@@ -1,0 +1,80 @@
+// Caustics map, drawn into an 8-bit RenderTexture by a texture pass. The
+// water grid is projected along refracted sun rays onto the pool floor and
+// brightened where its triangles shrink. Output: r = caustic intensity,
+// g = soft sphere shadow. Sample it with causticUv() from pool-shading.chunk.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: caustics-vs:vert
+      frag: caustics-fs:frag
+      depthStencilState: { depthTest: false, depthWrite: false }
+      rasterizerState: { cullMode: none }
+      properties:
+        lightDir: { value: [0, 1, 0, 0] }
+        sphereParams: { value: [0, -10, 0, 0.25] }
+        waterTex: { value: black }
+}%
+
+CCProgram caustics-vs %{
+  precision highp float;
+  #include "./chunks/pool-common.chunk"
+
+  in vec3 a_position;
+  out vec3 v_oldPos;
+  out vec3 v_newPos;
+  uniform sampler2D waterTex;
+
+  vec3 project(vec3 origin, vec3 ray, vec3 refractedLight) {
+    vec2 tcube = intersectCube(origin, ray, vec3(-1.0, -poolHeight, -1.0), vec3(1.0, 2.0, 1.0));
+    origin += ray * tcube.y;
+    float tplane = (-origin.y - 1.0) / refractedLight.y;
+    return origin + refractedLight * tplane;
+  }
+
+  // Clip space is written directly (no camera matrices): clip xy = map uv * 2 - 1.
+  vec4 vert () {
+    vec4 info = texture(waterTex, a_position.xz * 0.5 + 0.5);
+    info.ba *= 0.5;
+    vec3 normal = vec3(info.b, sqrt(max(0.0, 1.0 - dot(info.ba, info.ba))), info.a);
+
+    vec3 refractedLight = refractedSunlight();
+    vec3 ray = refract(-light, normal, IOR_AIR / IOR_WATER);
+    vec3 flatPos = vec3(a_position.x, 0.0, a_position.z);
+    v_oldPos = project(flatPos, refractedLight, refractedLight);
+    v_newPos = project(flatPos + vec3(0.0, info.r, 0.0), ray, refractedLight);
+
+    return vec4(0.75 * (v_newPos.xz + refractedLight.xz / refractedLight.y), 0.0, 1.0);
+  }
+}%
+
+CCProgram caustics-fs %{
+  precision highp float;
+  #pragma extension([GL_OES_standard_derivatives, __VERSION__ < 300])
+  #include "./chunks/pool-common.chunk"
+
+  in vec3 v_oldPos;
+  in vec3 v_newPos;
+
+  vec4 frag () {
+    float oldArea = length(dFdx(v_oldPos)) * length(dFdy(v_oldPos));
+    float newArea = length(dFdx(v_newPos)) * length(dFdy(v_newPos));
+    vec4 color = vec4(oldArea / newArea * 0.2, 1.0, 0.0, 0.0);
+
+    vec3 refractedLight = refractedSunlight();
+
+    // soft shadow of the sphere, only where the sphere is between light and point
+    vec3 dir = (sphereCenter - v_newPos) / sphereRadius;
+    vec3 area = cross(dir, refractedLight);
+    float shadow = dot(area, area);
+    float dist = dot(dir, -refractedLight);
+    shadow = 1.0 + (shadow - 1.0) / (0.05 + dist * 0.025);
+    shadow = clamp(1.0 / (1.0 + exp(-shadow)), 0.0, 1.0);
+    shadow = mix(1.0, shadow, clamp(dist * 2.0, 0.0, 1.0));
+    color.g = shadow;
+
+    // shadow of the pool rim
+    vec2 t = intersectCube(v_newPos, -refractedLight, vec3(-1.0, -poolHeight, -1.0), vec3(1.0, 2.0, 1.0));
+    color.r *= 1.0 / (1.0 + exp(-200.0 / (1.0 + 10.0 * (t.y - t.x)) * (v_newPos.y - refractedLight.y * t.y - rimHeight)));
+    return color;
+  }
+}%

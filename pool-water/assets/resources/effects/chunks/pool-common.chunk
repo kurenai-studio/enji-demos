@@ -1,0 +1,35 @@
+// Shared by every pool effect.
+// World layout: water rest height y = 0, pool spans x,z in [-1, 1],
+// floor at y = -1, pool rim at y = 2/12.
+
+const float IOR_AIR = 1.0;
+const float IOR_WATER = 1.333;
+const vec3 abovewaterColor = vec3(0.25, 1.0, 1.25);
+const vec3 underwaterColor = vec3(0.4, 0.9, 1.0);
+const float poolHeight = 1.0;
+const float rimHeight = 2.0 / 12.0;
+
+// Set every frame from PoolMaterials; list both in each effect's `properties`.
+uniform PoolScene {
+  vec4 lightDir;     // xyz: unit vector towards the sun
+  vec4 sphereParams; // xyz: sphere centre, w: radius
+};
+
+#define light (lightDir.xyz)
+#define sphereCenter (sphereParams.xyz)
+#define sphereRadius (sphereParams.w)
+
+vec2 intersectCube(vec3 origin, vec3 ray, vec3 cubeMin, vec3 cubeMax) {
+  vec3 tMin = (cubeMin - origin) / ray;
+  vec3 tMax = (cubeMax - origin) / ray;
+  vec3 t1 = min(tMin, tMax);
+  vec3 t2 = max(tMin, tMax);
+  float tNear = max(max(t1.x, t1.y), t1.z);
+  float tFar = min(min(t2.x, t2.y), t2.z);
+  return vec2(tNear, tFar);
+}
+
+// Sunlight direction after it enters the flat water surface (pointing down).
+vec3 refractedSunlight() {
+  return refract(-light, vec3(0.0, 1.0, 0.0), IOR_AIR / IOR_WATER);
+}

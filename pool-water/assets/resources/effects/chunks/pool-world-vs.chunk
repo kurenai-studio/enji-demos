@@ -1,0 +1,14 @@
+// Vertex program for meshes shaded in world space: passes the world position.
+// Use as `CCProgram world-vs %{ #include "./chunks/pool-world-vs.chunk" }%`.
+precision highp float;
+#include <builtin/uniforms/cc-global>
+#include <builtin/uniforms/cc-local>
+
+in vec3 a_position;
+out vec3 v_pos;
+
+vec4 vert () {
+  vec4 world = cc_matWorld * vec4(a_position, 1.0);
+  v_pos = world.xyz;
+  return cc_matProj * cc_matView * world;
+}

@@ -1,0 +1,72 @@
+// Additive halos around the hanging lanterns (a cheap bloom). One quad per
+// lantern, all lanterns of a chunk in one mesh: a_position = lantern centre
+// (world), a_texCoord = corner in [-1, 1], a_normal.x = size, a_normal.y = gain.
+// The quad is expanded in view space so it always faces the camera.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: glow-vs:vert
+      frag: glow-fs:frag
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: one
+          blendDst: one
+          blendSrcAlpha: zero
+          blendDstAlpha: one
+      depthStencilState: { depthTest: true, depthWrite: false }
+      rasterizerState: { cullMode: none }
+      properties:
+        fogParams: { value: [0.02, 3.0, 0, 0] }
+        glowColor: { value: [1.0, 0.45, 0.14, 0.8] }
+}%
+
+CCProgram glow-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/uniforms/cc-local>
+
+  in vec3 a_position;
+  in vec3 a_normal;
+  in vec2 a_texCoord;
+  out vec2 v_corner;
+  out float v_gain;
+  out float v_dist;
+
+  vec4 vert () {
+    vec4 world = cc_matWorld * vec4(a_position, 1.0);
+    vec4 view = cc_matView * world;
+    v_dist = length(view.xyz);
+    // Keep halos a few pixels wide far away so distant lanterns still twinkle.
+    float size = a_normal.x * (1.0 + v_dist * 0.012);
+    view.xy += a_texCoord * size;
+    // Pull the quad towards the eye so it is not cut by the lantern's own sphere.
+    view.xyz *= max(v_dist - 0.8, 0.1) / max(v_dist, 0.1);
+    v_corner = a_texCoord;
+    v_gain = a_normal.y;
+    return cc_matProj * view;
+  }
+}%
+
+CCProgram glow-fs %{
+  precision highp float;
+  #include "./chunks/ic-common.chunk"
+
+  in vec2 v_corner;
+  in float v_gain;
+  in float v_dist;
+
+  uniform Params {
+    vec4 fogParams;
+    vec4 glowColor;
+  };
+
+  vec4 frag () {
+    float r2 = dot(v_corner, v_corner);
+    float core = exp(-r2 * 18.0);
+    float halo = exp(-r2 * 3.5) * 0.35;
+    float fade = 1.0 - icFogAmount(v_dist, fogParams) * 0.85;
+    vec3 c = glowColor.rgb * (core + halo) * glowColor.a * v_gain * fade;
+    return vec4(c, 0.0);
+  }
+}%

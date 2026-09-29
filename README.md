@@ -1,0 +1,39 @@
+# Enji demos
+
+Cocos Creator 3.8 projects built with [Enji](https://github.com/kurenai-studio/enji),
+kept out of the Enji repository so that installing Enji does not download them.
+Each directory is a complete project (open it in Creator 3.8.8 or preview it with
+Enji).
+
+| Demo | What it shows | Enji |
+|---|---|---|
+| [pool-water](pool-water) | Port of the three.js / WebGL Water pool: CPU height field in a float texture, caustics render pass, ray-traced refraction and reflection, floating sphere | 0.4 (`feat/3d-water`) |
+| [infinity-castle](infinity-castle) | Endless fall through a procedural Infinity Castle shaft: Blender-generated glTF blocks, pooled chunks, custom lantern lighting and haze | 0.4 (`feat/3d-water`) |
+
+## Run a demo
+
+Install Enji as described in its
+[getting started guide](https://github.com/kurenai-studio/enji/blob/main/docs/getting-started.md),
+then:
+
+```sh
+git clone https://github.com/kurenai-studio/enji-demos.git
+cd enji-demos
+enji host start --project pool-water   # prints previewUrl
+```
+
+Open the printed `previewUrl` in a browser. The first boot imports every asset
+and takes about a minute. `enji host stop --project pool-water` when done.
+
+## Adding a demo
+
+1. `enji init <name> [--3d]` inside this repository.
+2. Build it; keep `library/`, `temp/`, `local/` out of git (the root
+   `.gitignore` does this).
+3. Put comparison screenshots in `<name>/shots/` as JPEG and write
+   `<name>/README.md`: what it shows, controls, measured performance, and the
+   Enji version it was made with.
+4. Add a row to the table above.
+
+Screenshots and generated models go in the demo folder, not in the Enji
+repository.

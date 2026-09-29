@@ -1,0 +1,43 @@
+// Inside of a large sphere that follows the camera: the haze colour at full
+// fog, so looking into the empty shaft matches the fogged castle exactly.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: sky-vs:vert
+      frag: sky-fs:frag
+      depthStencilState: { depthTest: true, depthWrite: false }
+      rasterizerState: { cullMode: front }
+      priority: max - 10
+      properties:
+        fogTint: { value: [0.95, 0.42, 0.16, 0.55] }
+}%
+
+CCProgram sky-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/uniforms/cc-local>
+
+  in vec3 a_position;
+  out vec3 v_dir;
+
+  vec4 vert () {
+    vec4 world = cc_matWorld * vec4(a_position, 1.0);
+    v_dir = world.xyz - cc_cameraPos.xyz;
+    return cc_matProj * cc_matView * world;
+  }
+}%
+
+CCProgram sky-fs %{
+  precision highp float;
+  #include "./chunks/ic-common.chunk"
+
+  in vec3 v_dir;
+
+  uniform Params {
+    vec4 fogTint;
+  };
+
+  vec4 frag () {
+    return vec4(icHaze(normalize(v_dir), fogTint), 1.0);
+  }
+}%

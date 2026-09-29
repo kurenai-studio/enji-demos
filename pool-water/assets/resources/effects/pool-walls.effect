@@ -1,0 +1,33 @@
+// Tiled pool walls and floor with caustics, sphere occlusion and rim shadow.
+// The mesh is an open-top box whose faces point into the pool.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: world-vs:vert
+      frag: walls-fs:frag
+      properties:
+        lightDir: { value: [0, 1, 0, 0] }
+        sphereParams: { value: [0, -10, 0, 0.25] }
+        waterTex: { value: black }
+        tileTex: { value: white }
+        causticTex: { value: black }
+}%
+
+CCProgram world-vs %{
+  #include "./chunks/pool-world-vs.chunk"
+}%
+
+CCProgram walls-fs %{
+  precision highp float;
+  #include "./chunks/pool-common.chunk"
+  #include "./chunks/pool-shading.chunk"
+
+  in vec3 v_pos;
+
+  vec4 frag () {
+    vec3 color = getWallColor(v_pos);
+    vec4 info = texture(waterTex, v_pos.xz * 0.5 + 0.5);
+    if (v_pos.y < info.r) color *= underwaterColor * 1.2;
+    return vec4(color, 1.0);
+  }
+}%

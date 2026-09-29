@@ -1,0 +1,28 @@
+// Shared look for every Infinity Castle effect: tone mapping and the haze colour.
+// All effects fog in display space (after tone mapping) so the haze sky, the
+// castle and the lantern halos meet exactly at the far distance.
+
+vec3 icTonemap (vec3 c) {
+  c = max(c, vec3(0.0));
+  c = (c * (2.51 * c + 0.03)) / (c * (2.43 * c + 0.59) + 0.14);
+  return pow(clamp(c, 0.0, 1.0), vec3(1.0 / 2.2));
+}
+
+// Haze colour seen along view direction dir (world, normalized): warm and bright
+// looking down the abyss, dark indigo looking up. fogTint.rgb = warm haze, fogTint.a = gain.
+vec3 icHaze (vec3 dir, vec4 fogTint) {
+  float down = clamp(-dir.y, 0.0, 1.0);
+  float side = 1.0 - abs(dir.y);
+  vec3 up = vec3(0.035, 0.03, 0.05);
+  vec3 warm = fogTint.rgb * fogTint.a;
+  vec3 c = mix(up, warm * 0.55, side * 0.8);
+  c = mix(c, warm, pow(down, 1.5));
+  return c;
+}
+
+// Fraction of haze between the eye and a point at distance d: exp2 fog with a
+// start distance so the nearest storeys stay crisp. p = (density, start, 0, 0).
+float icFogAmount (float d, vec4 p) {
+  float x = max(d - p.y, 0.0) * p.x;
+  return 1.0 - exp(-x * x * 0.6 - x * 0.4);
+}

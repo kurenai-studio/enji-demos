@@ -1,0 +1,10 @@
+{
+    "name": "infinity-castle",
+    "type": "3d",
+    "version": "3.8.8",
+    "uuid": "a67492c5-2321-4243-9daa-1e916f11435e",
+    "creator": {
+        "version": "3.8.8",
+        "dependencies": {}
+    }
+}

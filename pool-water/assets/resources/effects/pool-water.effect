@@ -1,0 +1,104 @@
+// Water surface, ray traced per pixel: refraction, reflection, Fresnel, sky
+// cube map and sun specular. Technique 0 is seen from above, technique 1 from
+// below (total internal reflection). The grid mesh lies in xz and is
+// displaced in the vertex shader from the simulation texture.
+CCEffect %{
+  techniques:
+  - name: above
+    passes:
+    - vert: water-vs:vert
+      frag: water-fs:frag
+      properties: &props
+        lightDir: { value: [0, 1, 0, 0] }
+        sphereParams: { value: [0, -10, 0, 0.25] }
+        waterTex: { value: black }
+        tileTex: { value: white }
+        causticTex: { value: black }
+        skyTex: { value: white }
+  - name: below
+    passes:
+    - vert: water-vs:vert
+      frag: water-fs:frag
+      embeddedMacros: { UNDERWATER: true }
+      rasterizerState: { cullMode: front }
+      properties: *props
+}%
+
+CCProgram water-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+
+  in vec3 a_position;
+  out vec3 v_pos;
+  uniform sampler2D waterTex;
+
+  // The node stays at the origin, so the grid's local xz is world xz.
+  vec4 vert () {
+    vec4 info = texture(waterTex, a_position.xz * 0.5 + 0.5);
+    v_pos = vec3(a_position.x, info.r, a_position.z);
+    return cc_matProj * cc_matView * vec4(v_pos, 1.0);
+  }
+}%
+
+CCProgram water-fs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include "./chunks/pool-common.chunk"
+  #include "./chunks/pool-shading.chunk"
+
+  in vec3 v_pos;
+  uniform samplerCube skyTex;
+
+  vec3 getSurfaceRayColor(vec3 origin, vec3 ray, vec3 waterColor) {
+    vec3 color;
+    float q = intersectSphere(origin, ray, sphereCenter, sphereRadius);
+    if (q < 1.0e6) {
+      color = getSphereColor(origin + ray * q);
+    } else if (ray.y < 0.0) {
+      vec2 t = intersectCube(origin, ray, vec3(-1.0, -poolHeight, -1.0), vec3(1.0, 2.0, 1.0));
+      color = getWallColor(origin + ray * t.y);
+    } else {
+      vec2 t = intersectCube(origin, ray, vec3(-1.0, -poolHeight, -1.0), vec3(1.0, 2.0, 1.0));
+      vec3 hit = origin + ray * t.y;
+      if (hit.y < rimHeight) {
+        color = getWallColor(hit);
+      } else {
+        color = texture(skyTex, ray).rgb;
+        color += vec3(pow(max(0.0, dot(light, ray)), 5000.0)) * vec3(10.0, 8.0, 6.0);
+      }
+    }
+    if (ray.y < 0.0) color *= waterColor;
+    return color;
+  }
+
+  vec4 frag () {
+    vec2 coord = v_pos.xz * 0.5 + 0.5;
+    vec4 info = texture(waterTex, coord);
+
+    // sharpen wave crests by marching along the normal gradient
+    for (int i = 0; i < 5; i++) {
+      coord += info.ba * 0.005;
+      info = texture(waterTex, coord);
+    }
+
+    vec3 normal = vec3(info.b, sqrt(max(0.0, 1.0 - dot(info.ba, info.ba))), info.a);
+    vec3 incomingRay = normalize(v_pos - cc_cameraPos.xyz);
+
+  #if UNDERWATER
+    normal = -normal;
+    vec3 reflectedRay = reflect(incomingRay, normal);
+    vec3 refractedRay = refract(incomingRay, normal, IOR_WATER / IOR_AIR);
+    float fresnel = mix(0.5, 1.0, pow(1.0 - dot(normal, -incomingRay), 3.0));
+    vec3 reflectedColor = getSurfaceRayColor(v_pos, reflectedRay, underwaterColor);
+    vec3 refractedColor = getSurfaceRayColor(v_pos, refractedRay, vec3(1.0)) * vec3(0.8, 1.0, 1.1);
+    return vec4(mix(reflectedColor, refractedColor, (1.0 - fresnel) * length(refractedRay)), 1.0);
+  #else
+    vec3 reflectedRay = reflect(incomingRay, normal);
+    vec3 refractedRay = refract(incomingRay, normal, IOR_AIR / IOR_WATER);
+    float fresnel = mix(0.25, 1.0, pow(1.0 - dot(normal, -incomingRay), 3.0));
+    vec3 reflectedColor = getSurfaceRayColor(v_pos, reflectedRay, abovewaterColor);
+    vec3 refractedColor = getSurfaceRayColor(v_pos, refractedRay, abovewaterColor);
+    return vec4(mix(refractedColor, reflectedColor, fresnel), 1.0);
+  #endif
+  }
+}%

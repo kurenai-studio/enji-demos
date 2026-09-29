@@ -1,0 +1,107 @@
+{
+  "ver": "2.3.14",
+  "importer": "gltf",
+  "imported": true,
+  "uuid": "0e95af06-eeaf-4719-ae42-cf6f64ae35db",
+  "files": [],
+  "subMetas": {
+    "64097": {
+      "importer": "gltf-material",
+      "uuid": "0e95af06-eeaf-4719-ae42-cf6f64ae35db@64097",
+      "displayName": "",
+      "id": "64097",
+      "name": "Castle.material",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "0822b": {
+      "importer": "gltf-mesh",
+      "uuid": "0e95af06-eeaf-4719-ae42-cf6f64ae35db@0822b",
+      "displayName": "",
+      "id": "0822b",
+      "name": "B_stair_a.mesh",
+      "userData": {
+        "gltfIndex": 0,
+        "triangleCount": 1712
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "79fc0": {
+      "importer": "gltf-scene",
+      "uuid": "0e95af06-eeaf-4719-ae42-cf6f64ae35db@79fc0",
+      "displayName": "",
+      "id": "79fc0",
+      "name": "B_stair_a.prefab",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "imageMetas": [],
+    "legacyFbxImporter": false,
+    "allowMeshDataAccess": true,
+    "addVertexColor": false,
+    "generateLightmapUVNode": false,
+    "meshOptimizer": {
+      "enable": false,
+      "algorithm": "simplify",
+      "simplifyOptions": {
+        "targetRatio": 1,
+        "enableSmartLink": true,
+        "agressiveness": 7,
+        "maxIterationCount": 100
+      }
+    },
+    "lods": {
+      "enable": false,
+      "hasBuiltinLOD": false,
+      "options": [
+        {
+          "screenRatio": 0.25,
+          "faceCount": 1
+        },
+        {
+          "screenRatio": 0.125,
+          "faceCount": 0.25
+        },
+        {
+          "screenRatio": 0.01,
+          "faceCount": 0.1
+        }
+      ]
+    },
+    "assetFinder": {
+      "meshes": [
+        "0e95af06-eeaf-4719-ae42-cf6f64ae35db@0822b"
+      ],
+      "skeletons": [],
+      "textures": [],
+      "materials": [
+        "0e95af06-eeaf-4719-ae42-cf6f64ae35db@64097"
+      ],
+      "scenes": [
+        "0e95af06-eeaf-4719-ae42-cf6f64ae35db@79fc0"
+      ]
+    }
+  }
+}

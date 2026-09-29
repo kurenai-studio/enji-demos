@@ -1,0 +1,53 @@
+// Stone deck around the pool: coping stones at the rim, pavers beyond, a soft
+// contact shadow from the sphere and distance fog towards the horizon colour.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: world-vs:vert
+      frag: deck-fs:frag
+      properties:
+        lightDir: { value: [0, 1, 0, 0] }
+        sphereParams: { value: [0, -10, 0, 0.25] }
+        deckTex: { value: white }
+}%
+
+CCProgram world-vs %{
+  #include "./chunks/pool-world-vs.chunk"
+}%
+
+CCProgram deck-fs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include "./chunks/pool-common.chunk"
+
+  in vec3 v_pos;
+  uniform sampler2D deckTex;
+
+  vec4 frag () {
+    float edge = max(abs(v_pos.x), abs(v_pos.z));
+    vec3 base;
+    if (edge < 1.16) {
+      // coping stones around the rim
+      base = texture(deckTex, v_pos.xz * 0.9 + 0.37).rgb * vec3(1.12, 1.1, 1.05);
+      base *= 1.0 - 0.25 * smoothstep(1.13, 1.16, edge);
+    } else {
+      base = texture(deckTex, v_pos.xz * 0.5).rgb;
+    }
+
+    float diffuse = max(dot(vec3(0.0, 1.0, 0.0), light), 0.0);
+
+    // soft contact shadow from the sphere when it rests on the deck side
+    vec3 toSphere = sphereCenter - v_pos;
+    vec2 proj = toSphere.xz - light.xz / light.y * toSphere.y;
+    float shadow = toSphere.y > 0.0 ? smoothstep(sphereRadius * 0.6, sphereRadius * 1.1, length(proj)) : 1.0;
+
+    // darken close to the water edge
+    float ao = mix(0.75, 1.0, smoothstep(1.0, 1.08, edge));
+
+    vec3 col = base * (0.45 + 0.7 * diffuse * shadow) * ao;
+
+    float dist = length(v_pos.xz - cc_cameraPos.xz);
+    col = mix(col, vec3(0.72, 0.84, 0.95), smoothstep(10.0, 90.0, dist));
+    return vec4(col, 1.0);
+  }
+}%

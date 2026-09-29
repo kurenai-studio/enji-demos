@@ -1,0 +1,33 @@
+// The floating sphere. The node carries the centre and radius (position and
+// uniform scale of a unit sphere); sphereParams must match them because the
+// shading also uses it.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: world-vs:vert
+      frag: sphere-fs:frag
+      properties:
+        lightDir: { value: [0, 1, 0, 0] }
+        sphereParams: { value: [0, -10, 0, 0.25] }
+        waterTex: { value: black }
+        causticTex: { value: black }
+}%
+
+CCProgram world-vs %{
+  #include "./chunks/pool-world-vs.chunk"
+}%
+
+CCProgram sphere-fs %{
+  precision highp float;
+  #include "./chunks/pool-common.chunk"
+  #include "./chunks/pool-shading.chunk"
+
+  in vec3 v_pos;
+
+  vec4 frag () {
+    vec3 color = getSphereColor(v_pos);
+    vec4 info = texture(waterTex, v_pos.xz * 0.5 + 0.5);
+    if (v_pos.y < info.r) color *= underwaterColor * 1.2;
+    return vec4(color, 1.0);
+  }
+}%

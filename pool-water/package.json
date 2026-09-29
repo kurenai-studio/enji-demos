@@ -1,0 +1,10 @@
+{
+    "name": "pool-water",
+    "type": "3d",
+    "version": "3.8.8",
+    "uuid": "9adc9ef4-f72b-4d47-9571-91dabac8d453",
+    "creator": {
+        "version": "3.8.8",
+        "dependencies": {}
+    }
+}
