@@ -1,0 +1,41 @@
+// MPM particles drawn as round point sprites with a little shading, in display colours.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: vs:vert
+      frag: fs:frag
+      primitive: point_list
+      properties:
+        pointParams: { value: [4, 0, 0, 0] }
+}%
+
+CCProgram vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/uniforms/cc-local>
+  in vec3 a_position;
+  in vec4 a_color;
+  out vec4 v_color;
+  uniform Points {
+    // x point size in framebuffer pixels
+    vec4 pointParams;
+  };
+  vec4 vert () {
+    v_color = a_color;
+    gl_PointSize = pointParams.x;
+    return cc_matProj * cc_matView * cc_matWorld * vec4(a_position, 1.0);
+  }
+}%
+
+CCProgram fs %{
+  precision highp float;
+  in vec4 v_color;
+  vec4 frag () {
+    vec2 d = gl_PointCoord * 2.0 - 1.0;
+    float r2 = dot(d, d);
+    if (r2 > 1.0) discard;
+    // Light from the top left so overlapping discs read as a lumpy surface.
+    float shade = 0.82 + 0.18 * clamp(dot(vec3(d.x, -d.y, sqrt(1.0 - r2)), normalize(vec3(-0.4, 0.5, 0.75))), 0.0, 1.0);
+    return vec4(v_color.rgb * shade, 1.0);
+  }
+}%
