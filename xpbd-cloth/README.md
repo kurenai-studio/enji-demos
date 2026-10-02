@@ -1,7 +1,8 @@
 # XPBD cloth
 
 A minimal Extended Position Based Dynamics cloth for Cocos Creator 3.8, built
-and previewed with Enji, sized to run on phones.
+and previewed with Enji, sized to run on phones. A compare scene hangs a classic
+PBD sheet next to an XPBD one, and the cloth can collide with itself.
 
 | Drape over a sphere | Grab and lift | Curtain in the wind |
 |---|---|---|
@@ -25,16 +26,75 @@ and previewed with Enji, sized to run on phones.
   - Colliders: a kinematic sphere (its motion is spread over the substeps) and
     the ground, with position-level friction. Wind is a drag along the particle
     normals.
+  - `method = 'pbd'` switches to classic Position Based Dynamics (Müller et al.
+    2007) for the comparison below: `dλ = -k C / (w_a + w_b)` with a fixed
+    stiffness `k` per group.
+  - Optional self collision, described below.
   - All state lives in preallocated `Float32Array`s. `step()` allocates nothing,
     so there are no GC stalls on phones.
 - `ClothScene.ts`: streams positions and normals into a dynamic mesh every frame.
   UVs are uploaded only once, because `updateSubMesh` maps buffers to
-  attributes in order. It also owns the scene presets, the stiffness presets and
-  the quality levels.
+  attributes in order. It also owns the scene presets, the stiffness presets,
+  the substep multiplier and the quality levels.
 - `xpbd-cloth.effect`: two-sided cloth, with a different colour per side and a
   procedural weave. `xpbd-lit.effect`: ground grid with an analytic contact
   shadow for the sphere. There are no shadow maps, which keeps the fill cost
   low on phones.
+
+## PBD vs XPBD
+
+| 5 substeps | 40 substeps |
+|---|---|
+| ![Few substeps](shots/compare-few-substeps.jpg) | ![Many substeps](shots/compare-many-substeps.jpg) |
+
+The compare scene hangs two rubber sheets by their whole top edge, PBD in blue
+and XPBD in red, with the same compliance. The PBD stiffness of each group is
+set to what one XPBD sweep applies at the quality level's own substep count,
+`k = w / (w + α/h²)` (`matchPbdStiffness`), so the two sheets agree there. The
+substep button then multiplies the substep count by 0.5, 1, 2 or 4, and the HUD
+shows how far each bottom edge sags below its rest height.
+
+PBD removes a fixed fraction of every constraint error per sweep, so more
+sweeps make the material stiffer. XPBD's compliance term scales with `1/h²` and
+cancels that, so the sheet keeps the stiffness it was given. Headless, 32×32
+sheets matched at 10 substeps, 8 s after release
+(`node --experimental-strip-types tools/compare.mts hang`):
+
+| Substeps | XPBD sag | PBD sag |
+|---|---|---|
+| 5 | 10.7 cm | 34.9 cm |
+| 10 | 10.4 cm | 10.2 cm |
+| 20 | 11.7 cm | 2.6 cm |
+| 40 | 12.2 cm | 0.6 cm |
+
+The XPBD sag still moves by about 2 cm, because one sweep per substep does not
+fully converge the soft constraints. The PBD sag changes by a factor of 60.
+
+## Self collision
+
+| Self collision on | Self collision off |
+|---|---|
+| ![On](shots/fold-self-on.jpg) | ![Off](shots/fold-self-off.jpg) |
+
+A corner folded over the cloth lying on the ground. Without self collision the
+flap sinks through the lower layer.
+
+Every particle keeps at least `selfThickness` (0.9 of the grid spacing) from
+every other particle, with friction between the layers, as in Müller's "Ten
+Minute Physics" cloth. Below 1/√2 of the spacing a particle could slip through
+the middle of a cell. The particles are counting-sorted into a dense grid over
+the cloth's bounding box, with cells as wide as the thickness. Cells along x are
+contiguous, and each particle visits only the forward half of its 3×3×3 block
+(five runs of slots), so each pair is tested once. The grid is capped at 32
+cells per particle and grows its cells when the cloth spreads out.
+
+The pass runs every second substep. A substep moves a particle far less than
+the thickness, so contacts are not missed: in a sheet dropped edge-first onto
+the ground (`tools/compare.mts pile`), the closest pair of particles that are
+not grid neighbours stays at most 10% under the thickness at every quality
+level, against 0.06–2.4 cm apart without it. In the 32×32 drape it adds about 60% to
+the solver time (1.7 ms to 2.7 ms in the same run). Self collision is on in the
+drape and curtain scenes and off in the compare scene.
 
 ## Mobile
 
@@ -56,15 +116,16 @@ pinch to zoom.
 
 - Drag the cloth to grab a particle, or drag the ball to move it. Drag anywhere
   else to orbit. Zoom with the wheel or a pinch.
-- The buttons switch the scene (drape or curtain), reset, pause, toggle wind,
-  unpin, cycle stiffness (silk, cotton, leather) and set quality.
-- Keys: `C` scene, `R` reset, `Space` pause, `W` wind, `U` unpin, `B`
-  stiffness, `Q` quality.
+- The buttons switch the scene (drape, curtain, compare), reset, pause, cycle
+  stiffness (silk, cotton, leather, rubber), multiply the substeps, toggle self
+  collision and wind, unpin, and set quality.
+- Keys: `C` scene, `R` reset, `Space` pause, `B` stiffness, `N` substeps, `S`
+  self collision, `W` wind, `U` unpin, `Q` quality.
 
 ## Performance
 
-Headless solver, including normals (`node --experimental-strip-types tools/bench.mts`,
-Apple Silicon Mac, Node 24):
+Headless solver, including normals, without self collision
+(`node --experimental-strip-types tools/bench.mts`, Apple Silicon Mac, Node 24):
 
 | Grid | Substeps | Drape | Curtain | Worst edge stretch |
 |---|---|---|---|---|
@@ -80,11 +141,15 @@ Enji preview measurements:
   viewport was 410×713 at DPR 2.
 - With Chrome CPU throttling at 4× (a rough mid-range phone), Medium ran at
   60 FPS with about 3 ms of simulation, and High at 54–56 FPS with 6 ms.
+- Self collision adds about two thirds to that under the same throttling
+  (6.5 ms to 10.8 ms for the Medium drape, measured on a busier machine), so a
+  mid-range phone running Medium sits near the 5 ms auto quality budget.
 
 ## Not in this demo yet
 
-- Self collision. Folded layers can pass through each other; a spatial hash is
-  the next step.
+- Triangle-level self collision. Particles keep apart, but the folded layers
+  show a gap of 0.9 grid spacings (4.6 cm on Medium), and a fast thin object
+  could still pass between particles.
 - Dihedral bending, and strain limiting beyond tethers.
 
 Made with Enji 0.4 (`feat/3d-water`).

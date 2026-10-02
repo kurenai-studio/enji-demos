@@ -5,6 +5,9 @@ const GAP = 8;
 const BUTTON_HEIGHT = 44;
 const MAX_BUTTON_WIDTH = 130;
 const FONT_SIZE = 16;
+const STATUS_LINES = 4;
+const STATUS_LINE_HEIGHT = 22;
+const STATUS_WIDTH = 330;
 const PANEL = new Color(12, 18, 30, 170);
 const BUTTON = new Color(30, 44, 70, 220);
 const BUTTON_ON = new Color(70, 120, 200, 235);
@@ -12,14 +15,6 @@ const BUTTON_ON = new Color(70, 120, 200, 235);
 export interface HudButton {
     id: string;
     onTap(): void;
-}
-
-export interface HudStatus {
-    fps: number;
-    simMs: number;
-    segments: number;
-    constraints: number;
-    substeps: number;
 }
 
 interface ButtonView {
@@ -45,18 +40,19 @@ export class ClothHud {
     constructor(canvas: Node, buttons: HudButton[]) {
         this.root = uiNode('Hud', canvas, 0, 0);
 
-        this.statusPanel = uiNode('Status', this.root, 300, 3 * 22 + PADDING * 2);
+        const statusHeight = STATUS_LINES * STATUS_LINE_HEIGHT + PADDING * 2;
+        this.statusPanel = uiNode('Status', this.root, STATUS_WIDTH, statusHeight);
         this.statusPanel.getComponent(UITransform)!.anchorPoint = new Vec2(0, 1);
         const statusBg = this.statusPanel.addComponent(Graphics);
         statusBg.fillColor = PANEL;
-        statusBg.roundRect(0, -(3 * 22 + PADDING * 2), 300, 3 * 22 + PADDING * 2, 8);
+        statusBg.roundRect(0, -statusHeight, STATUS_WIDTH, statusHeight, 8);
         statusBg.fill();
-        const statusText = uiNode('Text', this.statusPanel, 300 - PADDING * 2, 3 * 22);
+        const statusText = uiNode('Text', this.statusPanel, STATUS_WIDTH - PADDING * 2, STATUS_LINES * STATUS_LINE_HEIGHT);
         statusText.getComponent(UITransform)!.anchorPoint = new Vec2(0, 1);
         statusText.setPosition(PADDING, -PADDING, 0);
         this.status = statusText.addComponent(Label);
         this.status.fontSize = 14;
-        this.status.lineHeight = 22;
+        this.status.lineHeight = STATUS_LINE_HEIGHT;
         this.status.color = new Color(255, 236, 170, 255);
         this.status.horizontalAlign = Label.HorizontalAlign.LEFT;
         this.status.verticalAlign = Label.VerticalAlign.TOP;
@@ -95,11 +91,9 @@ export class ClothHud {
         b.background.fill();
     }
 
-    setStatus(s: HudStatus): void {
-        this.status.string =
-            `FPS ${s.fps.toFixed(0)} · XPBD ${s.simMs.toFixed(2)} ms\n` +
-            `${s.segments}×${s.segments} = ${s.segments * s.segments} particles\n` +
-            `${s.constraints} constraints · ${s.substeps} substeps`;
+    /** Up to four lines of status text. */
+    setStatus(lines: readonly string[]): void {
+        this.status.string = lines.slice(0, STATUS_LINES).join('\n');
     }
 
     /** True when a UI-space point (origin bottom left) is over a button. */

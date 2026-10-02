@@ -7,7 +7,12 @@
  * Constraints are distance constraints in three groups with their own
  * compliance (inverse stiffness, m/N): stretch (grid edges), shear (cell
  * diagonals) and bending (every second particle along rows and columns).
- * Colliders: a kinematic sphere and the ground plane y = 0.
+ * Colliders: a kinematic sphere, the ground plane y = 0 and, optionally, the
+ * cloth itself.
+ *
+ * `method = 'pbd'` switches to classic Position Based Dynamics (Müller et al.
+ * 2007) for comparison: each sweep moves a constraint a fixed fraction k of the
+ * way to its rest length, so the material stiffens as the substep count grows.
  */
 
 export interface ClothLayout {
@@ -22,7 +27,13 @@ export interface ClothLayout {
     height: number;
     /** Grid (column, row) pairs whose particles are fixed in place. */
     pins: ReadonlyArray<readonly [number, number]>;
+    /** Long range attachments to the pins; on by default. */
+    tethers?: boolean;
+    /** Shift along x, in metres. */
+    offsetX?: number;
 }
+
+export type SolverMethod = 'xpbd' | 'pbd';
 
 export const GROUP_STRETCH = 0;
 export const GROUP_SHEAR = 1;
@@ -42,7 +53,19 @@ export class XpbdCloth {
 
     /** Compliance per constraint group (stretch, shear, bend), in m/N. */
     readonly compliance = new Float64Array([0, 1e-4, 5e-3]);
+    method: SolverMethod = 'xpbd';
+    /** PBD only: fraction of the constraint error removed per sweep, per group. See `matchPbdStiffness()`. */
+    readonly pbdStiffness = new Float64Array([1, 1, 1]);
     substeps = 10;
+    /** Rest distance between grid neighbours, in metres. */
+    readonly spacing: number;
+    selfCollision = false;
+    /** Run the self collision pass on every n-th substep; 2 halves its cost while a substep moves particles far less than the thickness. */
+    selfCollisionEvery = 1;
+    /** Minimum distance between any two particles when self collision is on. */
+    selfThickness: number;
+    /** Fraction of the relative substep motion of two touching particles removed per contact. */
+    selfFriction = 0.3;
     gravity = -9.81;
     /** Linear velocity damping per second. */
     damping = 0.3;
@@ -67,6 +90,10 @@ export class XpbdCloth {
     /** Long range attachments (Kim et al. 2012): pinned particle indices and each particle's rest distance to them. */
     private tetherPins: Int32Array = new Int32Array(0);
     private tetherRest: Float32Array = new Float32Array(0);
+    /** Self collision grid: cell start offsets, particle indices sorted by cell, and each particle's cell. */
+    private readonly cellStart: Int32Array;
+    private readonly cellSorted: Int32Array;
+    private readonly cellOf: Int32Array;
 
     private readonly sphereFrom = { x: 0, y: 0, z: 0 };
     private grabIndex = -1;
@@ -79,6 +106,12 @@ export class XpbdCloth {
         const n = layout.segments;
         this.segments = n;
         this.count = n * n;
+        this.spacing = layout.size / (n - 1);
+        // Below 1/√2 of the spacing a particle could slip through the middle of a cell.
+        this.selfThickness = 0.9 * this.spacing;
+        this.cellStart = new Int32Array(32 * this.count + 1);
+        this.cellSorted = new Int32Array(this.count);
+        this.cellOf = new Int32Array(this.count);
         this.pos = new Float32Array(this.count * 3);
         this.prev = new Float32Array(this.count * 3);
         this.vel = new Float32Array(this.count * 3);
@@ -104,6 +137,17 @@ export class XpbdCloth {
 
     get constraintCount(): number {
         return this.rest.length;
+    }
+
+    /**
+     * Sets the PBD stiffness of every group to what one XPBD sweep applies at
+     * `substeps` substeps per `frameDt`: k = w / (w + α/h²) for two particles of
+     * the cloth's mass. Both methods then agree at that substep count only.
+     */
+    matchPbdStiffness(substeps: number, frameDt = 1 / 60): void {
+        const h = frameDt / substeps;
+        const w = (2 * this.count) / this.massTotal;
+        for (let g = 0; g < 3; g++) this.pbdStiffness[g] = w / (w + this.compliance[g] / (h * h));
     }
 
     /** Advances the simulation by `dt` seconds split into `substeps` substeps. */
@@ -159,6 +203,7 @@ export class XpbdCloth {
             }
 
             this.solveConstraints(h);
+            if (this.selfCollision && (s + 1) % this.selfCollisionEvery === 0) this.solveSelfCollisions();
             if (this.tetherPins.length > 0) this.solveTethers();
             this.collide(
                 sf.x + (sphere.x - sf.x) * t,
@@ -224,6 +269,14 @@ export class XpbdCloth {
         this.sphere.x = x;
         this.sphere.y = Math.max(y, this.sphere.r);
         this.sphere.z = z;
+    }
+
+    /** Puts the sphere somewhere without sweeping it through the cloth on the next step. */
+    placeSphere(x: number, y: number, z: number): void {
+        this.setSphere(x, y, z);
+        this.sphereFrom.x = this.sphere.x;
+        this.sphereFrom.y = this.sphere.y;
+        this.sphereFrom.z = this.sphere.z;
     }
 
     /** Holds particle `index` at a target that follows `moveGrab()`, until `releaseGrab()`. */
@@ -302,15 +355,16 @@ export class XpbdCloth {
 
     private buildParticles(layout: ClothLayout): void {
         const n = layout.segments;
-        const spacing = layout.size / (n - 1);
+        const spacing = this.spacing;
         const half = layout.size / 2;
+        const offsetX = layout.offsetX ?? 0;
         const w = this.count / layout.mass;
         this.massTotal = layout.mass;
         for (let row = 0; row < n; row++) {
             for (let col = 0; col < n; col++) {
                 const i = row * n + col;
                 const k = i * 3;
-                const u = col * spacing - half;
+                const u = col * spacing - half + offsetX;
                 const v = row * spacing;
                 if (layout.orientation === 'horizontal') {
                     this.pos[k] = u;
@@ -330,6 +384,7 @@ export class XpbdCloth {
         for (const [col, row] of layout.pins) this.invMass[row * n + col] = 0;
         this.prev.set(this.pos);
 
+        if (layout.tethers === false) return;
         const pins = layout.pins.map(([col, row]) => row * n + col);
         this.tetherPins = Int32Array.from(pins);
         this.tetherRest = new Float32Array(pins.length * this.count);
@@ -370,6 +425,120 @@ export class XpbdCloth {
                 pos[k + 1] = ay + dy * s;
                 pos[k + 2] = az + dz * s;
             }
+        }
+    }
+
+    /**
+     * Keeps every pair of particles at least `selfThickness` apart (as in
+     * Müller's "Ten Minute Physics" cloth self collision). Every substep the
+     * particles are counting-sorted into a dense grid over the cloth's bounding
+     * box with cells at least the thickness wide, so all contacts of a particle
+     * lie in its 3×3×3 block of cells; a substep moves particles far less than a
+     * cell. Cells along x are contiguous, and only the forward half of the block
+     * is visited (5 runs of slots), so each pair is tested once. Grid
+     * neighbours rest a full spacing apart, beyond the thickness, so only real
+     * contacts and strong compression react.
+     */
+    private solveSelfCollisions(): void {
+        const pos = this.pos;
+        const count = this.count;
+        const cellStart = this.cellStart;
+        const sorted = this.cellSorted;
+        const cellOf = this.cellOf;
+        const maxCells = cellStart.length - 1;
+
+        let minX = Infinity, minY = Infinity, minZ = Infinity;
+        let maxX = -Infinity, maxY = -Infinity, maxZ = -Infinity;
+        for (let k = 0; k < count * 3; k += 3) {
+            const x = pos[k], y = pos[k + 1], z = pos[k + 2];
+            if (x < minX) minX = x; if (x > maxX) maxX = x;
+            if (y < minY) minY = y; if (y > maxY) maxY = y;
+            if (z < minZ) minZ = z; if (z > maxZ) maxZ = z;
+        }
+        // Larger cells only add candidates; they keep a spread-out cloth within the grid memory.
+        let cell = this.selfThickness;
+        let nx = 0, ny = 0, nz = 0;
+        for (;;) {
+            nx = Math.floor((maxX - minX) / cell) + 1;
+            ny = Math.floor((maxY - minY) / cell) + 1;
+            nz = Math.floor((maxZ - minZ) / cell) + 1;
+            if (nx * ny * nz <= maxCells) break;
+            cell *= 1.25;
+        }
+        const inv = 1 / cell;
+        const nxy = nx * ny;
+        const cells = nxy * nz;
+
+        cellStart.fill(0, 0, cells + 1);
+        for (let i = 0, k = 0; i < count; i++, k += 3) {
+            const c = Math.floor((pos[k] - minX) * inv) + nx * (Math.floor((pos[k + 1] - minY) * inv) + ny * Math.floor((pos[k + 2] - minZ) * inv));
+            cellOf[i] = c;
+            cellStart[c]++;
+        }
+        for (let c = 1; c < cells; c++) cellStart[c] += cellStart[c - 1];
+        cellStart[cells] = count;
+        // cellStart[c] holds the end of cell c; filling backwards leaves it at the start.
+        for (let i = count - 1; i >= 0; i--) sorted[--cellStart[cellOf[i]]] = i;
+
+        for (let s = 0; s < count; s++) {
+            const i = sorted[s];
+            const c = cellOf[i];
+            const ix = c % nx;
+            const iy = ((c / nx) | 0) % ny;
+            const iz = (c / nxy) | 0;
+            const x0 = ix > 0 ? ix - 1 : 0;
+            const x1 = ix < nx - 1 ? ix + 1 : ix;
+            // Own row: the rest of this cell, then the next cell along x.
+            this.collideRun(i, s + 1, cellStart[c - ix + x1 + 1]);
+            if (iy + 1 < ny) {
+                const row = c - ix + nx;
+                this.collideRun(i, cellStart[row + x0], cellStart[row + x1 + 1]);
+            }
+            if (iz + 1 < nz) {
+                const y0 = iy > 0 ? iy - 1 : 0;
+                const y1 = iy < ny - 1 ? iy + 1 : iy;
+                for (let y = y0; y <= y1; y++) {
+                    const row = nx * (y + ny * (iz + 1));
+                    this.collideRun(i, cellStart[row + x0], cellStart[row + x1 + 1]);
+                }
+            }
+        }
+    }
+
+    /** Separates particle `i` from the particles in sorted slots [from, to), with friction. */
+    private collideRun(i: number, from: number, to: number): void {
+        const pos = this.pos;
+        const prev = this.prev;
+        const invMass = this.invMass;
+        const sorted = this.cellSorted;
+        const thickness = this.selfThickness;
+        const t2 = thickness * thickness;
+        const friction = this.selfFriction * 0.5;
+        const wi = invMass[i];
+        const a = i * 3;
+        for (let q = from; q < to; q++) {
+            const j = sorted[q];
+            const wj = invMass[j];
+            const wSum = wi + wj;
+            if (wSum === 0) continue;
+            const b = j * 3;
+            const ex = pos[b] - pos[a];
+            const ey = pos[b + 1] - pos[a + 1];
+            const ez = pos[b + 2] - pos[a + 2];
+            const d2 = ex * ex + ey * ey + ez * ez;
+            if (d2 >= t2 || d2 < 1e-12) continue;
+            const d = Math.sqrt(d2);
+            const s = (thickness - d) / (d * wSum);
+            const sa = s * wi;
+            const sb = s * wj;
+            pos[a] -= ex * sa; pos[a + 1] -= ey * sa; pos[a + 2] -= ez * sa;
+            pos[b] += ex * sb; pos[b + 1] += ey * sb; pos[b + 2] += ez * sb;
+            // Friction: pull both substep displacements toward their average.
+            const rx = (pos[b] - prev[b] - pos[a] + prev[a]) * friction;
+            const ry = (pos[b + 1] - prev[b + 1] - pos[a + 1] + prev[a + 1]) * friction;
+            const rz = (pos[b + 2] - prev[b + 2] - pos[a + 2] + prev[a + 2]) * friction;
+            if (wi > 0) { pos[a] += rx; pos[a + 1] += ry; pos[a + 2] += rz; }
+            if (wj > 0) { pos[b] -= rx; pos[b + 1] -= ry; pos[b + 2] -= rz; }
         }
     }
 
@@ -432,6 +601,8 @@ export class XpbdCloth {
      * reduces to  dλ = -C / (w_a + w_b + α/h²)  and λ need not be stored.
      * Sweep direction alternates between substeps to avoid a one-sided bias;
      * groups run bend, shear, stretch so the stiffest ones are solved last.
+     * PBD replaces the compliance term by a fixed fraction k of the full
+     * correction: dλ = -k C / (w_a + w_b).
      */
     private solveConstraints(h: number): void {
         const pos = this.pos;
@@ -440,11 +611,13 @@ export class XpbdCloth {
         const cb = this.cb;
         const rest = this.rest;
         const invH2 = 1 / (h * h);
+        const pbd = this.method === 'pbd';
         const forward = (this.stepParity ^= 1) === 1;
         for (let g = 2; g >= 0; g--) {
             const start = g === 0 ? 0 : this.groupEnd[g - 1];
             const end = this.groupEnd[g];
-            const alpha = this.compliance[g] * invH2;
+            const alpha = pbd ? 0 : this.compliance[g] * invH2;
+            const k = pbd ? this.pbdStiffness[g] : 1;
             const first = forward ? start : end - 1;
             const inc = forward ? 1 : -1;
             for (let j = first, left = end - start; left > 0; j += inc, left--) {
@@ -461,7 +634,7 @@ export class XpbdCloth {
                 const dz = pos[a + 2] - pos[b + 2];
                 const len = Math.sqrt(dx * dx + dy * dy + dz * dz);
                 if (len < 1e-9) continue;
-                const s = -(len - rest[j]) / (wSum * len);
+                const s = (-k * (len - rest[j])) / (wSum * len);
                 const sa = s * wa;
                 const sb = s * wb;
                 pos[a] += dx * sa; pos[a + 1] += dy * sa; pos[a + 2] += dz * sa;

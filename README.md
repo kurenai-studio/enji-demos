@@ -10,7 +10,7 @@ Enji).
 | [pool-water](pool-water) | Port of the three.js / WebGL Water pool: CPU height field in a float texture, caustics render pass, ray-traced refraction and reflection, floating sphere | 0.4 (`feat/3d-water`) |
 | [infinity-castle](infinity-castle) | Endless fall through a procedural Infinity Castle shaft: Blender-generated glTF blocks, pooled chunks, custom lantern lighting and haze | 0.4 (`feat/3d-water`) |
 | [pbf-water](pbf-water) | 3D Position Based Fluids in a glass tank: grid neighbour search, density constraint with XSPH and vorticity, closed water surface rebuilt every frame with Surface Nets; dam break, shake, tilt | 0.3 |
-| [xpbd-cloth](xpbd-cloth) | Minimal XPBD cloth sized for phones: typed-array solver with substeps, tethers and sphere/ground collision, streamed into a dynamic mesh; grab, wind, auto quality | 0.4 (`feat/3d-water`) |
+| [xpbd-cloth](xpbd-cloth) | Minimal XPBD cloth sized for phones: typed-array solver with substeps, tethers, sphere/ground collision and self collision, streamed into a dynamic mesh; PBD vs XPBD side by side; grab, wind, auto quality | 0.4 (`feat/3d-water`) |
 | [slots](slots) | Lucky Reels — 3-reel casino slots (2D UI, paytable, spin animation). Built one-shot with Cursor CLI against an Enji host in Docker | 0.4 (`feat/3d-water`) |
 
 ## Run a demo

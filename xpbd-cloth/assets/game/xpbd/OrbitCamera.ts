@@ -19,10 +19,18 @@ export class OrbitCamera {
     private readonly position = new Vec3();
 
     constructor(readonly camera: Camera, eye: Readonly<Vec3>) {
+        this.yaw = this.pitch = this.distance = 0;
+        this.setView(eye, this.target);
+    }
+
+    /** Jumps to a new eye position looking at `target`. */
+    setView(eye: Readonly<Vec3>, target: Readonly<Vec3>): void {
+        this.target.set(target);
         const offset = Vec3.subtract(new Vec3(), eye, this.target);
         this.distance = offset.length();
         this.yaw = Math.atan2(offset.x, offset.z);
         this.pitch = Math.asin(offset.y / this.distance);
+        this.pendingYaw = this.pendingPitch = 0;
         this.apply();
     }
 

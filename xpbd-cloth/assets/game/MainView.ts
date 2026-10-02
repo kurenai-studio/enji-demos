@@ -8,9 +8,13 @@ import { OrbitCamera } from './xpbd/OrbitCamera';
 
 const { ccclass } = _decorator;
 
+const VIEW = { eye: new Vec3(2.0, 1.9, 2.7), target: new Vec3(0, 0.75, 0) };
+const COMPARE_VIEW = { eye: new Vec3(0.5, 1.75, 3.4), target: new Vec3(0, 1.3, 0) };
+
 /**
  * XPBD cloth playground: a CPU solver in typed arrays streamed into a dynamic
- * mesh every frame, sized to run on phones (auto quality, no shadow maps).
+ * mesh every frame, sized to run on phones (auto quality, no shadow maps). The
+ * compare scene hangs a PBD sheet next to an XPBD one.
  */
 @ccclass('MainView')
 export class MainView extends Component implements IView {
@@ -42,25 +46,35 @@ export class MainView extends Component implements IView {
         camera.priority = 0;
         camera.near = 0.05;
         camera.far = 100;
-        this.orbit = new OrbitCamera(camera, new Vec3(2.0, 1.9, 2.7));
+        this.orbit = new OrbitCamera(camera, VIEW.eye);
 
         const actions = {
             togglePause: () => { if (this.cloth) this.cloth.paused = !this.cloth.paused; this.refreshButtons(); },
             reset: () => { this.cloth?.rebuild(); this.refreshButtons(); },
-            togglePreset: () => { this.cloth?.setPreset(this.cloth.preset === 'drape' ? 'curtain' : 'drape'); this.refreshButtons(); },
+            cyclePreset: () => {
+                if (!this.cloth) return;
+                this.cloth.cyclePreset();
+                const view = this.cloth.preset === 'compare' ? COMPARE_VIEW : VIEW;
+                this.orbit?.setView(view.eye, view.target);
+                this.refreshButtons();
+            },
             cycleQuality: () => { this.cloth?.cycleQuality(); this.refreshButtons(); },
             cycleStiffness: () => { this.cloth?.cycleStiffness(); this.refreshButtons(); },
-            unpin: () => { this.cloth?.cloth.unpinAll(); },
+            cycleSubsteps: () => { this.cloth?.cycleSubsteps(); this.refreshButtons(); },
+            toggleSelfCollision: () => { this.cloth?.toggleSelfCollision(); this.refreshButtons(); },
+            unpin: () => { this.cloth?.unpinAll(); },
             toggleWind: () => { if (this.cloth) this.cloth.wind = !this.cloth.wind; this.refreshButtons(); },
         };
 
         this.hud = new ClothHud(ensureCanvas(root).node, [
-            { id: 'preset', onTap: actions.togglePreset },
+            { id: 'preset', onTap: actions.cyclePreset },
             { id: 'reset', onTap: actions.reset },
             { id: 'pause', onTap: actions.togglePause },
+            { id: 'stiffness', onTap: actions.cycleStiffness },
+            { id: 'substeps', onTap: actions.cycleSubsteps },
+            { id: 'self', onTap: actions.toggleSelfCollision },
             { id: 'wind', onTap: actions.toggleWind },
             { id: 'unpin', onTap: actions.unpin },
-            { id: 'stiffness', onTap: actions.cycleStiffness },
             { id: 'quality', onTap: actions.cycleQuality },
         ]);
         this.hud.setButton('unpin', 'Unpin');
@@ -96,10 +110,12 @@ export class MainView extends Component implements IView {
         const cloth = this.cloth;
         const hud = this.hud;
         if (!cloth || !hud) return;
-        hud.setButton('preset', cloth.preset === 'drape' ? 'Scene: drape' : 'Scene: curtain');
+        hud.setButton('preset', `Scene: ${cloth.preset}`);
         hud.setButton('pause', cloth.paused ? 'Resume' : 'Pause', cloth.paused);
         hud.setButton('wind', 'Wind', cloth.wind);
         hud.setButton('stiffness', STIFFNESS[cloth.stiffness].name);
+        hud.setButton('substeps', `${cloth.substeps} substeps`);
+        hud.setButton('self', 'Self collide', cloth.selfCollision);
         hud.setButton('quality', `${QUALITY[cloth.quality].name}${cloth.autoQuality ? ' (auto)' : ''}`);
     }
 
@@ -107,14 +123,16 @@ export class MainView extends Component implements IView {
         this.frames += 1;
         this.frameTime += dt;
         if (this.frameTime < 0.5 || !this.hud || !this.cloth) return;
-        const level = this.cloth.level;
-        this.hud.setStatus({
-            fps: this.frames / this.frameTime,
-            simMs: this.cloth.simMs,
-            segments: level.segments,
-            constraints: this.cloth.cloth.constraintCount,
-            substeps: level.substeps,
-        });
+        const cloth = this.cloth;
+        const n = cloth.level.segments;
+        const sag = cloth.sag;
+        const cm = (m: number) => `${(m * 100).toFixed(1)} cm`;
+        this.hud.setStatus([
+            `FPS ${(this.frames / this.frameTime).toFixed(0)} · solver ${cloth.simMs.toFixed(2)} ms`,
+            `${n}×${n} · ${cloth.particleCount} particles · ${cloth.constraintCount} constraints`,
+            `${cloth.substeps} substeps · self collision ${cloth.selfCollision ? 'on' : 'off'}`,
+            sag ? `Sag: PBD (blue) ${cm(sag.pbd)} · XPBD (red) ${cm(sag.xpbd)}` : '',
+        ]);
         // Auto quality may have changed the level since the last refresh.
         this.refreshButtons();
         this.frames = 0;

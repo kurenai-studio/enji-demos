@@ -1,13 +1,15 @@
 import { Camera, EventKeyboard, EventMouse, EventTouch, geometry, Input, input, KeyCode, Touch, Vec2, Vec3, view } from 'cc';
-import type { ClothScene } from './ClothScene';
+import type { ClothPick, ClothScene } from './ClothScene';
 import type { OrbitCamera } from './OrbitCamera';
 
 export interface ClothActions {
     togglePause(): void;
     reset(): void;
-    togglePreset(): void;
+    cyclePreset(): void;
     cycleQuality(): void;
     cycleStiffness(): void;
+    cycleSubsteps(): void;
+    toggleSelfCollision(): void;
     unpin(): void;
     toggleWind(): void;
 }
@@ -29,7 +31,7 @@ export class ClothInteraction {
     private planeOffset = 0;
     private readonly hit = new Vec3();
     private readonly prevHit = new Vec3();
-    private readonly pickResult = { index: -1, t: 0 };
+    private readonly pickResult: ClothPick = { body: -1, index: -1, t: 0 };
 
     constructor(
         private readonly camera: Camera,
@@ -108,16 +110,14 @@ export class ClothInteraction {
         }
         const loc = touch.getLocation();
         const ray = this.camera.screenPointToRay(loc.x, loc.y, this.ray);
-        const s = scene.cloth.sphere;
+        const s = scene.sphere;
         const sphereT = intersectSphere(ray, s.x, s.y, s.z, s.r);
         const pick = this.pickResult;
-        const clothHit = scene.cloth.pick(ray.o.x, ray.o.y, ray.o.z, ray.d.x, ray.d.y, ray.d.z, pick);
+        const clothHit = scene.pick(ray.o.x, ray.o.y, ray.o.z, ray.d.x, ray.d.y, ray.d.z, pick);
 
         if (clothHit && (sphereT === null || pick.t <= sphereT)) {
             this.mode = 'cloth';
-            scene.cloth.grab(pick.index);
-            const k = pick.index * 3;
-            this.hit.set(scene.cloth.pos[k], scene.cloth.pos[k + 1], scene.cloth.pos[k + 2]);
+            scene.grab(pick, this.hit);
         } else if (sphereT !== null) {
             this.mode = 'sphere';
             ray.computeHit(this.hit, sphereT);
@@ -143,9 +143,9 @@ export class ClothInteraction {
         const ray = this.camera.screenPointToRay(loc.x, loc.y, this.ray);
         if (!intersectPlane(ray, this.planeNormal, this.planeOffset, this.hit)) return;
         if (this.mode === 'cloth') {
-            scene.cloth.moveGrab(this.hit.x, this.hit.y, this.hit.z);
+            scene.moveGrab(this.hit.x, this.hit.y, this.hit.z);
         } else {
-            const s = scene.cloth.sphere;
+            const s = scene.sphere;
             scene.moveSphere(
                 s.x + this.hit.x - this.prevHit.x,
                 s.y + this.hit.y - this.prevHit.y,
@@ -156,7 +156,7 @@ export class ClothInteraction {
     }
 
     private endPrimary(): void {
-        this.scene()?.cloth.releaseGrab();
+        this.scene()?.releaseGrab();
         this.mode = null;
         this.primaryId = -1;
     }
@@ -177,7 +177,9 @@ export class ClothInteraction {
         switch (event.keyCode) {
             case KeyCode.SPACE: this.actions.togglePause(); break;
             case KeyCode.KEY_R: this.actions.reset(); break;
-            case KeyCode.KEY_C: this.actions.togglePreset(); break;
+            case KeyCode.KEY_C: this.actions.cyclePreset(); break;
+            case KeyCode.KEY_N: this.actions.cycleSubsteps(); break;
+            case KeyCode.KEY_S: this.actions.toggleSelfCollision(); break;
             case KeyCode.KEY_Q: this.actions.cycleQuality(); break;
             case KeyCode.KEY_B: this.actions.cycleStiffness(); break;
             case KeyCode.KEY_U: this.actions.unpin(); break;
