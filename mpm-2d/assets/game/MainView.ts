@@ -15,8 +15,16 @@ const MODES: Mode[] = ['compare', 'pb', 'mls'];
 const MODE_NAMES: Record<Mode, string> = { compare: 'PB vs MLS', pb: 'PB-MPM', mls: 'MLS-MPM' };
 /** Grid-to-particle + particle-to-grid passes per rendered frame. */
 const BUDGETS = [5, 10, 20, 40];
-const SINGLE_GRID = { width: 48, height: 64 };
-const COMPARE_WIDTH = 32;
+/** Lite halves the particle count for slow devices; the same scenes, scaled to the grid. */
+const GRIDS = {
+    full: { single: 48, compare: 32, height: 64 },
+    lite: { single: 36, compare: 24, height: 48 },
+};
+/** Frames skipped, then frames averaged, before the start-up quality check. */
+const AUTO_WARMUP = 30;
+const AUTO_SAMPLES = 60;
+const AUTO_MIN_FPS = 50;
+const AUTO_MAX_SOLVER_MS = 8;
 const STIFF_FACTOR = 4;
 const BASE_YOUNG = 1.5e5;
 const BASE_BULK = 1.2e5;
@@ -51,6 +59,10 @@ export class MainView extends Component implements IView {
     private mode: Mode = 'compare';
     private budget = 1;
     private stiff = false;
+    private lite = false;
+    private autoFrames = 0;
+    private autoTime = 0;
+    private autoSolverMs = 0;
     private tool: 'grab' | 'push' = 'grab';
     private labels: Label[] = [];
     private canvas: Node | null = null;
@@ -105,6 +117,11 @@ export class MainView extends Component implements IView {
                 this.refreshButtons();
             },
             reset: () => this.sim.reset(),
+            toggleLite: () => {
+                this.autoFrames = -1;
+                this.lite = !this.lite;
+                this.reconfigure();
+            },
         };
 
         this.canvas = ensureCanvas(root).node;
@@ -140,6 +157,28 @@ export class MainView extends Component implements IView {
         this.sim.step();
         this.view.update(this.sim);
         this.updateHud(dt);
+        this.autoQuality(dt);
+    }
+
+    /**
+     * Once, at start-up: switch to the lite grids if the default setup can't
+     * hold 50 FPS or the solvers alone take half a 60 Hz frame. Frame rate is
+     * capped by the display, so solver time is the steadier signal.
+     */
+    private autoQuality(dt: number): void {
+        if (this.autoFrames < 0) return;
+        this.autoFrames += 1;
+        if (this.autoFrames <= AUTO_WARMUP) return;
+        this.autoTime += dt;
+        this.autoSolverMs += this.sim.stepMs[0] + this.sim.stepMs[1];
+        if (this.autoFrames < AUTO_WARMUP + AUTO_SAMPLES) return;
+        const fps = AUTO_SAMPLES / this.autoTime;
+        const solverMs = this.autoSolverMs / AUTO_SAMPLES;
+        this.autoFrames = -1;
+        if ((fps < AUTO_MIN_FPS || solverMs > AUTO_MAX_SOLVER_MS) && !this.lite) {
+            this.lite = true;
+            this.reconfigure();
+        }
     }
 
     private reconfigure(): void {
@@ -147,8 +186,9 @@ export class MainView extends Component implements IView {
         this.sim.params.youngModulus = BASE_YOUNG * (this.stiff ? STIFF_FACTOR : 1);
         this.sim.params.bulkModulus = BASE_BULK * (this.stiff ? STIFF_FACTOR : 1);
         const kinds: SolverKind[] = this.mode === 'compare' ? ['pb', 'mls'] : [this.mode];
-        const width = this.mode === 'compare' ? COMPARE_WIDTH : SINGLE_GRID.width;
-        this.sim.configure(kinds.map((k) => settingFor(k, passes)), width, SINGLE_GRID.height);
+        const grid = this.lite ? GRIDS.lite : GRIDS.full;
+        const width = this.mode === 'compare' ? grid.compare : grid.single;
+        this.sim.configure(kinds.map((k) => settingFor(k, passes)), width, grid.height);
         for (const w of this.sim.worlds) w.pointer.radius = POINTER_RADIUS;
         this.view?.rebuild(this.sim);
         this.layoutKey = '';
@@ -264,7 +304,7 @@ export class MainView extends Component implements IView {
         const sim = this.sim;
         const worlds = sim.worlds;
         const w0 = worlds[0];
-        const grid = `${worlds.length > 1 ? '2 × ' : ''}${w0.width}×${w0.height}`;
+        const grid = `${worlds.length > 1 ? '2 × ' : ''}${w0.width}×${w0.height}${this.lite ? ' lite' : ''}`;
         const side = (i: number) => (worlds.length > 1 ? (i === 0 ? 'L ' : 'R ') : '');
         const lines = [
             `FPS ${(this.frames / this.frameTime).toFixed(0)} · ${sim.particleCount} particles · grid ${grid}`,

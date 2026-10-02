@@ -88,6 +88,24 @@ degrades it gracefully, while MLS-MPM has a hard floor below which it fails.
 For the same budget, more substeps beat more iterations (120 Hz × 5 is better
 than 60 Hz × 10).
 
+The stiffness button shows the other side of it. With E and K ×4 the
+material's wave speed doubles, 600 Hz is no longer enough and MLS-MPM blows up
+at 10 passes, while PB-MPM with the same moduli is unchanged:
+
+![Stiff ×4, 10 passes per frame](shots/compare-stiff-x4.jpg)
+
+## Sand and mixed materials
+
+| Sand column | Mixed |
+|---|---|
+| ![Sand column](shots/pb-sand-column.jpg) | ![Mixed](shots/pb-mixed.jpg) |
+
+PB-MPM alone at 10 passes. The sand column slumps into a pile at roughly its
+friction angle (30°) and stops; the jelly disc stays round. In the mixed scene
+sand, the green viscoplastic block and the jelly disc fall into a liquid
+layer: the sand sinks in and spreads, the visco block flows over the jelly and
+keeps the shape it was bent into.
+
 ## Controls
 
 - Drag through the material to grab it (or push it, with the Tool button). In
@@ -95,17 +113,37 @@ than 60 Hz × 10).
 - Buttons: PB vs MLS / PB-MPM only / MLS-MPM only; scene (dam break, sand
   column, mixed); budget (5, 10, 20, 40 passes); MLS stiffness ×1 / ×4; tool;
   reset.
-- Keys: `S` solver, `C` scene, `B` budget, `K` stiffness, `T` tool, `R` reset.
+- Keys: `S` solver, `C` scene, `B` budget, `K` stiffness, `T` tool, `R` reset,
+  `Q` full / lite grids.
 
 ## Performance
 
-Enji preview, viewport 563×1024, compare mode (two 32×64 worlds, 1,667
-particles each):
+At start-up the demo watches the first 60 frames after a 30-frame warm-up. If
+they run below 50 FPS, or the solvers alone take more than 8 ms per frame, it
+switches once to lite grids: 24×48 per side in compare mode and 36×48 in the
+single view, about half the particles, with the scenes scaled to fit. The
+status line then says "lite". On the coarser grid the comparison comes out the
+same (MLS-MPM still blows up at 5 passes and is fine at 10).
 
-| Budget | Frame rate | PB-MPM solver | MLS-MPM solver |
+Enji preview, viewport 563×1024, dam break, 10 passes per frame unless noted.
+The 4× column uses Chrome CPU throttling as a rough mid-range phone.
+
+| Setup | Particles | Desktop | 4× CPU throttle |
 |---|---|---|---|
-| 10 passes | 60 FPS | 1.5–2.1 ms | 1.8–2.5 ms |
-| 5 passes | 60 FPS | 1.0–1.1 ms | 1.3 ms |
+| Compare, full grids (2 × 32×64) | 3,334 | 60 FPS, solvers 2.0 + 2.4 ms | 38 FPS, 9.2 + 11.0 ms |
+| Compare, full grids, 5 passes | 3,334 | 60 FPS, 1.0 + 1.3 ms | 60 FPS, 4.5 + 6.0 ms |
+| Compare, lite grids (2 × 24×48) | 1,598 | — | 60 FPS, 4.3 + 5.2 ms |
+| Compare, lite grids, 20 passes | 1,598 | — | 43 FPS, 8.4 + 9.9 ms |
+| PB-MPM, full grid (48×64) | 2,965 | 60 FPS, 3.6 ms | 45 FPS, 16.6 ms |
+| PB-MPM, lite grid (36×48) | 1,513 | — | 60 FPS, 7.8 ms |
+| PB-MPM, lite, sand column | 1,215 | — | 54 FPS, 13.6 ms |
+| PB-MPM, lite, mixed | 1,517 | — | 55 FPS, 12.3 ms |
+| MLS-MPM, lite, mixed | 1,517 | — | 37 FPS, 20.6 ms |
+
+On the desktop the start-up check measured 4.6 ms of solver time and kept the
+full grids; under 4× throttling it measured 35 FPS and 19 ms and switched to
+lite. Sand costs more per particle than liquid in PB-MPM because every
+iteration runs an SVD and the return mapping.
 
 In Node on the same machine a pass costs 85–95 ns per particle for PB-MPM and
 95–105 ns for MLS-MPM, which does a stress evaluation and two sweeps per
@@ -118,6 +156,9 @@ side.
 
 ## Not in this demo yet
 
+- Lowering the pass budget automatically as well as the grid: it would make
+  MLS-MPM blow up on slow devices, which is the point of the comparison but a
+  bad default.
 - Multithreading: the P2G scatter would need per-thread grids or colouring.
 - A liquid surface (marching squares over the grid mass) instead of points.
 - 3D, and moving colliders.

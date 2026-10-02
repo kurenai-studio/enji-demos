@@ -7,6 +7,7 @@ export interface MpmActions {
     toggleStiff(): void;
     toggleTool(): void;
     reset(): void;
+    toggleLite(): void;
 }
 
 /**
@@ -79,6 +80,7 @@ export class MpmInteraction {
             case KeyCode.KEY_K: this.actions.toggleStiff(); break;
             case KeyCode.KEY_T: this.actions.toggleTool(); break;
             case KeyCode.KEY_R: this.actions.reset(); break;
+            case KeyCode.KEY_Q: this.actions.toggleLite(); break;
             default: break;
         }
     }
