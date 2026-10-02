@@ -13,6 +13,7 @@ Enji).
 | [xpbd-cloth](xpbd-cloth) | Minimal XPBD cloth sized for phones: typed-array solver with substeps, tethers, sphere/ground collision and self collision, streamed into a dynamic mesh; PBD vs XPBD side by side; Projective Dynamics (banded Cholesky or Chebyshev) vs XPBD on a swinging flap; grab, wind, auto quality | 0.4 (`feat/3d-water`) |
 | [pbr-probes](pbr-probes) | PBR spheres lit by baked light probes in a Cornell box: offline multi-bounce bake into walls and an L2 SH probe grid, GGX with an analytic area light, box-projected reflection probe prefiltered at startup (RGBM), soft analytic sphere shadows | 0.3 |
 | [mpm-2d](mpm-2d) | 2D Material Point Method on the CPU: a port of EA SEED's Position Based MPM next to explicit MLS-MPM on the same scene and pass budget; liquid, jelly, sand and viscoplastic materials, point-sprite rendering, grab / push | 0.3 |
+| [fem-softbody](fem-softbody) | Co-rotated linear FEM soft bodies on tetrahedra: implicit Euler solved by CG on a block-sparse R·K·Rᵀ, warm-started polar rotations, contacts filtered inside the solve; linear vs co-rotated beams and spinning cubes, jelly blocks on a ball, grab, auto lite meshes | 0.3 |
 | [slots](slots) | Lucky Reels — 3-reel casino slots (2D UI, paytable, spin animation). Built one-shot with Cursor CLI against an Enji host in Docker | 0.4 (`feat/3d-water`) |
 
 ## Run a demo

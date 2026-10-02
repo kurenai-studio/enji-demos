@@ -1,4 +1,4 @@
-// PBD vs XPBD and self collision: node --experimental-strip-types tools/compare.mts
+// PBD vs XPBD and self collision: node --no-warnings --import ./tools/ts-resolve.mjs tools/compare.mts
 //
 // 1. A rubber sheet hung by its whole top edge, at 0.5x to 4x the base substep
 //    count. PBD uses the stiffness that matches XPBD at the base count. Prints

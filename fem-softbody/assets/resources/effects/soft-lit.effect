@@ -1,0 +1,89 @@
+// Soft bodies, ground and collider sphere. USE_GRID draws a metre grid with
+// analytic soft shadows: the sphere's and up to four blobs under the bodies
+// (no shadow map, cheap on phones).
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: vs:vert
+      frag: fs:frag
+      properties:
+        baseColor: { value: [0.6, 0.62, 0.66, 1], editor: { type: color } }
+        lightDir: { value: [0.4, 0.8, 0.45, 0] }
+        sphere: { value: [0, -10, 0, 0.4] }
+        blob0: { value: [0, 0, 0, 0] }
+        blob1: { value: [0, 0, 0, 0] }
+        blob2: { value: [0, 0, 0, 0] }
+        blob3: { value: [0, 0, 0, 0] }
+}%
+
+CCProgram vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/uniforms/cc-local>
+  in vec3 a_position;
+  in vec3 a_normal;
+  out vec3 v_world;
+  out vec3 v_normal;
+  vec4 vert () {
+    vec4 world = cc_matWorld * vec4(a_position, 1.0);
+    v_world = world.xyz;
+    v_normal = (cc_matWorldIT * vec4(a_normal, 0.0)).xyz;
+    return cc_matProj * cc_matView * world;
+  }
+}%
+
+CCProgram fs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #pragma extension([GL_OES_standard_derivatives, __VERSION__ < 300])
+  in vec3 v_world;
+  in vec3 v_normal;
+  uniform Params {
+    vec4 baseColor;
+    vec4 lightDir;
+    // xyz: centre, w: radius
+    vec4 sphere;
+    // x, z: centre, y: radius (0 = off), w: height of the body's lowest point
+    vec4 blob0;
+    vec4 blob1;
+    vec4 blob2;
+    vec4 blob3;
+  };
+
+  float blobShadow (vec4 b) {
+    if (b.y <= 0.0) return 1.0;
+    float d = length(v_world.xz - b.xz) / (b.y * (1.0 + b.w * 0.6));
+    return mix(mix(0.5, 1.0, clamp(b.w, 0.0, 1.0)), 1.0, smoothstep(0.55, 1.25, d));
+  }
+
+  vec4 frag () {
+    vec3 n = normalize(v_normal);
+    vec3 l = normalize(lightDir.xyz);
+    vec3 base = baseColor.rgb;
+    float shadow = 1.0;
+    #if USE_GRID
+      vec2 g = abs(fract(v_world.xz - 0.5) - 0.5) / fwidth(v_world.xz);
+      float line = 1.0 - min(min(g.x, g.y), 1.0);
+      base *= 1.0 - 0.25 * line;
+      vec3 c = sphere.xyz - l * (sphere.y / max(l.y, 0.2));
+      float d = length(v_world.xz - c.xz) / sphere.w;
+      shadow = mix(0.45, 1.0, smoothstep(0.6, 1.4, d));
+      shadow *= blobShadow(blob0) * blobShadow(blob1) * blobShadow(blob2) * blobShadow(blob3);
+    #endif
+    float diffuse = max(dot(n, l), 0.0);
+    vec3 v = normalize(cc_cameraPos.xyz - v_world);
+    vec3 h = normalize(l + v);
+    float spec = pow(max(dot(n, h), 0.0), 40.0) * 0.4;
+    vec3 ambient = mix(vec3(0.2, 0.2, 0.22), vec3(0.45, 0.5, 0.6), n.y * 0.5 + 0.5);
+    #if USE_GRID
+      spec = 0.0;
+    #endif
+    vec3 color = base * (ambient + diffuse * shadow * vec3(1.0, 0.96, 0.9)) + spec * shadow;
+    #if USE_GRID
+      // Fade into the camera clear colour (184, 199, 219); the pipeline writes shader output as is.
+      float fade = exp(-dot(v_world.xz, v_world.xz) * 0.02);
+      color = mix(vec3(0.722, 0.78, 0.859), color, fade);
+    #endif
+    return vec4(color, 1.0);
+  }
+}%

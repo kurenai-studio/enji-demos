@@ -1,4 +1,4 @@
-// Headless solver benchmark: node --experimental-strip-types tools/bench.mts
+// Headless solver benchmark: node --no-warnings --import ./tools/ts-resolve.mjs tools/bench.mts
 // Runs every quality level on both presets and reports the cost per 60 Hz
 // frame and the worst stretch of the grid edges after 10 s of simulation.
 import { XpbdCloth } from '../assets/game/xpbd/XpbdCloth.ts';

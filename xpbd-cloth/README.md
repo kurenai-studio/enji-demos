@@ -58,7 +58,7 @@ PBD removes a fixed fraction of every constraint error per sweep, so more
 sweeps make the material stiffer. XPBD's compliance term scales with `1/h²` and
 cancels that, so the sheet keeps the stiffness it was given. Headless, 32×32
 sheets matched at 10 substeps, 8 s after release
-(`node --experimental-strip-types tools/compare.mts hang`):
+(`node --no-warnings --import ./tools/ts-resolve.mjs tools/compare.mts hang`):
 
 | Substeps | XPBD sag | PBD sag |
 |---|---|---|
@@ -176,7 +176,7 @@ pinch to zoom.
 ## Performance
 
 Headless solver, including normals, without self collision
-(`node --experimental-strip-types tools/bench.mts`, Apple Silicon Mac, Node 24):
+(`node --no-warnings --import ./tools/ts-resolve.mjs tools/bench.mts`, Apple Silicon Mac, Node 24):
 
 | Grid | Substeps | Drape | Curtain | Worst edge stretch |
 |---|---|---|---|---|
