@@ -1,0 +1,33 @@
+// Shared by the room, sphere and probe effects. The pipeline writes shader
+// output to the screen as is, so every effect tone maps and gamma encodes here.
+
+// Linear radiance -> display: exposure, ACES fit (Narkowicz 2015), gamma 2.2.
+vec3 toDisplay(vec3 c, float exposure) {
+  c *= exposure;
+  c = (c * (2.51 * c + 0.03)) / (c * (2.43 * c + 0.59) + 0.14);
+  return pow(clamp(c, 0.0, 1.0), vec3(1.0 / 2.2));
+}
+
+// Fraction of the cosine-weighted hemisphere above (p, n) covered by sphere s
+// (xyz centre, w radius). Same as Occlusion.ts.
+float sphereOcclusion(vec3 p, vec3 n, vec4 s) {
+  vec3 d = s.xyz - p;
+  float l2 = dot(d, d);
+  return clamp(dot(n, d) * inversesqrt(l2) * s.w * s.w / l2, 0.0, 1.0);
+}
+
+// Fraction of a spherical light (xyz centre, w radius) that sphere s hides
+// from p: overlap of the two discs seen from p. Same as Occlusion.ts.
+float sphereLightBlock(vec3 p, vec4 light, vec4 s) {
+  vec3 tl = light.xyz - p;
+  vec3 ts = s.xyz - p;
+  float dl = length(tl);
+  float ds = length(ts);
+  if (ds <= s.w) return 1.0;
+  if (ds >= dl) return 0.0;
+  float angL = asin(min(light.w / dl, 1.0));
+  float angS = asin(min(s.w / ds, 1.0));
+  float g = acos(clamp(dot(tl, ts) / (dl * ds), -1.0, 1.0));
+  float inner = min(angS, angL) / angL;
+  return inner * inner * (1.0 - smoothstep(abs(angL - angS), angL + angS, g));
+}

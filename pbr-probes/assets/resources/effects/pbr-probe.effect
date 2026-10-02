@@ -1,0 +1,36 @@
+// Probe display: small spheres whose vertex colours are the probe's SH
+// evaluated along each vertex normal, i.e. how a white diffuse ball would look there.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: vs:vert
+      frag: fs:frag
+      properties:
+        display: { value: [1.2, 0, 0, 0] }
+}%
+
+CCProgram vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/uniforms/cc-local>
+  in vec3 a_position;
+  in vec4 a_color;
+  out vec3 v_color;
+  vec4 vert () {
+    v_color = a_color.rgb;
+    return cc_matProj * cc_matView * cc_matWorld * vec4(a_position, 1.0);
+  }
+}%
+
+CCProgram fs %{
+  precision highp float;
+  #include "./chunks/pbr-common.chunk"
+  in vec3 v_color;
+  uniform Probe {
+    // x exposure
+    vec4 display;
+  };
+  vec4 frag () {
+    return vec4(toDisplay(v_color, display.x), 1.0);
+  }
+}%

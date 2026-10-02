@@ -1,0 +1,10 @@
+{
+    "name": "pbr-probes",
+    "type": "3d",
+    "version": "3.8.8",
+    "uuid": "32cf221a-4e06-4520-92b2-2bd722dfd60b",
+    "creator": {
+        "version": "3.8.8",
+        "dependencies": {}
+    }
+}

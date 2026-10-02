@@ -11,6 +11,7 @@ Enji).
 | [infinity-castle](infinity-castle) | Endless fall through a procedural Infinity Castle shaft: Blender-generated glTF blocks, pooled chunks, custom lantern lighting and haze | 0.4 (`feat/3d-water`) |
 | [pbf-water](pbf-water) | 3D Position Based Fluids in a glass tank: grid neighbour search, density constraint with XSPH and vorticity, closed water surface rebuilt every frame with Surface Nets; dam break, shake, tilt | 0.3 |
 | [xpbd-cloth](xpbd-cloth) | Minimal XPBD cloth sized for phones: typed-array solver with substeps, tethers, sphere/ground collision and self collision, streamed into a dynamic mesh; PBD vs XPBD side by side; grab, wind, auto quality | 0.4 (`feat/3d-water`) |
+| [pbr-probes](pbr-probes) | PBR spheres lit by baked light probes in a Cornell box: offline multi-bounce bake into walls and an L2 SH probe grid, GGX with an analytic area light, box-projected reflection probe prefiltered at startup (RGBM), soft analytic sphere shadows | 0.3 |
 | [slots](slots) | Lucky Reels — 3-reel casino slots (2D UI, paytable, spin animation). Built one-shot with Cursor CLI against an Enji host in Docker | 0.4 (`feat/3d-water`) |
 
 ## Run a demo

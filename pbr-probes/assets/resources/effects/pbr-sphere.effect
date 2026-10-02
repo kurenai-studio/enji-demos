@@ -1,0 +1,212 @@
+// Metallic-roughness GGX for the dynamic spheres.
+//   Direct: the area light as a sphere light (Karis 2013 representative point
+//     and lobe normalisation), times the object's visibility of the light
+//     (CPU shadow rays against the blocks) and the nearest sphere's shadow.
+//   Diffuse ambient: L2 SH irradiance, blended on the CPU from the probes
+//     around the object (sh0..sh8 evaluate to irradiance / π).
+//   Specular ambient: a reflection probe prefiltered into 5 roughness levels
+//     (RGBM cubes env0..env4), looked up along the box-projected reflection.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: vs:vert
+      frag: fs:frag
+      properties:
+        baseColor: { value: [1, 1, 1, 1] }
+        material: { value: [0, 0.5, 1, 1.2] }
+        lightPos: { value: [0, 2.995, 0, 0.564] }
+        lightColor: { value: [17, 15.5, 13, 0] }
+        toggles: { value: [1, 1, 1, 1] }
+        probePos: { value: [0, 1.5, 0, 0] }
+        boxMin: { value: [-2, 0, -2, 0] }
+        boxMax: { value: [2, 3, 2, 0] }
+        occluder: { value: [0, -10, 0, 0.1] }
+        sh0: { value: [0, 0, 0, 0] }
+        sh1: { value: [0, 0, 0, 0] }
+        sh2: { value: [0, 0, 0, 0] }
+        sh3: { value: [0, 0, 0, 0] }
+        sh4: { value: [0, 0, 0, 0] }
+        sh5: { value: [0, 0, 0, 0] }
+        sh6: { value: [0, 0, 0, 0] }
+        sh7: { value: [0, 0, 0, 0] }
+        sh8: { value: [0, 0, 0, 0] }
+        env0: { value: white }
+        env1: { value: white }
+        env2: { value: white }
+        env3: { value: white }
+        env4: { value: white }
+}%
+
+CCProgram vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/uniforms/cc-local>
+  in vec3 a_position;
+  in vec3 a_normal;
+  out vec3 v_world;
+  out vec3 v_normal;
+  vec4 vert () {
+    vec4 world = cc_matWorld * vec4(a_position, 1.0);
+    v_world = world.xyz;
+    v_normal = (cc_matWorldIT * vec4(a_normal, 0.0)).xyz;
+    return cc_matProj * cc_matView * world;
+  }
+}%
+
+CCProgram fs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include "./chunks/pbr-common.chunk"
+  in vec3 v_world;
+  in vec3 v_normal;
+  uniform Sphere {
+    vec4 baseColor;
+    // x metallic, y perceptual roughness, z visibility of the light, w exposure
+    vec4 material;
+    // xyz centre, w radius
+    vec4 lightPos;
+    // rgb radiance · area of the panel
+    vec4 lightColor;
+    // x direct, y SH diffuse, z specular probe, w box projection
+    vec4 toggles;
+    vec4 probePos;
+    vec4 boxMin;
+    vec4 boxMax;
+    // nearest other sphere: xyz centre, w radius
+    vec4 occluder;
+    vec4 sh0;
+    vec4 sh1;
+    vec4 sh2;
+    vec4 sh3;
+    vec4 sh4;
+    vec4 sh5;
+    vec4 sh6;
+    vec4 sh7;
+    vec4 sh8;
+  };
+  uniform samplerCube env0;
+  uniform samplerCube env1;
+  uniform samplerCube env2;
+  uniform samplerCube env3;
+  uniform samplerCube env4;
+
+  const float PI = 3.14159265;
+  const float RGBM_RANGE = 16.0;
+
+  vec3 shIrradiance(vec3 n) {
+    return max(vec3(0.0),
+      sh0.rgb * 0.282095 +
+      sh1.rgb * 0.488603 * n.y + sh2.rgb * 0.488603 * n.z + sh3.rgb * 0.488603 * n.x +
+      sh4.rgb * 1.092548 * n.x * n.y + sh5.rgb * 1.092548 * n.y * n.z +
+      sh6.rgb * 0.315392 * (3.0 * n.z * n.z - 1.0) +
+      sh7.rgb * 1.092548 * n.x * n.z + sh8.rgb * 0.546274 * (n.x * n.x - n.y * n.y));
+  }
+
+  vec3 rgbm(vec4 c) { return c.rgb * c.a * RGBM_RANGE; }
+
+  // Prefiltered radiance along r for perceptual roughness: level = roughness · 4.
+  vec3 prefiltered(vec3 r, float roughness) {
+    float level = clamp(roughness, 0.0, 1.0) * 4.0;
+    vec3 c = vec3(0.0);
+    float w;
+    w = max(0.0, 1.0 - abs(level - 0.0)); if (w > 0.0) c += rgbm(texture(env0, r)) * w;
+    w = max(0.0, 1.0 - abs(level - 1.0)); if (w > 0.0) c += rgbm(texture(env1, r)) * w;
+    w = max(0.0, 1.0 - abs(level - 2.0)); if (w > 0.0) c += rgbm(texture(env2, r)) * w;
+    w = max(0.0, 1.0 - abs(level - 3.0)); if (w > 0.0) c += rgbm(texture(env3, r)) * w;
+    w = max(0.0, 1.0 - abs(level - 4.0)); if (w > 0.0) c += rgbm(texture(env4, r)) * w;
+    return c;
+  }
+
+  // Parallax correction: where r leaves the room box, seen from the probe.
+  vec3 boxProject(vec3 p, vec3 r) {
+    vec3 safe = sign(r) * max(abs(r), vec3(1e-4)) + vec3(1e-5);
+    vec3 t = max((boxMax.xyz - p) / safe, (boxMin.xyz - p) / safe);
+    float d = min(min(t.x, t.y), t.z);
+    return p + r * d - probePos.xyz;
+  }
+
+  // Karis 2014 mobile approximation of the split-sum environment BRDF.
+  vec3 envBrdf(vec3 f0, float roughness, float nv) {
+    const vec4 c0 = vec4(-1.0, -0.0275, -0.572, 0.022);
+    const vec4 c1 = vec4(1.0, 0.0425, 1.04, -0.04);
+    vec4 r = roughness * c0 + c1;
+    float a004 = min(r.x * r.x, exp2(-9.28 * nv)) * r.x + r.y;
+    vec2 ab = vec2(-1.04, 1.04) * a004 + r.zw;
+    return f0 * ab.x + ab.y;
+  }
+
+  // Irradiance from a sphere light of angular radius σ (sin²σ = sin2) at angle
+  // acos(cosTheta) from the normal, divided by π·sin²σ so it replaces max(cosθ, 0)
+  // (Lagarde & de Rousiers 2014, "Moving Frostbite to PBR").
+  float sphereCosine(float cosTheta, float sin2) {
+    if (cosTheta * cosTheta > sin2) return max(cosTheta, 0.0);
+    float sinTheta = sqrt(max(1.0 - cosTheta * cosTheta, 1e-6));
+    float x = sqrt(1.0 / sin2 - 1.0);
+    float y = -x * cosTheta / sinTheta;
+    float s = sinTheta * sqrt(max(1.0 - y * y, 0.0));
+    float e = (cosTheta * acos(y) - x * s) * sin2 + atan(s / max(x, 1e-4));
+    return max(e, 0.0) / (PI * sin2);
+  }
+
+  float ggx(float nh, float a) {
+    float a2 = a * a;
+    float d = nh * nh * (a2 - 1.0) + 1.0;
+    return a2 / (PI * d * d);
+  }
+
+  float smithVisibility(float nv, float nl, float a) {
+    float a2 = a * a;
+    float gv = nl * sqrt(nv * nv * (1.0 - a2) + a2);
+    float gl = nv * sqrt(nl * nl * (1.0 - a2) + a2);
+    return 0.5 / max(gv + gl, 1e-5);
+  }
+
+  vec4 frag () {
+    vec3 n = normalize(v_normal);
+    vec3 v = normalize(cc_cameraPos.xyz - v_world);
+    vec3 base = baseColor.rgb;
+    float metallic = material.x;
+    float roughness = max(material.y, 0.04);
+    float a = roughness * roughness;
+    vec3 f0 = mix(vec3(0.04), base, metallic);
+    vec3 diffuseColor = base * (1.0 - metallic);
+    float nv = max(dot(n, v), 1e-4);
+    vec3 r = reflect(-v, n);
+
+    vec3 color = vec3(0.0);
+
+    // Direct light.
+    vec3 toLight = lightPos.xyz - v_world;
+    float dist = length(toLight);
+    vec3 l = toLight / dist;
+    float nl = max(dot(n, l), 0.0);
+    float shadow = material.z * (1.0 - sphereLightBlock(v_world, lightPos, occluder));
+    // The panel faces down: radiant intensity falls off with the cosine below it.
+    vec3 irradiance = lightColor.rgb * max(l.y, 0.0) / (dist * dist) * shadow;
+    // Diffuse: a sphere light's cosine term, which stays above zero past the
+    // terminator while part of the light is still above the horizon.
+    float sin2 = clamp(lightPos.w * lightPos.w / (dist * dist), 1e-4, 1.0);
+    color += diffuseColor / PI * sphereCosine(dot(n, l), sin2) * irradiance * toggles.x;
+    if (nl > 0.0) {
+      vec3 centerToRay = dot(toLight, r) * r - toLight;
+      vec3 closest = toLight + centerToRay * clamp(lightPos.w / max(length(centerToRay), 1e-4), 0.0, 1.0);
+      vec3 ls = normalize(closest);
+      vec3 h = normalize(ls + v);
+      float nls = max(dot(n, ls), 0.0);
+      float aWide = clamp(a + lightPos.w / (2.0 * dist), 0.0, 1.0);
+      float norm = (a / aWide) * (a / aWide);
+      vec3 f = f0 + (1.0 - f0) * pow(1.0 - max(dot(v, h), 0.0), 5.0);
+      vec3 spec = f * ggx(max(dot(n, h), 0.0), a) * smithVisibility(nv, max(nls, 1e-4), a) * norm * nls;
+      color += spec * irradiance * toggles.x;
+    }
+
+    // Ambient from the probes, dimmed where the nearest sphere covers the sky.
+    float ao = 1.0 - sphereOcclusion(v_world, n, occluder);
+    vec3 fEnv = envBrdf(f0, roughness, nv);
+    color += diffuseColor * (1.0 - fEnv) * shIrradiance(n) * ao * toggles.y;
+    vec3 dir = toggles.w > 0.5 ? boxProject(v_world, r) : r;
+    color += prefiltered(dir, roughness) * fEnv * ao * toggles.z;
+
+    return vec4(toDisplay(color, material.w), 1.0);
+  }
+}%
