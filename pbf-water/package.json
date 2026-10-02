@@ -1,0 +1,10 @@
+{
+    "name": "pbf-water",
+    "type": "2d",
+    "version": "3.8.8",
+    "uuid": "27aa1479-78e9-42ec-8e1f-3cca8c08b2ee",
+    "creator": {
+        "version": "3.8.8",
+        "dependencies": {}
+    }
+}
