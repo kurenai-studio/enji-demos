@@ -1,0 +1,10 @@
+{
+    "name": "xpbd-cloth",
+    "type": "3d",
+    "version": "3.8.8",
+    "uuid": "69b5a6b1-8428-4530-bd5b-378a1aefde86",
+    "creator": {
+        "version": "3.8.8",
+        "dependencies": {}
+    }
+}
