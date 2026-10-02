@@ -103,8 +103,8 @@ at 10 passes, while PB-MPM with the same moduli is unchanged:
 PB-MPM alone at 10 passes. The sand column slumps into a pile at roughly its
 friction angle (30°) and stops; the jelly disc stays round. In the mixed scene
 sand, the green viscoplastic block and the jelly disc fall into a liquid
-layer: the sand sinks in and spreads, the visco block flows over the jelly and
-keeps the shape it was bent into.
+layer: the sand sinks in and throws up grains, the visco block sags where it
+lands and keeps the bent shape instead of springing back like the jelly.
 
 ## Controls
 
