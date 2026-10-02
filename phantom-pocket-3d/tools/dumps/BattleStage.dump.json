@@ -1,0 +1,5501 @@
+{
+ "harness": {
+  "ok": true,
+  "name": "BattleStage"
+ },
+ "nodeCount": 104,
+ "rows": [
+  {
+   "path": "",
+   "children": [
+    "CameraRig",
+    "Lights",
+    "Ground",
+    "Backdrop",
+    "PlayerAnchor",
+    "EnemyAnchor",
+    "Fx"
+   ],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": []
+  },
+  {
+   "path": "CameraRig",
+   "children": [
+    "MainCamera"
+   ],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": []
+  },
+  {
+   "path": "CameraRig/MainCamera",
+   "children": [],
+   "pos": [
+    0,
+    3,
+    9
+   ],
+   "quat": [
+    -0.15024,
+    0,
+    0,
+    0.98865
+   ],
+   "euler": [
+    -17.2815,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Camera",
+     "projection": 1,
+     "fov": 44,
+     "fovAxis": 1,
+     "near": 0.1,
+     "far": 120,
+     "clearFlags": 7,
+     "clearColor": [
+      26,
+      4,
+      10,
+      255
+     ],
+     "priority": 0,
+     "visibility": 1073741824
+    }
+   ]
+  },
+  {
+   "path": "Lights",
+   "children": [
+    "KeyLight",
+    "RimRed",
+    "PlayerSpot"
+   ],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": []
+  },
+  {
+   "path": "Lights/KeyLight",
+   "children": [],
+   "pos": [
+    -4,
+    8,
+    8
+   ],
+   "quat": [
+    -0.34728,
+    -0.21463,
+    -0.08198,
+    0.90918
+   ],
+   "euler": [
+    -41.8103,
+    -26.5651,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.DirectionalLight",
+     "color": [
+      255,
+      244,
+      232,
+      255
+     ],
+     "illuminanceHDR": 60000,
+     "illuminance": 60000,
+     "shadowEnabled": false
+    }
+   ]
+  },
+  {
+   "path": "Lights/RimRed",
+   "children": [],
+   "pos": [
+    2.75,
+    2.8,
+    -4.4
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.SphereLight",
+     "color": [
+      255,
+      40,
+      60,
+      255
+     ],
+     "luminanceHDR": 12000,
+     "luminance": 12000,
+     "size": 0.4,
+     "range": 9
+    }
+   ]
+  },
+  {
+   "path": "Lights/PlayerSpot",
+   "children": [],
+   "pos": [
+    -3.15,
+    6.5,
+    5.9
+   ],
+   "quat": [
+    -0.44427,
+    -0.22794,
+    -0.11798,
+    0.85834
+   ],
+   "euler": [
+    -54.7315,
+    -29.7449,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.SpotLight",
+     "color": [
+      255,
+      250,
+      235,
+      255
+     ],
+     "luminanceHDR": 16000,
+     "luminance": 16000,
+     "size": 0.3,
+     "range": 16,
+     "spotAngle": 38
+    }
+   ]
+  },
+  {
+   "path": "Ground",
+   "children": [
+    "Floor",
+    "Stripes",
+    "EnemyPad",
+    "EnemyPadInk",
+    "EnemyPadCore",
+    "PlayerPad",
+    "PlayerPadInk",
+    "PlayerPadCore"
+   ],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": []
+  },
+  {
+   "path": "Ground/Floor",
+   "children": [],
+   "pos": [
+    0,
+    -0.05,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    32,
+    0.05,
+    32
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@8abdc",
+     "materials": [
+      {
+       "uuid": "3fe896fe-dd99-4cf4-a31d-b5ec387afc72",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        10,
+        10,
+        10,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -1,
+       -0.5
+      ],
+      [
+       0.5,
+       1,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Ground/Stripes",
+   "children": [
+    "Stripe0",
+    "Stripe1",
+    "Stripe2",
+    "Stripe3",
+    "Stripe4",
+    "Stripe5",
+    "Stripe6"
+   ],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": []
+  },
+  {
+   "path": "Ground/Stripes/Stripe0",
+   "children": [],
+   "pos": [
+    0,
+    0.012,
+    -1
+   ],
+   "quat": [
+    0,
+    0.10453,
+    0,
+    0.99452
+   ],
+   "euler": [
+    0,
+    12,
+    0
+   ],
+   "scale": [
+    0.9,
+    0.01,
+    30
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "9087ab13-63df-4ffd-8307-73fc0956a81c",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        230,
+        0,
+        18,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Ground/Stripes/Stripe1",
+   "children": [],
+   "pos": [
+    0,
+    0.013,
+    -1
+   ],
+   "quat": [
+    0,
+    0.29237,
+    0,
+    0.9563
+   ],
+   "euler": [
+    0,
+    34,
+    0
+   ],
+   "scale": [
+    0.25,
+    0.01,
+    30
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "cbd6b534-91ac-471b-a54d-8b40224947f8",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        240,
+        232,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Ground/Stripes/Stripe2",
+   "children": [],
+   "pos": [
+    0,
+    0.014,
+    -1
+   ],
+   "quat": [
+    0,
+    0.48481,
+    0,
+    0.87462
+   ],
+   "euler": [
+    0,
+    58,
+    0
+   ],
+   "scale": [
+    0.5,
+    0.01,
+    30
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "9087ab13-63df-4ffd-8307-73fc0956a81c",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        230,
+        0,
+        18,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Ground/Stripes/Stripe3",
+   "children": [],
+   "pos": [
+    0,
+    0.015,
+    -1
+   ],
+   "quat": [
+    0,
+    -0.15643,
+    0,
+    0.98769
+   ],
+   "euler": [
+    0,
+    -18,
+    0
+   ],
+   "scale": [
+    0.18,
+    0.01,
+    30
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "cbd6b534-91ac-471b-a54d-8b40224947f8",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        240,
+        232,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Ground/Stripes/Stripe4",
+   "children": [],
+   "pos": [
+    0,
+    0.016,
+    -1
+   ],
+   "quat": [
+    0,
+    -0.34202,
+    0,
+    0.93969
+   ],
+   "euler": [
+    0,
+    -40,
+    0
+   ],
+   "scale": [
+    0.7,
+    0.01,
+    30
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "9087ab13-63df-4ffd-8307-73fc0956a81c",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        230,
+        0,
+        18,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Ground/Stripes/Stripe5",
+   "children": [],
+   "pos": [
+    0,
+    0.017,
+    -1
+   ],
+   "quat": [
+    0,
+    0.65606,
+    0,
+    0.75471
+   ],
+   "euler": [
+    0,
+    82,
+    0
+   ],
+   "scale": [
+    0.3,
+    0.01,
+    30
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "cbd6b534-91ac-471b-a54d-8b40224947f8",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        240,
+        232,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Ground/Stripes/Stripe6",
+   "children": [],
+   "pos": [
+    0,
+    0.018,
+    -1
+   ],
+   "quat": [
+    0,
+    -0.52992,
+    0,
+    0.84805
+   ],
+   "euler": [
+    0,
+    -64,
+    0
+   ],
+   "scale": [
+    0.35,
+    0.01,
+    30
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "9087ab13-63df-4ffd-8307-73fc0956a81c",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        230,
+        0,
+        18,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Ground/EnemyPad",
+   "children": [],
+   "pos": [
+    1.25,
+    0.03,
+    -2.2
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    3.1,
+    0.03,
+    3.1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@8abdc",
+     "materials": [
+      {
+       "uuid": "9087ab13-63df-4ffd-8307-73fc0956a81c",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        230,
+        0,
+        18,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -1,
+       -0.5
+      ],
+      [
+       0.5,
+       1,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Ground/EnemyPadInk",
+   "children": [],
+   "pos": [
+    1.25,
+    0.035,
+    -2.2
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    2.6,
+    0.035,
+    2.6
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@8abdc",
+     "materials": [
+      {
+       "uuid": "3fe896fe-dd99-4cf4-a31d-b5ec387afc72",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        10,
+        10,
+        10,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -1,
+       -0.5
+      ],
+      [
+       0.5,
+       1,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Ground/EnemyPadCore",
+   "children": [],
+   "pos": [
+    1.25,
+    0.04,
+    -2.2
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    2.24,
+    0.04,
+    2.24
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@8abdc",
+     "materials": [
+      {
+       "uuid": "9087ab13-63df-4ffd-8307-73fc0956a81c",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        230,
+        0,
+        18,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -1,
+       -0.5
+      ],
+      [
+       0.5,
+       1,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Ground/PlayerPad",
+   "children": [],
+   "pos": [
+    -1.15,
+    0.03,
+    2.4
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    2.9,
+    0.03,
+    2.9
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@8abdc",
+     "materials": [
+      {
+       "uuid": "cbd6b534-91ac-471b-a54d-8b40224947f8",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        240,
+        232,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -1,
+       -0.5
+      ],
+      [
+       0.5,
+       1,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Ground/PlayerPadInk",
+   "children": [],
+   "pos": [
+    -1.15,
+    0.035,
+    2.4
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    2.44,
+    0.035,
+    2.44
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@8abdc",
+     "materials": [
+      {
+       "uuid": "3fe896fe-dd99-4cf4-a31d-b5ec387afc72",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        10,
+        10,
+        10,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -1,
+       -0.5
+      ],
+      [
+       0.5,
+       1,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Ground/PlayerPadCore",
+   "children": [],
+   "pos": [
+    -1.15,
+    0.04,
+    2.4
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    2.1,
+    0.04,
+    2.1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@8abdc",
+     "materials": [
+      {
+       "uuid": "cbd6b534-91ac-471b-a54d-8b40224947f8",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        240,
+        232,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -1,
+       -0.5
+      ],
+      [
+       0.5,
+       1,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop",
+   "children": [
+    "Wall",
+    "Slash0",
+    "Slash1",
+    "Slash2",
+    "Slash3",
+    "Starburst",
+    "Moon",
+    "City",
+    "SpikeL",
+    "SpikeR"
+   ],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": []
+  },
+  {
+   "path": "Backdrop/Wall",
+   "children": [],
+   "pos": [
+    0,
+    9,
+    -15
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    60,
+    26,
+    0.2
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "9087ab13-63df-4ffd-8307-73fc0956a81c",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        230,
+        0,
+        18,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/Slash0",
+   "children": [],
+   "pos": [
+    0,
+    4.5,
+    -14.8
+   ],
+   "quat": [
+    0,
+    0,
+    0.13917,
+    0.99027
+   ],
+   "euler": [
+    0,
+    0,
+    16
+   ],
+   "scale": [
+    70,
+    1.4,
+    0.1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "3fe896fe-dd99-4cf4-a31d-b5ec387afc72",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        10,
+        10,
+        10,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/Slash1",
+   "children": [],
+   "pos": [
+    0,
+    10.5,
+    -14.78
+   ],
+   "quat": [
+    0,
+    0,
+    -0.10453,
+    0.99452
+   ],
+   "euler": [
+    0,
+    0,
+    -12
+   ],
+   "scale": [
+    70,
+    2.2,
+    0.1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "3fe896fe-dd99-4cf4-a31d-b5ec387afc72",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        10,
+        10,
+        10,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/Slash2",
+   "children": [],
+   "pos": [
+    0,
+    7.4,
+    -14.76
+   ],
+   "quat": [
+    0,
+    0,
+    0.13917,
+    0.99027
+   ],
+   "euler": [
+    0,
+    0,
+    16
+   ],
+   "scale": [
+    70,
+    0.35,
+    0.1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "cbd6b534-91ac-471b-a54d-8b40224947f8",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        240,
+        232,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/Slash3",
+   "children": [],
+   "pos": [
+    0,
+    13.5,
+    -14.74
+   ],
+   "quat": [
+    0,
+    0,
+    0.07846,
+    0.99692
+   ],
+   "euler": [
+    0,
+    0,
+    9
+   ],
+   "scale": [
+    70,
+    0.6,
+    0.1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "e908ced5-a9c6-4de6-8558-b48454e6b634",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        139,
+        0,
+        0,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/Starburst",
+   "children": [
+    "Ray0",
+    "Ray1",
+    "Ray2",
+    "Ray3",
+    "Ray4",
+    "Ray5",
+    "Ray6",
+    "Ray7"
+   ],
+   "pos": [
+    3.2,
+    6.8,
+    -14.5
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": []
+  },
+  {
+   "path": "Backdrop/Starburst/Ray0",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    16,
+    0.28,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "cbd6b534-91ac-471b-a54d-8b40224947f8",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        240,
+        232,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/Starburst/Ray1",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0.01
+   ],
+   "quat": [
+    0,
+    0,
+    0.19509,
+    0.98079
+   ],
+   "euler": [
+    0,
+    0,
+    22.5
+   ],
+   "scale": [
+    16,
+    0.14,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/Starburst/Ray2",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0.02
+   ],
+   "quat": [
+    0,
+    0,
+    0.38268,
+    0.92388
+   ],
+   "euler": [
+    0,
+    0,
+    45
+   ],
+   "scale": [
+    16,
+    0.28,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "cbd6b534-91ac-471b-a54d-8b40224947f8",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        240,
+        232,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/Starburst/Ray3",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0.03
+   ],
+   "quat": [
+    0,
+    0,
+    0.55557,
+    0.83147
+   ],
+   "euler": [
+    0,
+    0,
+    67.5
+   ],
+   "scale": [
+    16,
+    0.14,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/Starburst/Ray4",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0.04
+   ],
+   "quat": [
+    0,
+    0,
+    0.70711,
+    0.70711
+   ],
+   "euler": [
+    0,
+    0,
+    90
+   ],
+   "scale": [
+    16,
+    0.28,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "cbd6b534-91ac-471b-a54d-8b40224947f8",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        240,
+        232,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/Starburst/Ray5",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0.05
+   ],
+   "quat": [
+    0,
+    0,
+    0.83147,
+    0.55557
+   ],
+   "euler": [
+    0,
+    0,
+    112.5
+   ],
+   "scale": [
+    16,
+    0.14,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/Starburst/Ray6",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0.06
+   ],
+   "quat": [
+    0,
+    0,
+    0.92388,
+    0.38268
+   ],
+   "euler": [
+    0,
+    0,
+    135
+   ],
+   "scale": [
+    16,
+    0.28,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "cbd6b534-91ac-471b-a54d-8b40224947f8",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        240,
+        232,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/Starburst/Ray7",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0.07
+   ],
+   "quat": [
+    0,
+    0,
+    0.98079,
+    0.19509
+   ],
+   "euler": [
+    0,
+    0,
+    157.5
+   ],
+   "scale": [
+    16,
+    0.14,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/Moon",
+   "children": [
+    "Disc",
+    "Bite"
+   ],
+   "pos": [
+    -6.5,
+    12,
+    -14.4
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": []
+  },
+  {
+   "path": "Backdrop/Moon/Disc",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0.70711,
+    0,
+    0,
+    0.70711
+   ],
+   "euler": [
+    90,
+    0,
+    0
+   ],
+   "scale": [
+    6.4,
+    0.05,
+    6.4
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@8abdc",
+     "materials": [
+      {
+       "uuid": "cbd6b534-91ac-471b-a54d-8b40224947f8",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        240,
+        232,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -1,
+       -0.5
+      ],
+      [
+       0.5,
+       1,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/Moon/Bite",
+   "children": [],
+   "pos": [
+    1.2,
+    0.7,
+    0.12
+   ],
+   "quat": [
+    0.70711,
+    0,
+    0,
+    0.70711
+   ],
+   "euler": [
+    90,
+    0,
+    0
+   ],
+   "scale": [
+    5.4,
+    0.05,
+    5.4
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@8abdc",
+     "materials": [
+      {
+       "uuid": "9087ab13-63df-4ffd-8307-73fc0956a81c",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        230,
+        0,
+        18,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -1,
+       -0.5
+      ],
+      [
+       0.5,
+       1,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City",
+   "children": [
+    "Tower0",
+    "Window0_0",
+    "Window0_1",
+    "Tower1",
+    "Tower2",
+    "Window2_0",
+    "Window2_1",
+    "Tower3",
+    "Tower4",
+    "Window4_0",
+    "Window4_1",
+    "Tower5",
+    "Tower6",
+    "Window6_0",
+    "Window6_1",
+    "Tower7",
+    "Tower8",
+    "Window8_0",
+    "Window8_1",
+    "Tower9",
+    "Tower10",
+    "Window10_0",
+    "Window10_1",
+    "Tower11",
+    "Tower12",
+    "Window12_0",
+    "Window12_1",
+    "Tower13"
+   ],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": []
+  },
+  {
+   "path": "Backdrop/City/Tower0",
+   "children": [],
+   "pos": [
+    -16.2,
+    1.6,
+    -11.5
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1.6,
+    3.2,
+    1.2
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "3fe896fe-dd99-4cf4-a31d-b5ec387afc72",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        10,
+        10,
+        10,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Window0_0",
+   "children": [],
+   "pos": [
+    -16.45,
+    1.44,
+    -10.85
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.22,
+    0.32,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Window0_1",
+   "children": [],
+   "pos": [
+    -15.95,
+    2.24,
+    -10.85
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.22,
+    0.32,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Tower1",
+   "children": [],
+   "pos": [
+    -14,
+    2.8,
+    -12.1
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    2.3,
+    5.6,
+    1.2
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "3fe896fe-dd99-4cf4-a31d-b5ec387afc72",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        10,
+        10,
+        10,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Tower2",
+   "children": [],
+   "pos": [
+    -11.1,
+    1.2,
+    -12.7
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    3,
+    2.4,
+    1.2
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "3fe896fe-dd99-4cf4-a31d-b5ec387afc72",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        10,
+        10,
+        10,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Window2_0",
+   "children": [],
+   "pos": [
+    -11.35,
+    1.08,
+    -12.05
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.22,
+    0.32,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Window2_1",
+   "children": [],
+   "pos": [
+    -10.85,
+    1.68,
+    -12.05
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.22,
+    0.32,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Tower3",
+   "children": [],
+   "pos": [
+    -8.375,
+    3.5,
+    -11.5
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1.95,
+    7,
+    1.2
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "3fe896fe-dd99-4cf4-a31d-b5ec387afc72",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        10,
+        10,
+        10,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Tower4",
+   "children": [],
+   "pos": [
+    -5.825,
+    2.05,
+    -12.1
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    2.65,
+    4.1,
+    1.2
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "3fe896fe-dd99-4cf4-a31d-b5ec387afc72",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        10,
+        10,
+        10,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Window4_0",
+   "children": [],
+   "pos": [
+    -6.075,
+    1.845,
+    -11.45
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.22,
+    0.32,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Window4_1",
+   "children": [],
+   "pos": [
+    -5.575,
+    2.87,
+    -11.45
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.22,
+    0.32,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Tower5",
+   "children": [],
+   "pos": [
+    -3.45,
+    1.4,
+    -12.7
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1.6,
+    2.8,
+    1.2
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "3fe896fe-dd99-4cf4-a31d-b5ec387afc72",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        10,
+        10,
+        10,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Tower6",
+   "children": [],
+   "pos": [
+    -1.25,
+    3.1,
+    -11.5
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    2.3,
+    6.2,
+    1.2
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "3fe896fe-dd99-4cf4-a31d-b5ec387afc72",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        10,
+        10,
+        10,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Window6_0",
+   "children": [],
+   "pos": [
+    -1.5,
+    2.79,
+    -10.85
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.22,
+    0.32,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Window6_1",
+   "children": [],
+   "pos": [
+    -1,
+    4.34,
+    -10.85
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.22,
+    0.32,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Tower7",
+   "children": [],
+   "pos": [
+    1.65,
+    1.8,
+    -12.1
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    3,
+    3.6,
+    1.2
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "3fe896fe-dd99-4cf4-a31d-b5ec387afc72",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        10,
+        10,
+        10,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Tower8",
+   "children": [],
+   "pos": [
+    4.375,
+    4.2,
+    -12.7
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1.95,
+    8.4,
+    1.2
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "3fe896fe-dd99-4cf4-a31d-b5ec387afc72",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        10,
+        10,
+        10,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Window8_0",
+   "children": [],
+   "pos": [
+    4.125,
+    3.78,
+    -12.05
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.22,
+    0.32,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Window8_1",
+   "children": [],
+   "pos": [
+    4.625,
+    5.88,
+    -12.05
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.22,
+    0.32,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Tower9",
+   "children": [],
+   "pos": [
+    6.925,
+    1.3,
+    -11.5
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    2.65,
+    2.6,
+    1.2
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "3fe896fe-dd99-4cf4-a31d-b5ec387afc72",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        10,
+        10,
+        10,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Tower10",
+   "children": [],
+   "pos": [
+    9.3,
+    2.5,
+    -12.1
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1.6,
+    5,
+    1.2
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "3fe896fe-dd99-4cf4-a31d-b5ec387afc72",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        10,
+        10,
+        10,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Window10_0",
+   "children": [],
+   "pos": [
+    9.05,
+    2.25,
+    -11.45
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.22,
+    0.32,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Window10_1",
+   "children": [],
+   "pos": [
+    9.55,
+    3.5,
+    -11.45
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.22,
+    0.32,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Tower11",
+   "children": [],
+   "pos": [
+    11.5,
+    1.5,
+    -12.7
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    2.3,
+    3,
+    1.2
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "3fe896fe-dd99-4cf4-a31d-b5ec387afc72",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        10,
+        10,
+        10,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Tower12",
+   "children": [],
+   "pos": [
+    14.4,
+    3.4,
+    -11.5
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    3,
+    6.8,
+    1.2
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "3fe896fe-dd99-4cf4-a31d-b5ec387afc72",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        10,
+        10,
+        10,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Window12_0",
+   "children": [],
+   "pos": [
+    14.15,
+    3.06,
+    -10.85
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.22,
+    0.32,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Window12_1",
+   "children": [],
+   "pos": [
+    14.65,
+    4.76,
+    -10.85
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.22,
+    0.32,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/City/Tower13",
+   "children": [],
+   "pos": [
+    17.125,
+    2.2,
+    -12.1
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1.95,
+    4.4,
+    1.2
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "3fe896fe-dd99-4cf4-a31d-b5ec387afc72",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        10,
+        10,
+        10,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/SpikeL",
+   "children": [],
+   "pos": [
+    -7.5,
+    0,
+    -6
+   ],
+   "quat": [
+    0,
+    0,
+    -0.06976,
+    0.99756
+   ],
+   "euler": [
+    0,
+    0,
+    -8
+   ],
+   "scale": [
+    3,
+    9,
+    3
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@38fd2",
+     "materials": [
+      {
+       "uuid": "3fe896fe-dd99-4cf4-a31d-b5ec387afc72",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        10,
+        10,
+        10,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Backdrop/SpikeR",
+   "children": [],
+   "pos": [
+    8,
+    0,
+    -7
+   ],
+   "quat": [
+    0,
+    0,
+    0.08716,
+    0.99619
+   ],
+   "euler": [
+    0,
+    0,
+    10
+   ],
+   "scale": [
+    3.6,
+    11,
+    3.6
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@38fd2",
+     "materials": [
+      {
+       "uuid": "3fe896fe-dd99-4cf4-a31d-b5ec387afc72",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        10,
+        10,
+        10,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "PlayerAnchor",
+   "children": [
+    "Shadow",
+    "Model",
+    "FxPoint"
+   ],
+   "pos": [
+    -1.15,
+    0,
+    2.4
+   ],
+   "quat": [
+    0,
+    0.38268,
+    0,
+    0.92388
+   ],
+   "euler": [
+    0,
+    45,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": []
+  },
+  {
+   "path": "PlayerAnchor/Shadow",
+   "children": [],
+   "pos": [
+    0,
+    0.09,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1.104,
+    0.01,
+    1.104
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@8abdc",
+     "materials": [
+      {
+       "uuid": "7297e1d8-f1eb-43ef-9c0d-0464f99654a0",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        34,
+        30,
+        32,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -1,
+       -0.5
+      ],
+      [
+       0.5,
+       1,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "PlayerAnchor/Model",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1.15,
+    1.15,
+    1.15
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": []
+  },
+  {
+   "path": "PlayerAnchor/FxPoint",
+   "children": [],
+   "pos": [
+    0,
+    1.15,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": []
+  },
+  {
+   "path": "EnemyAnchor",
+   "children": [
+    "Shadow",
+    "Model",
+    "FxPoint"
+   ],
+   "pos": [
+    1.25,
+    0,
+    -2.2
+   ],
+   "quat": [
+    0,
+    -0.23814,
+    0,
+    0.97123
+   ],
+   "euler": [
+    0,
+    -27.553,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": []
+  },
+  {
+   "path": "EnemyAnchor/Shadow",
+   "children": [],
+   "pos": [
+    0,
+    0.09,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1.44,
+    0.01,
+    1.44
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@8abdc",
+     "materials": [
+      {
+       "uuid": "7297e1d8-f1eb-43ef-9c0d-0464f99654a0",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        34,
+        30,
+        32,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -1,
+       -0.5
+      ],
+      [
+       0.5,
+       1,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "EnemyAnchor/Model",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1.5,
+    1.5,
+    1.5
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": []
+  },
+  {
+   "path": "EnemyAnchor/FxPoint",
+   "children": [],
+   "pos": [
+    0,
+    1.5,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": []
+  },
+  {
+   "path": "Fx",
+   "children": [
+    "HitBurst",
+    "Slash",
+    "Fireball",
+    "CallingCard",
+    "ShockRing",
+    "HealRing"
+   ],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": []
+  },
+  {
+   "path": "Fx/HitBurst",
+   "children": [
+    "Spike0",
+    "Spike1",
+    "Spike2",
+    "Spike3",
+    "Spike4",
+    "Spike5",
+    "Spike6",
+    "Spike7",
+    "Core"
+   ],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 1073741824,
+   "active": false,
+   "comps": []
+  },
+  {
+   "path": "Fx/HitBurst/Spike0",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1.6,
+    0.16,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "cbd6b534-91ac-471b-a54d-8b40224947f8",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        240,
+        232,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Fx/HitBurst/Spike1",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0.01
+   ],
+   "quat": [
+    0,
+    0,
+    0.38268,
+    0.92388
+   ],
+   "euler": [
+    0,
+    0,
+    45
+   ],
+   "scale": [
+    1,
+    0.16,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Fx/HitBurst/Spike2",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0.02
+   ],
+   "quat": [
+    0,
+    0,
+    0.70711,
+    0.70711
+   ],
+   "euler": [
+    0,
+    0,
+    90
+   ],
+   "scale": [
+    1.6,
+    0.16,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "cbd6b534-91ac-471b-a54d-8b40224947f8",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        240,
+        232,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Fx/HitBurst/Spike3",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0.03
+   ],
+   "quat": [
+    0,
+    0,
+    0.92388,
+    0.38268
+   ],
+   "euler": [
+    0,
+    0,
+    135
+   ],
+   "scale": [
+    1,
+    0.16,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Fx/HitBurst/Spike4",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0.04
+   ],
+   "quat": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "euler": [
+    0,
+    0,
+    180
+   ],
+   "scale": [
+    1.6,
+    0.16,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "cbd6b534-91ac-471b-a54d-8b40224947f8",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        240,
+        232,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Fx/HitBurst/Spike5",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0.05
+   ],
+   "quat": [
+    0,
+    0,
+    0.92388,
+    -0.38268
+   ],
+   "euler": [
+    0,
+    0,
+    225
+   ],
+   "scale": [
+    1,
+    0.16,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Fx/HitBurst/Spike6",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0.06
+   ],
+   "quat": [
+    0,
+    0,
+    0.70711,
+    -0.70711
+   ],
+   "euler": [
+    0,
+    0,
+    270
+   ],
+   "scale": [
+    1.6,
+    0.16,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "cbd6b534-91ac-471b-a54d-8b40224947f8",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        240,
+        232,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Fx/HitBurst/Spike7",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0.07
+   ],
+   "quat": [
+    0,
+    0,
+    0.38268,
+    -0.92388
+   ],
+   "euler": [
+    0,
+    0,
+    315
+   ],
+   "scale": [
+    1,
+    0.16,
+    0.05
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Fx/HitBurst/Core",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.55,
+    0.55,
+    0.55
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@17020",
+     "materials": [
+      {
+       "uuid": "cbd6b534-91ac-471b-a54d-8b40224947f8",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        240,
+        232,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.4975,
+       -0.5,
+       -0.499
+      ],
+      [
+       0.4995,
+       0.5,
+       0.499
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Fx/Slash",
+   "children": [
+    "Blade",
+    "Edge"
+   ],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 1073741824,
+   "active": false,
+   "comps": []
+  },
+  {
+   "path": "Fx/Slash/Blade",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    3.2,
+    0.12,
+    0.04
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "cbd6b534-91ac-471b-a54d-8b40224947f8",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        240,
+        232,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Fx/Slash/Edge",
+   "children": [],
+   "pos": [
+    0,
+    -0.1,
+    -0.01
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    3,
+    0.08,
+    0.03
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "9087ab13-63df-4ffd-8307-73fc0956a81c",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        230,
+        0,
+        18,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Fx/Fireball",
+   "children": [
+    "Outer",
+    "Inner"
+   ],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 1073741824,
+   "active": false,
+   "comps": []
+  },
+  {
+   "path": "Fx/Fireball/Outer",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.7,
+    0.7,
+    0.7
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@17020",
+     "materials": [
+      {
+       "uuid": "e6f52c4d-0c74-4546-a0d8-b6f14c3537b1",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        255,
+        107,
+        107,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.4975,
+       -0.5,
+       -0.499
+      ],
+      [
+       0.4995,
+       0.5,
+       0.499
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Fx/Fireball/Inner",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.42,
+    0.42,
+    0.42
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@17020",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.4975,
+       -0.5,
+       -0.499
+      ],
+      [
+       0.4995,
+       0.5,
+       0.499
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Fx/CallingCard",
+   "children": [
+    "Face",
+    "Ink",
+    "Mark",
+    "Stripe"
+   ],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 1073741824,
+   "active": false,
+   "comps": []
+  },
+  {
+   "path": "Fx/CallingCard/Face",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.9,
+    1.3,
+    0.04
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "cbd6b534-91ac-471b-a54d-8b40224947f8",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        240,
+        232,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Fx/CallingCard/Ink",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0.025
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.74,
+    1.14,
+    0.01
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "3fe896fe-dd99-4cf4-a31d-b5ec387afc72",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        10,
+        10,
+        10,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Fx/CallingCard/Mark",
+   "children": [],
+   "pos": [
+    0,
+    0.05,
+    0.035
+   ],
+   "quat": [
+    0,
+    0,
+    0.38268,
+    0.92388
+   ],
+   "euler": [
+    0,
+    0,
+    45
+   ],
+   "scale": [
+    0.42,
+    0.42,
+    0.01
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "9087ab13-63df-4ffd-8307-73fc0956a81c",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        230,
+        0,
+        18,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Fx/CallingCard/Stripe",
+   "children": [],
+   "pos": [
+    0,
+    -0.42,
+    0.035
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.74,
+    0.1,
+    0.01
+   ],
+   "layer": 1073741824,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@a804a",
+     "materials": [
+      {
+       "uuid": "9087ab13-63df-4ffd-8307-73fc0956a81c",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        230,
+        0,
+        18,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.5,
+       -0.5
+      ],
+      [
+       0.5,
+       0.5,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Fx/ShockRing",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    0.2,
+    1
+   ],
+   "layer": 1073741824,
+   "active": false,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@40ece",
+     "materials": [
+      {
+       "uuid": "9087ab13-63df-4ffd-8307-73fc0956a81c",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        230,
+        0,
+        18,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.1,
+       -0.5
+      ],
+      [
+       0.5,
+       0.1,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  },
+  {
+   "path": "Fx/HealRing",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    0.2,
+    1
+   ],
+   "layer": 1073741824,
+   "active": false,
+   "comps": [
+    {
+     "type": "cc.MeshRenderer",
+     "mesh": "1263d74c-8167-4928-91a6-4e2672411f47@40ece",
+     "materials": [
+      {
+       "uuid": "b711d460-f936-4607-8400-e5e33bfeea10",
+       "effect": "builtin-unlit",
+       "mainColor": [
+        245,
+        215,
+        110,
+        255
+       ]
+      }
+     ],
+     "meshBounds": [
+      [
+       -0.5,
+       -0.1,
+       -0.5
+      ],
+      [
+       0.5,
+       0.1,
+       0.5
+      ]
+     ],
+     "shadowCasting": 0
+    }
+   ]
+  }
+ ],
+ "errors": []
+}

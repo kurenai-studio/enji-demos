@@ -1,0 +1,1970 @@
+{
+ "harness": {
+  "ok": true,
+  "name": "BagDialog"
+ },
+ "nodeCount": 38,
+ "rows": [
+  {
+   "path": "",
+   "children": [
+    "Dim",
+    "bag_dialog"
+   ],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.5,
+    0.5,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.UIOpacity",
+     "opacity": 255
+    }
+   ],
+   "ui": {
+    "w": 1440,
+    "h": 2560,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "Dim",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "ce64358b-f6fe-413d-abd3-b8a5ba8203f8@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      0,
+      0,
+      0,
+      170
+     ],
+     "frameSize": [
+      16,
+      16
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "type": "cc.BlockInputEvents"
+    }
+   ],
+   "ui": {
+    "w": 1440,
+    "h": 2560,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog",
+   "children": [
+    "dlg_body",
+    "title_wedge",
+    "item_list",
+    "title_panel",
+    "hazard_band",
+    "bag_hint",
+    "bag_close",
+    "spike_tl",
+    "spike_br"
+   ],
+   "pos": [
+    0,
+    40,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Widget",
+     "alignFlags": 18,
+     "top": 0,
+     "bottom": 0,
+     "left": 0,
+     "right": 0,
+     "alignMode": 2
+    }
+   ],
+   "ui": {
+    "w": 1200,
+    "h": 1280,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/dlg_body",
+   "children": [],
+   "pos": [
+    0,
+    12,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "f6360252-4d4d-4707-adff-31367ece720b@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      1170,
+      1196
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 1176,
+    "h": 1200,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/title_wedge",
+   "children": [],
+   "pos": [
+    -164,
+    456,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "1812fb49-27dd-449e-b1e5-4e7f0aa43da2@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      712,
+      180
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 720,
+    "h": 184,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list",
+   "children": [
+    "item_row_0",
+    "item_row_1"
+   ],
+   "pos": [
+    4,
+    -20,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [],
+   "ui": {
+    "w": 1064,
+    "h": 520,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list/item_row_0",
+   "children": [
+    "item_row_0_panel",
+    "item_name_0",
+    "item_count_0",
+    "item_desc_0",
+    "item_use_0"
+   ],
+   "pos": [
+    0,
+    140,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [],
+   "ui": {
+    "w": 1064,
+    "h": 240,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list/item_row_0/item_row_0_panel",
+   "children": [],
+   "pos": [
+    -138,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "4a1185c6-e72f-45de-946a-ed0956e56511@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      806,
+      260
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 812,
+    "h": 264,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list/item_row_0/item_name_0",
+   "children": [],
+   "pos": [
+    -360,
+    48,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "伤药",
+     "fontSize": 60,
+     "lineHeight": 72,
+     "color": [
+      17,
+      17,
+      17,
+      255
+     ],
+     "bold": true,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 248,
+    "h": 80,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list/item_row_0/item_count_0",
+   "children": [
+    "item_count_0_chip",
+    "Text"
+   ],
+   "pos": [
+    -136,
+    48,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [],
+   "ui": {
+    "w": 144,
+    "h": 72,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list/item_row_0/item_count_0/item_count_0_chip",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "fce57b5e-ff85-4ee6-8359-376c0cddd681@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      162,
+      92
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 168,
+    "h": 96,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list/item_row_0/item_count_0/Text",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "×3",
+     "fontSize": 44,
+     "lineHeight": 53,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 1,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 144,
+    "h": 72,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list/item_row_0/item_desc_0",
+   "children": [],
+   "pos": [
+    -184,
+    -48,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "回复 30 HP",
+     "fontSize": 44,
+     "lineHeight": 53,
+     "color": [
+      17,
+      17,
+      17,
+      255
+     ],
+     "bold": false,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 600,
+    "h": 64,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list/item_row_0/item_use_0",
+   "children": [
+    "item_use_0_rim",
+    "item_use_0_face",
+    "item_use_0_label"
+   ],
+   "pos": [
+    392,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Button",
+     "target": "bag_dialog/item_list/item_row_0/item_use_0",
+     "transition": 3,
+     "zoomScale": 0.94,
+     "interactable": true
+    }
+   ],
+   "ui": {
+    "w": 280,
+    "h": 144,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list/item_row_0/item_use_0/item_use_0_rim",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "5c652122-778d-40de-9a8e-85f75b8b8885@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      298,
+      164
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 304,
+    "h": 168,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list/item_row_0/item_use_0/item_use_0_face",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "42d066e9-100e-46a6-92ea-14271e060588@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      274,
+      140
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 280,
+    "h": 144,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list/item_row_0/item_use_0/item_use_0_label",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "使用",
+     "fontSize": 56,
+     "lineHeight": 67,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 1,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 200,
+    "h": 72,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list/item_row_1",
+   "children": [
+    "item_row_1_panel",
+    "item_name_1",
+    "item_count_1",
+    "item_desc_1",
+    "item_use_1"
+   ],
+   "pos": [
+    0,
+    -140,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [],
+   "ui": {
+    "w": 1064,
+    "h": 240,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list/item_row_1/item_row_1_panel",
+   "children": [],
+   "pos": [
+    -138,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "4a1185c6-e72f-45de-946a-ed0956e56511@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      806,
+      260
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 812,
+    "h": 264,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list/item_row_1/item_name_1",
+   "children": [],
+   "pos": [
+    -360,
+    48,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "灵露",
+     "fontSize": 60,
+     "lineHeight": 72,
+     "color": [
+      17,
+      17,
+      17,
+      255
+     ],
+     "bold": true,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 248,
+    "h": 80,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list/item_row_1/item_count_1",
+   "children": [
+    "item_count_1_chip",
+    "Text"
+   ],
+   "pos": [
+    -136,
+    48,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [],
+   "ui": {
+    "w": 144,
+    "h": 72,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list/item_row_1/item_count_1/item_count_1_chip",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "fce57b5e-ff85-4ee6-8359-376c0cddd681@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      162,
+      92
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 168,
+    "h": 96,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list/item_row_1/item_count_1/Text",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "×2",
+     "fontSize": 44,
+     "lineHeight": 53,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 1,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 144,
+    "h": 72,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list/item_row_1/item_desc_1",
+   "children": [],
+   "pos": [
+    -184,
+    -48,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "回复 10 MP",
+     "fontSize": 44,
+     "lineHeight": 53,
+     "color": [
+      17,
+      17,
+      17,
+      255
+     ],
+     "bold": false,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 600,
+    "h": 64,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list/item_row_1/item_use_1",
+   "children": [
+    "item_use_1_rim",
+    "item_use_1_face",
+    "item_use_1_label"
+   ],
+   "pos": [
+    392,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Button",
+     "target": "bag_dialog/item_list/item_row_1/item_use_1",
+     "transition": 3,
+     "zoomScale": 0.94,
+     "interactable": true
+    }
+   ],
+   "ui": {
+    "w": 280,
+    "h": 144,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list/item_row_1/item_use_1/item_use_1_rim",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "5c652122-778d-40de-9a8e-85f75b8b8885@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      298,
+      164
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 304,
+    "h": 168,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list/item_row_1/item_use_1/item_use_1_face",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "42d066e9-100e-46a6-92ea-14271e060588@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      274,
+      140
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 280,
+    "h": 144,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/item_list/item_row_1/item_use_1/item_use_1_label",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "使用",
+     "fontSize": 56,
+     "lineHeight": 67,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 1,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 200,
+    "h": 72,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/title_panel",
+   "children": [
+    "bag_title"
+   ],
+   "pos": [
+    -204,
+    480,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "c8022f2b-e0ab-4d31-b68e-d5975ac476b0@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      666,
+      180
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 672,
+    "h": 184,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/title_panel/bag_title",
+   "children": [],
+   "pos": [
+    -136,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "道具袋",
+     "fontSize": 88,
+     "lineHeight": 106,
+     "color": [
+      17,
+      17,
+      17,
+      255
+     ],
+     "bold": true,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 280,
+    "h": 112,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/hazard_band",
+   "children": [],
+   "pos": [
+    0,
+    292,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "5b17ff72-8ff5-446f-8907-4684e5e86f39@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      1170,
+      44
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 1176,
+    "h": 48,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/bag_hint",
+   "children": [],
+   "pos": [
+    -300,
+    350,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "选择要使用的道具",
+     "fontSize": 40,
+     "lineHeight": 48,
+     "color": [
+      154,
+      154,
+      154,
+      255
+     ],
+     "bold": false,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 360,
+    "h": 52,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/bag_close",
+   "children": [
+    "bag_close_rim",
+    "bag_close_face",
+    "bag_close_label"
+   ],
+   "pos": [
+    0,
+    -440,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Button",
+     "target": "bag_dialog/bag_close",
+     "transition": 3,
+     "zoomScale": 0.94,
+     "interactable": true
+    }
+   ],
+   "ui": {
+    "w": 480,
+    "h": 128,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/bag_close/bag_close_rim",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "4f7d91c0-667e-4b49-a535-472be7ac88e1@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      498,
+      148
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 504,
+    "h": 152,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/bag_close/bag_close_face",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "3371972e-87cc-49b1-9988-181b8ef4eefd@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      478,
+      128
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 484,
+    "h": 132,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/bag_close/bag_close_label",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "关闭",
+     "fontSize": 52,
+     "lineHeight": 62,
+     "color": [
+      17,
+      17,
+      17,
+      255
+     ],
+     "bold": true,
+     "hAlign": 1,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 320,
+    "h": 68,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/spike_tl",
+   "children": [],
+   "pos": [
+    -520,
+    544,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "8dcc4528-16c7-41fb-9989-9e5459293de4@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      177,
+      178
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 184,
+    "h": 184,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bag_dialog/spike_br",
+   "children": [],
+   "pos": [
+    520,
+    -520,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "8d713dc7-f41c-4093-b9d2-dc6601f1c036@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      176,
+      177
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 184,
+    "h": 184,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  }
+ ],
+ "errors": []
+}

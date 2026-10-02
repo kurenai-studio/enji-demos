@@ -1,0 +1,47 @@
+{
+    "engine": {
+        "configs": {
+            "defaultConfig": {
+                "name": "Default Config",
+                "includeModules": [
+                    "2d",
+                    "3d",
+                    "affine-transform",
+                    "animation",
+                    "audio",
+                    "base",
+                    "custom-pipeline",
+                    "gfx-webgl",
+                    "gfx-webgl2",
+                    "graphics",
+                    "intersection-2d",
+                    "mask",
+                    "particle-2d",
+                    "physics-2d-box2d",
+                    "primitive",
+                    "profiler",
+                    "rich-text",
+                    "tween",
+                    "ui"
+                ],
+                "noDeprecatedFeatures": {
+                    "value": false,
+                    "version": ""
+                },
+                "flags": {}
+            }
+        },
+        "globalConfigKey": "defaultConfig",
+        "designResolution": {
+            "width": 720,
+            "height": 1280,
+            "fitWidth": true,
+            "fitHeight": false
+        }
+    },
+    "script": {
+        "preserveSymlinks": true
+    },
+    "version": "1.0.0",
+    "$schema": "../temp/cocos.config.schema.json"
+}

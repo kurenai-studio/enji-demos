@@ -1,0 +1,97 @@
+{
+ "ink_plate": {
+  "aspect": "16:9",
+  "bg": "magenta",
+  "refs": [
+   "/Users/shinjiyu/Documents/sub-private/enji-demos/phantom-pocket-3d/ui-work/battle/prod/atlas/ink_plate_ref.png",
+   "/Users/shinjiyu/Documents/sub-private/enji-demos/phantom-pocket-3d/ui-work/battle/prod/atlas/ink_plate_style.png"
+  ],
+  "prompt": "/Users/shinjiyu/Documents/sub-private/enji-demos/phantom-pocket-3d/ui-work/battle/prod/atlas/ink_plate_prompt.txt",
+  "textures": [
+   "ink_plate"
+  ],
+  "candidates": 3
+ },
+ "comic_panel": {
+  "aspect": "16:9",
+  "bg": "magenta",
+  "refs": [
+   "/Users/shinjiyu/Documents/sub-private/enji-demos/phantom-pocket-3d/ui-work/battle/prod/atlas/comic_panel_ref.png",
+   "/Users/shinjiyu/Documents/sub-private/enji-demos/phantom-pocket-3d/ui-work/battle/prod/atlas/comic_panel_style.png"
+  ],
+  "prompt": "/Users/shinjiyu/Documents/sub-private/enji-demos/phantom-pocket-3d/ui-work/battle/prod/atlas/comic_panel_prompt.txt",
+  "textures": [
+   "comic_panel"
+  ],
+  "candidates": 3
+ },
+ "button_1": {
+  "aspect": "1:1",
+  "bg": "magenta",
+  "refs": [
+   "/Users/shinjiyu/Documents/sub-private/enji-demos/phantom-pocket-3d/ui-work/battle/prod/atlas/button_1_ref.png",
+   "/Users/shinjiyu/Documents/sub-private/enji-demos/phantom-pocket-3d/ui-work/battle/prod/atlas/button_1_style.png"
+  ],
+  "prompt": "/Users/shinjiyu/Documents/sub-private/enji-demos/phantom-pocket-3d/ui-work/battle/prod/atlas/button_1_prompt.txt",
+  "textures": [
+   "skill_rim",
+   "skill_face",
+   "util_rim"
+  ],
+  "candidates": 2
+ },
+ "button_2": {
+  "aspect": "1:1",
+  "bg": "magenta",
+  "refs": [
+   "/Users/shinjiyu/Documents/sub-private/enji-demos/phantom-pocket-3d/ui-work/battle/prod/atlas/button_2_ref.png",
+   "/Users/shinjiyu/Documents/sub-private/enji-demos/phantom-pocket-3d/ui-work/battle/prod/atlas/button_2_style.png"
+  ],
+  "prompt": "/Users/shinjiyu/Documents/sub-private/enji-demos/phantom-pocket-3d/ui-work/battle/prod/atlas/button_2_prompt.txt",
+  "textures": [
+   "util_face"
+  ],
+  "candidates": 2
+ },
+ "deco_1": {
+  "aspect": "1:1",
+  "bg": "magenta",
+  "refs": [
+   "/Users/shinjiyu/Documents/sub-private/enji-demos/phantom-pocket-3d/ui-work/battle/prod/atlas/deco_1_ref.png",
+   "/Users/shinjiyu/Documents/sub-private/enji-demos/phantom-pocket-3d/ui-work/battle/prod/atlas/deco_1_style.png"
+  ],
+  "prompt": "/Users/shinjiyu/Documents/sub-private/enji-demos/phantom-pocket-3d/ui-work/battle/prod/atlas/deco_1_prompt.txt",
+  "textures": [
+   "hazard_stripe",
+   "slash_wedge",
+   "spike_tri"
+  ],
+  "candidates": 2
+ },
+ "frame_1": {
+  "aspect": "1:1",
+  "bg": "magenta",
+  "refs": [
+   "/Users/shinjiyu/Documents/sub-private/enji-demos/phantom-pocket-3d/ui-work/battle/prod/atlas/frame_1_ref.png",
+   "/Users/shinjiyu/Documents/sub-private/enji-demos/phantom-pocket-3d/ui-work/battle/prod/atlas/frame_1_style.png"
+  ],
+  "prompt": "/Users/shinjiyu/Documents/sub-private/enji-demos/phantom-pocket-3d/ui-work/battle/prod/atlas/frame_1_prompt.txt",
+  "textures": [
+   "lv_chip"
+  ],
+  "candidates": 2
+ },
+ "meter_1": {
+  "aspect": "1:1",
+  "bg": "magenta",
+  "refs": [
+   "/Users/shinjiyu/Documents/sub-private/enji-demos/phantom-pocket-3d/ui-work/battle/prod/atlas/meter_1_ref.png",
+   "/Users/shinjiyu/Documents/sub-private/enji-demos/phantom-pocket-3d/ui-work/battle/prod/atlas/meter_1_style.png"
+  ],
+  "prompt": "/Users/shinjiyu/Documents/sub-private/enji-demos/phantom-pocket-3d/ui-work/battle/prod/atlas/meter_1_prompt.txt",
+  "textures": [
+   "bar_track"
+  ],
+  "candidates": 2
+ }
+}

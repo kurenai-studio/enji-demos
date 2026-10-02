@@ -1,0 +1,9 @@
+{
+  "name": "phantom-pocket-3d-tools",
+  "private": true,
+  "type": "module",
+  "description": "Headless verification scripts (outside assets/).",
+  "dependencies": {
+    "playwright-core": "1.49.1"
+  }
+}

@@ -1,0 +1,539 @@
+{
+  "ver": "2.3.14",
+  "importer": "gltf",
+  "imported": true,
+  "uuid": "f9a3d07e-ca22-4f50-b84d-a9a1245a702e",
+  "files": [
+    "__original-animation-0.bin",
+    "__original-animation-1.bin",
+    "__original-animation-2.bin",
+    "__original-animation-3.bin",
+    "__original-animation-4.bin",
+    "__original-animation-5.bin",
+    "__original-animation-6.bin",
+    "__original-animation-7.bin"
+  ],
+  "subMetas": {
+    "4c1eb": {
+      "importer": "gltf-mesh",
+      "uuid": "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@4c1eb",
+      "displayName": "",
+      "id": "4c1eb",
+      "name": "leg-back-left.mesh",
+      "userData": {
+        "gltfIndex": 0,
+        "triangleCount": 44
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "5e001": {
+      "importer": "gltf-mesh",
+      "uuid": "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@5e001",
+      "displayName": "",
+      "id": "5e001",
+      "name": "body.mesh",
+      "userData": {
+        "gltfIndex": 1,
+        "triangleCount": 440
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "a22b6": {
+      "importer": "gltf-mesh",
+      "uuid": "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@a22b6",
+      "displayName": "",
+      "id": "a22b6",
+      "name": "Group.mesh",
+      "userData": {
+        "gltfIndex": 2,
+        "triangleCount": 60
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "e0fe2": {
+      "importer": "gltf-mesh",
+      "uuid": "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@e0fe2",
+      "displayName": "",
+      "id": "e0fe2",
+      "name": "leg-front-left.mesh",
+      "userData": {
+        "gltfIndex": 3,
+        "triangleCount": 44
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "d28ff": {
+      "importer": "gltf-mesh",
+      "uuid": "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@d28ff",
+      "displayName": "",
+      "id": "d28ff",
+      "name": "leg-back-right.mesh",
+      "userData": {
+        "gltfIndex": 4,
+        "triangleCount": 44
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "80ef2": {
+      "importer": "gltf-mesh",
+      "uuid": "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@80ef2",
+      "displayName": "",
+      "id": "80ef2",
+      "name": "leg-front-right.mesh",
+      "userData": {
+        "gltfIndex": 5,
+        "triangleCount": 44
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "18b80": {
+      "importer": "gltf-animation",
+      "uuid": "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@18b80",
+      "displayName": "",
+      "id": "18b80",
+      "name": "static.animation",
+      "userData": {
+        "gltfIndex": 0,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 0.10000000149011612
+        },
+        "events": []
+      },
+      "ver": "1.0.16",
+      "imported": true,
+      "files": [
+        ".bin"
+      ],
+      "subMetas": {}
+    },
+    "1f586": {
+      "importer": "gltf-animation",
+      "uuid": "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@1f586",
+      "displayName": "",
+      "id": "1f586",
+      "name": "idle.animation",
+      "userData": {
+        "gltfIndex": 1,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 1
+        },
+        "events": []
+      },
+      "ver": "1.0.16",
+      "imported": true,
+      "files": [
+        ".bin"
+      ],
+      "subMetas": {}
+    },
+    "7f3dc": {
+      "importer": "gltf-animation",
+      "uuid": "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@7f3dc",
+      "displayName": "",
+      "id": "7f3dc",
+      "name": "walk.animation",
+      "userData": {
+        "gltfIndex": 2,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 0.5
+        },
+        "events": []
+      },
+      "ver": "1.0.16",
+      "imported": true,
+      "files": [
+        ".bin"
+      ],
+      "subMetas": {}
+    },
+    "cf5ee": {
+      "importer": "gltf-animation",
+      "uuid": "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@cf5ee",
+      "displayName": "",
+      "id": "cf5ee",
+      "name": "run.animation",
+      "userData": {
+        "gltfIndex": 3,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 0.25
+        },
+        "events": []
+      },
+      "ver": "1.0.16",
+      "imported": true,
+      "files": [
+        ".bin"
+      ],
+      "subMetas": {}
+    },
+    "5fc59": {
+      "importer": "gltf-animation",
+      "uuid": "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@5fc59",
+      "displayName": "",
+      "id": "5fc59",
+      "name": "eat.animation",
+      "userData": {
+        "gltfIndex": 4,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 0.5
+        },
+        "events": []
+      },
+      "ver": "1.0.16",
+      "imported": true,
+      "files": [
+        ".bin"
+      ],
+      "subMetas": {}
+    },
+    "c1b8f": {
+      "importer": "gltf-animation",
+      "uuid": "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@c1b8f",
+      "displayName": "",
+      "id": "c1b8f",
+      "name": "dance.animation",
+      "userData": {
+        "gltfIndex": 5,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 0.5
+        },
+        "events": []
+      },
+      "ver": "1.0.16",
+      "imported": true,
+      "files": [
+        ".bin"
+      ],
+      "subMetas": {}
+    },
+    "b2384": {
+      "importer": "gltf-animation",
+      "uuid": "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@b2384",
+      "displayName": "",
+      "id": "b2384",
+      "name": "gesture-positive.animation",
+      "userData": {
+        "gltfIndex": 6,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 0.25
+        },
+        "events": []
+      },
+      "ver": "1.0.16",
+      "imported": true,
+      "files": [
+        ".bin"
+      ],
+      "subMetas": {}
+    },
+    "2e785": {
+      "importer": "gltf-animation",
+      "uuid": "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@2e785",
+      "displayName": "",
+      "id": "2e785",
+      "name": "gesture-negative.animation",
+      "userData": {
+        "gltfIndex": 7,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 0.25
+        },
+        "events": []
+      },
+      "ver": "1.0.16",
+      "imported": true,
+      "files": [
+        ".bin"
+      ],
+      "subMetas": {}
+    },
+    "96c50": {
+      "importer": "texture",
+      "uuid": "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@96c50",
+      "displayName": "",
+      "id": "96c50",
+      "name": "colormap.texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "linear",
+        "anisotropy": 0,
+        "isUuid": false,
+        "imageUuidOrDatabaseUri": "db://assets/resources/models/pets/Textures/colormap.png"
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "9991c": {
+      "importer": "gltf-material",
+      "uuid": "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@9991c",
+      "displayName": "",
+      "id": "9991c",
+      "name": "colormap.material",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "f8040": {
+      "importer": "gltf-scene",
+      "uuid": "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@f8040",
+      "displayName": "",
+      "id": "f8040",
+      "name": "animal-crab.prefab",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "imageMetas": [
+      {
+        "name": "colormap",
+        "uri": "db://assets/resources/models/pets/Textures/colormap.png"
+      }
+    ],
+    "legacyFbxImporter": false,
+    "allowMeshDataAccess": true,
+    "addVertexColor": false,
+    "generateLightmapUVNode": false,
+    "meshOptimizer": {
+      "enable": false,
+      "algorithm": "simplify",
+      "simplifyOptions": {
+        "targetRatio": 1,
+        "enableSmartLink": true,
+        "agressiveness": 7,
+        "maxIterationCount": 100
+      }
+    },
+    "lods": {
+      "enable": false,
+      "hasBuiltinLOD": false,
+      "options": [
+        {
+          "screenRatio": 0.25,
+          "faceCount": 1
+        },
+        {
+          "screenRatio": 0.125,
+          "faceCount": 0.25
+        },
+        {
+          "screenRatio": 0.01,
+          "faceCount": 0.1
+        }
+      ]
+    },
+    "animationImportSettings": [
+      {
+        "name": "static",
+        "duration": 0.10000000149011612,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "static",
+            "from": 0,
+            "to": 0.10000000149011612,
+            "wrapMode": 2,
+            "previousId": "18b80"
+          }
+        ]
+      },
+      {
+        "name": "idle",
+        "duration": 1,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "idle",
+            "from": 0,
+            "to": 1,
+            "wrapMode": 2,
+            "previousId": "1f586"
+          }
+        ]
+      },
+      {
+        "name": "walk",
+        "duration": 0.5,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "walk",
+            "from": 0,
+            "to": 0.5,
+            "wrapMode": 2,
+            "previousId": "7f3dc"
+          }
+        ]
+      },
+      {
+        "name": "run",
+        "duration": 0.25,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "run",
+            "from": 0,
+            "to": 0.25,
+            "wrapMode": 2,
+            "previousId": "cf5ee"
+          }
+        ]
+      },
+      {
+        "name": "eat",
+        "duration": 0.5,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "eat",
+            "from": 0,
+            "to": 0.5,
+            "wrapMode": 2,
+            "previousId": "5fc59"
+          }
+        ]
+      },
+      {
+        "name": "dance",
+        "duration": 0.5,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "dance",
+            "from": 0,
+            "to": 0.5,
+            "wrapMode": 2,
+            "previousId": "c1b8f"
+          }
+        ]
+      },
+      {
+        "name": "gesture-positive",
+        "duration": 0.25,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "gesture-positive",
+            "from": 0,
+            "to": 0.25,
+            "wrapMode": 2,
+            "previousId": "b2384"
+          }
+        ]
+      },
+      {
+        "name": "gesture-negative",
+        "duration": 0.25,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "gesture-negative",
+            "from": 0,
+            "to": 0.25,
+            "wrapMode": 2,
+            "previousId": "2e785"
+          }
+        ]
+      }
+    ],
+    "assetFinder": {
+      "meshes": [
+        "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@4c1eb",
+        "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@5e001",
+        "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@a22b6",
+        "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@e0fe2",
+        "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@d28ff",
+        "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@80ef2"
+      ],
+      "skeletons": [],
+      "textures": [
+        "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@96c50"
+      ],
+      "materials": [
+        "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@9991c"
+      ],
+      "scenes": [
+        "f9a3d07e-ca22-4f50-b84d-a9a1245a702e@f8040"
+      ]
+    }
+  }
+}

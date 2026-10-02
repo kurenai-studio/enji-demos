@@ -1,0 +1,83 @@
+{
+ "errors": [],
+ "warnings": [],
+ "n_parts": 21,
+ "unique_textures": 10,
+ "families": {
+  "frame": [
+   "caption_bar",
+   "comic_panel",
+   "ink_plate",
+   "lv_chip",
+   "title_banner"
+  ],
+  "deco": [
+   "hazard_stripe",
+   "slash_wedge",
+   "spike_tri"
+  ],
+  "button": [
+   "skill_face",
+   "skill_rim"
+  ]
+ },
+ "svg_bytes": 11227,
+ "textures": {
+  "ink_plate": 1,
+  "slash_wedge": 1,
+  "title_banner": 1,
+  "caption_bar": 1,
+  "comic_panel": 1,
+  "lv_chip": 1,
+  "hazard_stripe": 1,
+  "skill_rim": 1,
+  "skill_face": 1,
+  "spike_tri": 2
+ },
+ "renders": {
+  "nine_slice": 7,
+  "ring_mesh": 1,
+  "affine": 3,
+  "vector": 1,
+  "program": 9
+ },
+ "deco": 4,
+ "attached": 4,
+ "heroes": [
+  "title_banner",
+  "next_face"
+ ],
+ "unlisted_numbers": [],
+ "edges": {
+  "soft": 0,
+  "bevel": 0,
+  "hard": 11,
+  "torn": 0,
+  "brush": 0
+ },
+ "shapes": {
+  "rrect": 0,
+  "path": 0,
+  "tabhex": 0,
+  "polygon": 7,
+  "circle": 0,
+  "chamfer": 4,
+  "capsule": 0
+ },
+ "grammar": "v2.4",
+ "roles": {
+  "bg": 1,
+  "panel": 5,
+  "deco": 5,
+  "result_title": 1,
+  "result_sub": 1,
+  "label": 2,
+  "result_line_0": 1,
+  "result_line_1": 1,
+  "result_next": 1,
+  "button_rim": 1,
+  "button_face": 1,
+  "icon": 1
+ },
+ "missing_roles": []
+}

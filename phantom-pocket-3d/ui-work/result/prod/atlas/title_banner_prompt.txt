@@ -1,0 +1,10 @@
+Game UI texture atlas for a mobile game. Art direction: Persona 5 风格 UI——纯黑底、血红强调、高对比白字；尖锐对角切角与三角形装饰；漫画分镜框、斜纹警示带、漫画爆炸形按钮；不要圆角卡片堆叠，要有侵略性的几何节奏与戏剧性留白。 Rendering: Persona 5 inspired mobile battle HUD: pure black stage, crimson red accents, sharp chamfered comic panels in off-white, triangular corner ornaments, yellow-black diagonal hazard stripes, high-contrast white and black typography, dramatic manga panel framing, no soft rounded cards.
+
+Reference image 1 is a STRICT LAYOUT TEMPLATE on flat magenta #FF00FF with 1 placeholder shape(s). Paint each finished part exactly inside its placeholder: same position, outer size, aspect and silhouette; nothing may extend outside a placeholder's outer outline. Inner guide lines mark border bands and bevel widths. Placeholder fill colours give each part's colour role - keep that colour family.
+
+Reference image 2 shows the SAME layout filled with a low-resolution preview of how each part looks in the approved concept art. Match its materials, colours, wear, lighting and detail level, but repaint everything crisp and at full resolution; ignore any smudges or flat patches where text or overlapping parts were removed. Placeholders left blank magenta in image 2 have no preview - follow their description.
+
+Parts:
+1. middle-centre placeholder (1440x288px at x=48, y=288; custom 4-sided outline exactly as drawn, bevel about 10px wide (inner guide line); solid opaque; colour role accent #E60012): Persona 5 graphic battle UI, flat ink print, razor chamfers, pure black ground, crimson and warm off-white, no blur, no soft plastic, no creature art; huge skewed crimson result banner, slashed parallelogram like a manga splash caption, flat saturated red ink, thin black ink keyline inset, sparse halftone at the slashed ends, large clean center for giant white headline.
+
+Rules: background one perfectly flat uniform pure magenta #FF00FF exactly like reference image 1; NO drop shadows, NO glow outside parts, NO vignette. Front view, orthographic, symmetric where the outline is symmetric. NO text, NO numbers, NO letters, NO icons or pictograms inside parts.

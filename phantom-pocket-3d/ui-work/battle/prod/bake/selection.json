@@ -1,0 +1,56 @@
+{
+ "override": {
+  "lv_chip": "frame_1/v1",
+  "ink_plate": "ink_plate/v1"
+ },
+ "notes": {
+  "lv_chip": "v0 painted a black face; colour role is crimson accent",
+  "ink_plate": "v0 decoration ran behind HUD text; v1 is a quiet plate"
+ },
+ "chosen": {
+  "ink_plate": {
+   "ref": "ink_plate/v1",
+   "why": "manual override"
+  },
+  "comic_panel": {
+   "ref": "comic_panel/v1",
+   "why": "qa ok, lowest concept dE"
+  },
+  "skill_rim": {
+   "ref": "button_1/v1",
+   "why": "qa ok, lowest concept dE"
+  },
+  "skill_face": {
+   "ref": "button_1/v1",
+   "why": "qa ok, lowest concept dE"
+  },
+  "util_rim": {
+   "ref": "button_1/v1",
+   "why": "qa ok, lowest concept dE"
+  },
+  "util_face": {
+   "ref": "button_2/v0",
+   "why": "qa ok, lowest concept dE"
+  },
+  "hazard_stripe": {
+   "ref": "deco_1/v1",
+   "why": "qa ok, lowest concept dE"
+  },
+  "slash_wedge": {
+   "ref": "deco_1/v1",
+   "why": "qa ok, lowest concept dE"
+  },
+  "spike_tri": {
+   "ref": "deco_1/v1",
+   "why": "qa ok, lowest concept dE"
+  },
+  "lv_chip": {
+   "ref": "frame_1/v1",
+   "why": "manual override"
+  },
+  "bar_track": {
+   "ref": "meter_1/v0",
+   "why": "qa ok, lowest concept dE"
+  }
+ }
+}

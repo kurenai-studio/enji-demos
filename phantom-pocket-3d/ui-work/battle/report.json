@@ -1,0 +1,115 @@
+{
+ "errors": [],
+ "warnings": [],
+ "n_parts": 83,
+ "unique_textures": 11,
+ "families": {
+  "frame": [
+   "comic_panel",
+   "ink_plate",
+   "lv_chip"
+  ],
+  "deco": [
+   "hazard_stripe",
+   "slash_wedge",
+   "spike_tri"
+  ],
+  "button": [
+   "skill_face",
+   "skill_rim",
+   "util_face",
+   "util_rim"
+  ],
+  "meter": [
+   "bar_track"
+  ]
+ },
+ "svg_bytes": 39475,
+ "textures": {
+  "ink_plate": 2,
+  "hazard_stripe": 2,
+  "util_rim": 4,
+  "util_face": 4,
+  "comic_panel": 2,
+  "lv_chip": 2,
+  "bar_track": 3,
+  "spike_tri": 2,
+  "slash_wedge": 2,
+  "skill_rim": 5,
+  "skill_face": 5
+ },
+ "renders": {
+  "nine_slice": 20,
+  "program": 49,
+  "ring_mesh": 9,
+  "vector": 1,
+  "affine": 4
+ },
+ "deco": 6,
+ "attached": 6,
+ "heroes": [
+  "enemy_panel",
+  "player_panel"
+ ],
+ "unlisted_numbers": [],
+ "edges": {
+  "bevel": 0,
+  "brush": 0,
+  "soft": 0,
+  "torn": 0,
+  "hard": 33
+ },
+ "shapes": {
+  "tabhex": 0,
+  "capsule": 0,
+  "path": 0,
+  "rrect": 0,
+  "circle": 0,
+  "chamfer": 25,
+  "polygon": 8
+ },
+ "grammar": "v2.4",
+ "roles": {
+  "bg": 1,
+  "panel": 8,
+  "title": 1,
+  "deco": 6,
+  "settings": 1,
+  "button_rim": 9,
+  "button_face": 9,
+  "label": 13,
+  "enemy_name": 1,
+  "enemy_lv": 1,
+  "badge": 2,
+  "enemy_hp_pct": 1,
+  "meter": 3,
+  "enemy_hp_fill": 1,
+  "enemy_hp": 1,
+  "stage_view": 1,
+  "player_name": 1,
+  "player_lv": 1,
+  "player_hp_pct": 1,
+  "player_hp_fill": 1,
+  "player_hp": 1,
+  "player_mp_fill": 1,
+  "player_mp": 1,
+  "status": 1,
+  "move_0": 1,
+  "move_pp_0": 1,
+  "move_mp_0": 1,
+  "move_1": 1,
+  "move_pp_1": 1,
+  "move_mp_1": 1,
+  "move_2": 1,
+  "move_pp_2": 1,
+  "move_mp_2": 1,
+  "move_3": 1,
+  "move_pp_3": 1,
+  "move_mp_3": 1,
+  "bag": 1,
+  "run": 1,
+  "party": 1,
+  "catch": 1
+ },
+ "missing_roles": []
+}

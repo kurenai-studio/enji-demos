@@ -1,0 +1,10 @@
+{
+    "name": "phantom-pocket-3d",
+    "type": "2d",
+    "version": "3.8.8",
+    "uuid": "6d9da0bb-e5a3-4a1a-b2ee-7b57298fcf66",
+    "creator": {
+        "version": "3.8.8",
+        "dependencies": {}
+    }
+}

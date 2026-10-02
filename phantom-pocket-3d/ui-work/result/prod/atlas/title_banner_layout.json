@@ -1,0 +1,45 @@
+{
+ "atlas": "title_banner",
+ "canvas": [
+  1536,
+  864
+ ],
+ "aspect": "16:9",
+ "bg": "magenta",
+ "family": "frame",
+ "slots": [
+  {
+   "index": 0,
+   "texture": "title_banner",
+   "render": "nine_slice",
+   "canon": "poly",
+   "s": 2.4,
+   "rect": [
+    48.0,
+    288.0,
+    1440.0,
+    288.0
+   ],
+   "poly": [
+    [
+     124.8,
+     302.4
+    ],
+    [
+     1488.0,
+     288.0
+    ],
+    [
+     1411.2,
+     561.5999999999999
+    ],
+    [
+     48.0,
+     576.0
+    ]
+   ],
+   "band": 0,
+   "hollow": false
+  }
+ ]
+}

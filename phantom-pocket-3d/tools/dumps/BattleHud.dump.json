@@ -1,0 +1,4808 @@
+{
+ "harness": {
+  "ok": true,
+  "name": "BattleHud"
+ },
+ "nodeCount": 91,
+ "rows": [
+  {
+   "path": "",
+   "children": [
+    "Fx",
+    "top_block",
+    "stage_view",
+    "bottom_block"
+   ],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.5,
+    0.5,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [],
+   "ui": {
+    "w": 1440,
+    "h": 2560,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "Fx",
+   "children": [
+    "ScreenFlash",
+    "CutIn",
+    "PopEnemy",
+    "PopPlayer"
+   ],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [],
+   "ui": {
+    "w": 1440,
+    "h": 2560,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "Fx/ScreenFlash",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": false,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "ce64358b-f6fe-413d-abd3-b8a5ba8203f8@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      16,
+      16
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "type": "cc.UIOpacity",
+     "opacity": 0
+    }
+   ],
+   "ui": {
+    "w": 1440,
+    "h": 2560,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "Fx/CutIn",
+   "children": [
+    "Text"
+   ],
+   "pos": [
+    0,
+    220,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0.05234,
+    0.99863
+   ],
+   "euler": [
+    0,
+    0,
+    6
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": false,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "ce64358b-f6fe-413d-abd3-b8a5ba8203f8@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      230,
+      0,
+      18,
+      255
+     ],
+     "frameSize": [
+      16,
+      16
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "type": "cc.UIOpacity",
+     "opacity": 255
+    }
+   ],
+   "ui": {
+    "w": 1640,
+    "h": 150,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "Fx/CutIn/Text",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "怪谈斩！",
+     "fontSize": 96,
+     "lineHeight": 115,
+     "color": [
+      245,
+      240,
+      232,
+      255
+     ],
+     "bold": true,
+     "hAlign": 1,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 1440,
+    "h": 130,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "Fx/PopEnemy",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": false,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "-12",
+     "fontSize": 80,
+     "lineHeight": 96,
+     "color": [
+      245,
+      240,
+      232,
+      255
+     ],
+     "bold": true,
+     "hAlign": 1,
+     "vAlign": 1,
+     "overflow": 2
+    },
+    {
+     "type": "cc.UIOpacity",
+     "opacity": 255
+    }
+   ],
+   "ui": {
+    "w": 320,
+    "h": 110,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "Fx/PopPlayer",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": false,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "-12",
+     "fontSize": 80,
+     "lineHeight": 96,
+     "color": [
+      245,
+      240,
+      232,
+      255
+     ],
+     "bold": true,
+     "hAlign": 1,
+     "vAlign": 1,
+     "overflow": 2
+    },
+    {
+     "type": "cc.UIOpacity",
+     "opacity": 255
+    }
+   ],
+   "ui": {
+    "w": 320,
+    "h": 110,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "top_block",
+   "children": [
+    "titlebar",
+    "hazard_top",
+    "enemy_panel",
+    "settings"
+   ],
+   "pos": [
+    0,
+    940,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Widget",
+     "alignFlags": 1,
+     "top": 80,
+     "bottom": 0,
+     "left": 0,
+     "right": 0,
+     "alignMode": 2
+    }
+   ],
+   "ui": {
+    "w": 1440,
+    "h": 520,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "top_block/titlebar",
+   "children": [
+    "title"
+   ],
+   "pos": [
+    -120,
+    188,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "75ae2c17-2c11-493b-8524-bebf17477324@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      1154,
+      132
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 1160,
+    "h": 136,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "top_block/titlebar/title",
+   "children": [],
+   "pos": [
+    -320,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "怪谈口袋",
+     "fontSize": 64,
+     "lineHeight": 77,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 400,
+    "h": 88,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "top_block/hazard_top",
+   "children": [],
+   "pos": [
+    -120,
+    110,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "6d185849-cfe8-4a63-aa0a-687272386e30@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      1154,
+      40
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 1160,
+    "h": 44,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "top_block/enemy_panel",
+   "children": [
+    "enemy_name",
+    "enemy_lv",
+    "enemy_hp_pct",
+    "enemy_hp_label",
+    "enemy_hp_track",
+    "enemy_hp",
+    "enemy_spike",
+    "enemy_slash"
+   ],
+   "pos": [
+    0,
+    -64,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "d7cd79bf-b0b5-4299-9521-214d943cd4e3@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      1394,
+      316
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 1400,
+    "h": 320,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "top_block/enemy_panel/enemy_name",
+   "children": [],
+   "pos": [
+    -452,
+    74,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "赤影狐",
+     "fontSize": 68,
+     "lineHeight": 82,
+     "color": [
+      17,
+      17,
+      17,
+      255
+     ],
+     "bold": true,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 360,
+    "h": 92,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "top_block/enemy_panel/enemy_lv",
+   "children": [
+    "enemy_lv_chip"
+   ],
+   "pos": [
+    -172,
+    72,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [],
+   "ui": {
+    "w": 168,
+    "h": 64,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "top_block/enemy_panel/enemy_lv/enemy_lv_chip",
+   "children": [
+    "Text"
+   ],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "00609108-6408-4ceb-9f88-1316c250755f@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      186,
+      84
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 192,
+    "h": 88,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "top_block/enemy_panel/enemy_lv/enemy_lv_chip/Text",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "Lv14",
+     "fontSize": 36,
+     "lineHeight": 43,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 1,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 168,
+    "h": 64,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "top_block/enemy_panel/enemy_hp_pct",
+   "children": [],
+   "pos": [
+    452,
+    78,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "62%",
+     "fontSize": 80,
+     "lineHeight": 96,
+     "color": [
+      230,
+      0,
+      18,
+      255
+     ],
+     "bold": true,
+     "hAlign": 2,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 264,
+    "h": 108,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "top_block/enemy_panel/enemy_hp_label",
+   "children": [],
+   "pos": [
+    -598,
+    -44,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "HP",
+     "fontSize": 32,
+     "lineHeight": 38,
+     "color": [
+      17,
+      17,
+      17,
+      255
+     ],
+     "bold": true,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 68,
+    "h": 48,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "top_block/enemy_panel/enemy_hp_track",
+   "children": [
+    "enemy_hp_track_fill"
+   ],
+   "pos": [
+    -132,
+    -44,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "6a6f8ccd-5914-4e45-b8d0-88dcb1bbbb92@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      858,
+      68
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 864,
+    "h": 72,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "top_block/enemy_panel/enemy_hp_track/enemy_hp_track_fill",
+   "children": [],
+   "pos": [
+    -414,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "ce64358b-f6fe-413d-abd3-b8a5ba8203f8@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      230,
+      0,
+      18,
+      255
+     ],
+     "frameSize": [
+      16,
+      16
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 828,
+    "h": 36,
+    "ax": 0,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "top_block/enemy_panel/enemy_hp",
+   "children": [],
+   "pos": [
+    484,
+    -42,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "42 / 68",
+     "fontSize": 48,
+     "lineHeight": 58,
+     "color": [
+      17,
+      17,
+      17,
+      255
+     ],
+     "bold": true,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 328,
+    "h": 68,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "top_block/enemy_panel/enemy_spike",
+   "children": [],
+   "pos": [
+    656,
+    116,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "467288ba-1ce1-45b7-8efa-6ce1647ffea5@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      80,
+      81
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 88,
+    "h": 88,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "top_block/enemy_panel/enemy_slash",
+   "children": [],
+   "pos": [
+    -492,
+    -154,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "13c17391-a847-403d-bc37-2fa6b206b17f@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      376,
+      72
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 384,
+    "h": 76,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "top_block/settings",
+   "children": [
+    "settings_rim",
+    "settings_face",
+    "settings_label"
+   ],
+   "pos": [
+    580,
+    188,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Button",
+     "target": "top_block/settings",
+     "transition": 3,
+     "zoomScale": 0.94,
+     "interactable": true
+    }
+   ],
+   "ui": {
+    "w": 216,
+    "h": 112,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "top_block/settings/settings_rim",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "751a584f-8e20-4dc5-aedd-36e77028bde9@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      234,
+      132
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 240,
+    "h": 136,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "top_block/settings/settings_face",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "463810be-2685-4650-9f17-8a7bc0b88a50@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      214,
+      112
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 220,
+    "h": 116,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "top_block/settings/settings_label",
+   "children": [],
+   "pos": [
+    0,
+    2,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "菜单",
+     "fontSize": 44,
+     "lineHeight": 53,
+     "color": [
+      17,
+      17,
+      17,
+      255
+     ],
+     "bold": true,
+     "hAlign": 1,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 136,
+    "h": 60,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "stage_view",
+   "children": [],
+   "pos": [
+    0,
+    220,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Widget",
+     "alignFlags": 45,
+     "top": 600,
+     "bottom": 1040,
+     "left": 0,
+     "right": 0,
+     "alignMode": 2
+    }
+   ],
+   "ui": {
+    "w": 1440,
+    "h": 920,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block",
+   "children": [
+    "skill_grid",
+    "util_row",
+    "player_panel",
+    "status_bar"
+   ],
+   "pos": [
+    0,
+    -720,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Widget",
+     "alignFlags": 4,
+     "top": 0,
+     "bottom": 80,
+     "left": 0,
+     "right": 0,
+     "alignMode": 2
+    }
+   ],
+   "ui": {
+    "w": 1440,
+    "h": 960,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid",
+   "children": [
+    "move_0",
+    "move_1",
+    "move_2",
+    "move_3",
+    "ult_spike"
+   ],
+   "pos": [
+    0,
+    -56,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [],
+   "ui": {
+    "w": 1376,
+    "h": 304,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_0",
+   "children": [
+    "move_0_rim",
+    "move_0_face",
+    "move_0_name",
+    "move_pp_0",
+    "move_mp_0"
+   ],
+   "pos": [
+    -352,
+    80,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Button",
+     "target": "bottom_block/skill_grid/move_0",
+     "transition": 3,
+     "zoomScale": 0.94,
+     "interactable": true
+    }
+   ],
+   "ui": {
+    "w": 672,
+    "h": 144,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_0/move_0_rim",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "328513ff-c960-4aa5-9ee8-385495b0e878@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      690,
+      164
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 696,
+    "h": 168,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_0/move_0_face",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "fa0b78ed-a211-4d27-b6bc-0bed82b0f377@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      666,
+      140
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 672,
+    "h": 144,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_0/move_0_name",
+   "children": [],
+   "pos": [
+    -148,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "影爪",
+     "fontSize": 60,
+     "lineHeight": 72,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 264,
+    "h": 80,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_0/move_pp_0",
+   "children": [],
+   "pos": [
+    192,
+    22,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "PP 20",
+     "fontSize": 32,
+     "lineHeight": 38,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 2,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 192,
+    "h": 44,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_0/move_mp_0",
+   "children": [],
+   "pos": [
+    192,
+    -26,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "MP 0",
+     "fontSize": 32,
+     "lineHeight": 38,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 2,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 192,
+    "h": 44,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_1",
+   "children": [
+    "move_1_rim",
+    "move_1_face",
+    "move_1_name",
+    "move_pp_1",
+    "move_mp_1"
+   ],
+   "pos": [
+    352,
+    80,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Button",
+     "target": "bottom_block/skill_grid/move_1",
+     "transition": 3,
+     "zoomScale": 0.94,
+     "interactable": true
+    }
+   ],
+   "ui": {
+    "w": 672,
+    "h": 144,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_1/move_1_rim",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "328513ff-c960-4aa5-9ee8-385495b0e878@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      690,
+      164
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 696,
+    "h": 168,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_1/move_1_face",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "fa0b78ed-a211-4d27-b6bc-0bed82b0f377@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      666,
+      140
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 672,
+    "h": 144,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_1/move_1_name",
+   "children": [],
+   "pos": [
+    -148,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "鬼火",
+     "fontSize": 60,
+     "lineHeight": 72,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 264,
+    "h": 80,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_1/move_pp_1",
+   "children": [],
+   "pos": [
+    192,
+    22,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "PP 10",
+     "fontSize": 32,
+     "lineHeight": 38,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 2,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 192,
+    "h": 44,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_1/move_mp_1",
+   "children": [],
+   "pos": [
+    192,
+    -26,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "MP 6",
+     "fontSize": 32,
+     "lineHeight": 38,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 2,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 192,
+    "h": 44,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_2",
+   "children": [
+    "move_2_rim",
+    "move_2_face",
+    "move_2_name",
+    "move_pp_2",
+    "move_mp_2"
+   ],
+   "pos": [
+    -352,
+    -80,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Button",
+     "target": "bottom_block/skill_grid/move_2",
+     "transition": 3,
+     "zoomScale": 0.94,
+     "interactable": true
+    }
+   ],
+   "ui": {
+    "w": 672,
+    "h": 144,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_2/move_2_rim",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "328513ff-c960-4aa5-9ee8-385495b0e878@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      690,
+      164
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 696,
+    "h": 168,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_2/move_2_face",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "fa0b78ed-a211-4d27-b6bc-0bed82b0f377@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      666,
+      140
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 672,
+    "h": 144,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_2/move_2_name",
+   "children": [],
+   "pos": [
+    -148,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "夜啼",
+     "fontSize": 60,
+     "lineHeight": 72,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 264,
+    "h": 80,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_2/move_pp_2",
+   "children": [],
+   "pos": [
+    192,
+    22,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "PP 15",
+     "fontSize": 32,
+     "lineHeight": 38,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 2,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 192,
+    "h": 44,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_2/move_mp_2",
+   "children": [],
+   "pos": [
+    192,
+    -26,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "MP 4",
+     "fontSize": 32,
+     "lineHeight": 38,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 2,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 192,
+    "h": 44,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_3",
+   "children": [
+    "move_3_rim",
+    "move_3_face",
+    "move_3_name",
+    "move_pp_3",
+    "move_mp_3"
+   ],
+   "pos": [
+    352,
+    -80,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Button",
+     "target": "bottom_block/skill_grid/move_3",
+     "transition": 3,
+     "zoomScale": 0.94,
+     "interactable": true
+    }
+   ],
+   "ui": {
+    "w": 672,
+    "h": 144,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_3/move_3_rim",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "328513ff-c960-4aa5-9ee8-385495b0e878@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      690,
+      164
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 696,
+    "h": 168,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_3/move_3_face",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "fa0b78ed-a211-4d27-b6bc-0bed82b0f377@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      666,
+      140
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 672,
+    "h": 144,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_3/move_3_name",
+   "children": [],
+   "pos": [
+    -148,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "怪谈斩",
+     "fontSize": 60,
+     "lineHeight": 72,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 264,
+    "h": 80,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_3/move_pp_3",
+   "children": [],
+   "pos": [
+    192,
+    22,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "PP 5",
+     "fontSize": 32,
+     "lineHeight": 38,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 2,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 192,
+    "h": 44,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/move_3/move_mp_3",
+   "children": [],
+   "pos": [
+    192,
+    -26,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "MP 12",
+     "fontSize": 32,
+     "lineHeight": 38,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 2,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 192,
+    "h": 44,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/skill_grid/ult_spike",
+   "children": [],
+   "pos": [
+    656,
+    -28,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "467288ba-1ce1-45b7-8efa-6ce1647ffea5@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      80,
+      81
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 88,
+    "h": 88,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/util_row",
+   "children": [
+    "hazard_bottom",
+    "bag",
+    "run",
+    "party",
+    "catch"
+   ],
+   "pos": [
+    0,
+    -324,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [],
+   "ui": {
+    "w": 1376,
+    "h": 192,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/util_row/hazard_bottom",
+   "children": [],
+   "pos": [
+    0,
+    -84,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "389f40a9-b284-410a-abcf-2a9b35a7abc6@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      1394,
+      44
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 1400,
+    "h": 48,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/util_row/bag",
+   "children": [
+    "bag_rim",
+    "bag_face",
+    "bag_label"
+   ],
+   "pos": [
+    -552,
+    24,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Button",
+     "target": "bottom_block/util_row/bag",
+     "transition": 3,
+     "zoomScale": 0.94,
+     "interactable": true
+    }
+   ],
+   "ui": {
+    "w": 272,
+    "h": 144,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/util_row/bag/bag_rim",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "1f3416d1-c417-4f0a-b71e-206475c4ae5e@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      290,
+      164
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 296,
+    "h": 168,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/util_row/bag/bag_face",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "35d705ec-1ecc-4da3-997b-7b1733705c8d@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      270,
+      144
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 276,
+    "h": 148,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/util_row/bag/bag_label",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "道具",
+     "fontSize": 48,
+     "lineHeight": 58,
+     "color": [
+      17,
+      17,
+      17,
+      255
+     ],
+     "bold": true,
+     "hAlign": 1,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 160,
+    "h": 64,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/util_row/run",
+   "children": [
+    "run_rim",
+    "run_face",
+    "run_label"
+   ],
+   "pos": [
+    -264,
+    24,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Button",
+     "target": "bottom_block/util_row/run",
+     "transition": 3,
+     "zoomScale": 0.94,
+     "interactable": true
+    }
+   ],
+   "ui": {
+    "w": 272,
+    "h": 144,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/util_row/run/run_rim",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "1f3416d1-c417-4f0a-b71e-206475c4ae5e@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      290,
+      164
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 296,
+    "h": 168,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/util_row/run/run_face",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "35d705ec-1ecc-4da3-997b-7b1733705c8d@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      270,
+      144
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 276,
+    "h": 148,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/util_row/run/run_label",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "逃跑",
+     "fontSize": 48,
+     "lineHeight": 58,
+     "color": [
+      17,
+      17,
+      17,
+      255
+     ],
+     "bold": true,
+     "hAlign": 1,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 160,
+    "h": 64,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/util_row/party",
+   "children": [
+    "party_rim",
+    "party_face",
+    "party_label",
+    "party_count"
+   ],
+   "pos": [
+    48,
+    24,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Button",
+     "target": "bottom_block/util_row/party",
+     "transition": 3,
+     "zoomScale": 0.94,
+     "interactable": true
+    }
+   ],
+   "ui": {
+    "w": 320,
+    "h": 144,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/util_row/party/party_rim",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "5490c71d-95b3-4788-a923-3307df6156d6@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      338,
+      164
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 344,
+    "h": 168,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/util_row/party/party_face",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "51df6073-6473-4f2e-8e85-d83877613c24@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      318,
+      144
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 324,
+    "h": 148,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/util_row/party/party_label",
+   "children": [],
+   "pos": [
+    -64,
+    -2,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "队伍",
+     "fontSize": 44,
+     "lineHeight": 53,
+     "color": [
+      17,
+      17,
+      17,
+      255
+     ],
+     "bold": true,
+     "hAlign": 2,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 104,
+    "h": 60,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/util_row/party/party_count",
+   "children": [],
+   "pos": [
+    60,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "1/6",
+     "fontSize": 52,
+     "lineHeight": 62,
+     "color": [
+      17,
+      17,
+      17,
+      255
+     ],
+     "bold": true,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 120,
+    "h": 64,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/util_row/catch",
+   "children": [
+    "catch_rim",
+    "catch_face",
+    "catch_label"
+   ],
+   "pos": [
+    456,
+    24,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Button",
+     "target": "bottom_block/util_row/catch",
+     "transition": 3,
+     "zoomScale": 0.94,
+     "interactable": true
+    }
+   ],
+   "ui": {
+    "w": 464,
+    "h": 144,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/util_row/catch/catch_rim",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "d1bc4676-3fee-4f1c-a77a-4c3a0d55876a@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      482,
+      164
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 488,
+    "h": 168,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/util_row/catch/catch_face",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "2a6ce469-17fc-44ba-994a-dd1a6007af5a@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      458,
+      140
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 464,
+    "h": 144,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/util_row/catch/catch_label",
+   "children": [],
+   "pos": [
+    0,
+    -2,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "捕捉",
+     "fontSize": 68,
+     "lineHeight": 82,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 1,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 160,
+    "h": 84,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/player_panel",
+   "children": [
+    "player_name",
+    "player_lv",
+    "player_hp_pct",
+    "player_hp_label",
+    "player_hp_track",
+    "player_hp",
+    "player_mp_label",
+    "player_mp_track",
+    "player_mp"
+   ],
+   "pos": [
+    0,
+    344,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "d52934ec-4537-4f99-a364-2c8c4e38b5b6@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      1394,
+      244
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 1400,
+    "h": 248,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/player_panel/player_name",
+   "children": [],
+   "pos": [
+    -524,
+    60,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "墨猫",
+     "fontSize": 60,
+     "lineHeight": 72,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 248,
+    "h": 80,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/player_panel/player_lv",
+   "children": [
+    "player_lv_chip"
+   ],
+   "pos": [
+    -304,
+    58,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [],
+   "ui": {
+    "w": 160,
+    "h": 60,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/player_panel/player_lv/player_lv_chip",
+   "children": [
+    "Text"
+   ],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "c586135a-11e3-4082-9369-8ab6e70357e1@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      178,
+      80
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 184,
+    "h": 84,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/player_panel/player_lv/player_lv_chip/Text",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "Lv16",
+     "fontSize": 36,
+     "lineHeight": 43,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 1,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 160,
+    "h": 60,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/player_panel/player_hp_pct",
+   "children": [],
+   "pos": [
+    516,
+    58,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "87%",
+     "fontSize": 68,
+     "lineHeight": 82,
+     "color": [
+      255,
+      107,
+      107,
+      255
+     ],
+     "bold": true,
+     "hAlign": 2,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 264,
+    "h": 92,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/player_panel/player_hp_label",
+   "children": [],
+   "pos": [
+    -614,
+    -18,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "HP",
+     "fontSize": 32,
+     "lineHeight": 38,
+     "color": [
+      154,
+      154,
+      154,
+      255
+     ],
+     "bold": true,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 68,
+    "h": 44,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/player_panel/player_hp_track",
+   "children": [
+    "player_hp_track_fill"
+   ],
+   "pos": [
+    -148,
+    -16,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "a2399556-c855-4d5f-a396-1e6b5771b93b@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      858,
+      60
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 864,
+    "h": 64,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/player_panel/player_hp_track/player_hp_track_fill",
+   "children": [],
+   "pos": [
+    -414,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "ce64358b-f6fe-413d-abd3-b8a5ba8203f8@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      230,
+      0,
+      18,
+      255
+     ],
+     "frameSize": [
+      16,
+      16
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 828,
+    "h": 28,
+    "ax": 0,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/player_panel/player_hp",
+   "children": [],
+   "pos": [
+    476,
+    -16,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "78 / 90",
+     "fontSize": 44,
+     "lineHeight": 53,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 344,
+    "h": 64,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/player_panel/player_mp_label",
+   "children": [],
+   "pos": [
+    -614,
+    -74,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "MP",
+     "fontSize": 32,
+     "lineHeight": 38,
+     "color": [
+      154,
+      154,
+      154,
+      255
+     ],
+     "bold": true,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 68,
+    "h": 44,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/player_panel/player_mp_track",
+   "children": [
+    "player_mp_track_fill"
+   ],
+   "pos": [
+    -148,
+    -72,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "10e89132-621c-4bd7-8c13-e5c3389a4104@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      858,
+      52
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 864,
+    "h": 56,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/player_panel/player_mp_track/player_mp_track_fill",
+   "children": [],
+   "pos": [
+    -414,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "ce64358b-f6fe-413d-abd3-b8a5ba8203f8@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      245,
+      215,
+      110,
+      255
+     ],
+     "frameSize": [
+      16,
+      16
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 828,
+    "h": 20,
+    "ax": 0,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/player_panel/player_mp",
+   "children": [],
+   "pos": [
+    476,
+    -72,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "24 / 30",
+     "fontSize": 40,
+     "lineHeight": 48,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 344,
+    "h": 56,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/status_bar",
+   "children": [
+    "status",
+    "status_slash"
+   ],
+   "pos": [
+    0,
+    164,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "0352a0de-79b6-4b3f-a4dc-a8974960919d@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      1394,
+      116
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 1400,
+    "h": 120,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/status_bar/status",
+   "children": [],
+   "pos": [
+    48,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "野生的赤影狐出现了",
+     "fontSize": 44,
+     "lineHeight": 53,
+     "color": [
+      17,
+      17,
+      17,
+      255
+     ],
+     "bold": true,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 1200,
+    "h": 72,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "bottom_block/status_bar/status_slash",
+   "children": [],
+   "pos": [
+    -628,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "57c54fe4-577e-4920-b2b1-558a3892873c@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      104,
+      100
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 112,
+    "h": 104,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  }
+ ],
+ "errors": []
+}

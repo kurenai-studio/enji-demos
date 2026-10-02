@@ -1,0 +1,46 @@
+{
+ "override": {},
+ "notes": {},
+ "chosen": {
+  "ink_plate": {
+   "ref": "ink_plate/v0",
+   "why": "qa ok, lowest concept dE"
+  },
+  "title_banner": {
+   "ref": "title_banner/v0",
+   "why": "qa ok, lowest concept dE"
+  },
+  "skill_face": {
+   "ref": "skill_face/v0",
+   "why": "qa ok, lowest concept dE"
+  },
+  "skill_rim": {
+   "ref": "button_1/v0",
+   "why": "qa ok, lowest concept dE"
+  },
+  "hazard_stripe": {
+   "ref": "deco_1/v0",
+   "why": "qa ok, lowest concept dE"
+  },
+  "slash_wedge": {
+   "ref": "deco_1/v0",
+   "why": "qa ok, lowest concept dE"
+  },
+  "spike_tri": {
+   "ref": "deco_1/v0",
+   "why": "qa ok, lowest concept dE"
+  },
+  "caption_bar": {
+   "ref": "frame_1/v0",
+   "why": "qa ok, lowest concept dE"
+  },
+  "comic_panel": {
+   "ref": "frame_1/v0",
+   "why": "qa ok, lowest concept dE"
+  },
+  "lv_chip": {
+   "ref": "frame_1/v0",
+   "why": "qa ok, lowest concept dE"
+  }
+ }
+}

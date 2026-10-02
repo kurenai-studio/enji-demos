@@ -1,0 +1,255 @@
+{
+ "seed": "7",
+ "ok": true,
+ "checks": [
+  {
+   "name": "battle starts",
+   "ok": true,
+   "detail": {
+    "enemy": "赤影狐",
+    "status": "野生的赤影狐出现了！"
+   }
+  },
+  {
+   "name": "party count shown",
+   "ok": true,
+   "detail": "1/6"
+  },
+  {
+   "name": "move costs PP and MP",
+   "ok": true,
+   "detail": {
+    "pp": [
+     20,
+     10,
+     15,
+     4
+    ],
+    "mp": 18
+   }
+  },
+  {
+   "name": "enemy took damage",
+   "ok": true,
+   "detail": {
+    "from": 68,
+    "to": 32
+   }
+  },
+  {
+   "name": "enemy HP bar shrank",
+   "ok": true,
+   "detail": {
+    "from": 828,
+    "to": 389.6470588235294
+   }
+  },
+  {
+   "name": "enemy AI acted",
+   "ok": true,
+   "detail": {
+    "playerHp": 78,
+    "status": "要怎么做？"
+   }
+  },
+  {
+   "name": "result dialog after the enemy faints",
+   "ok": true,
+   "detail": {
+    "title": "战斗胜利",
+    "hp": 0
+   }
+  },
+  {
+   "name": "next encounter has a different enemy",
+   "ok": true,
+   "detail": {
+    "before": "赤影狐",
+    "now": "虎煞"
+   }
+  },
+  {
+   "name": "potion used and healed",
+   "ok": true,
+   "detail": {
+    "items": [
+     2,
+     2
+    ],
+    "hpBefore": 58,
+    "hpAfter": 78,
+    "healLine": "使用了伤药，HP 回复 30"
+   }
+  },
+  {
+   "name": "enemy weakened before the catch",
+   "ok": true,
+   "detail": {
+    "hp": 38,
+    "max": 84
+   }
+  },
+  {
+   "name": "catch succeeded and joined the party",
+   "ok": true,
+   "detail": {
+    "party": [
+     "墨猫",
+     "虎煞"
+    ],
+    "label": "2/6",
+    "title": "捕获成功"
+   }
+  },
+  {
+   "name": "run leaves the battle and starts a new encounter",
+   "ok": true,
+   "detail": {
+    "ran_from": "血钳蟹",
+    "now": "白幽熊"
+   }
+  },
+  {
+   "name": "no console errors",
+   "ok": true,
+   "detail": []
+  }
+ ],
+ "errors": [],
+ "steps": [
+  {
+   "shot": "shots/01_battle_start.jpg"
+  },
+  {
+   "click": "hud:move_3",
+   "x": 335,
+   "y": 668
+  },
+  {
+   "shot": "shots/02_move_hit.jpg"
+  },
+  {
+   "click": "hud:move_0",
+   "x": 115,
+   "y": 618
+  },
+  {
+   "click": "hud:move_0",
+   "x": 115,
+   "y": 618
+  },
+  {
+   "click": "hud:move_0",
+   "x": 115,
+   "y": 618
+  },
+  {
+   "shot": "shots/05_result_dialog.jpg"
+  },
+  {
+   "click": "result:result_next",
+   "x": 225,
+   "y": 523
+  },
+  {
+   "click": "hud:bag",
+   "x": 53,
+   "y": 719
+  },
+  {
+   "shot": "shots/03_bag_open.jpg"
+  },
+  {
+   "click": "bag:item_use_0",
+   "x": 349,
+   "y": 350
+  },
+  {
+   "click": "hud:move_0",
+   "x": 115,
+   "y": 618
+  },
+  {
+   "click": "hud:move_0",
+   "x": 115,
+   "y": 618
+  },
+  {
+   "click": "hud:move_0",
+   "x": 115,
+   "y": 618
+  },
+  {
+   "click": "hud:catch",
+   "x": 368,
+   "y": 719
+  },
+  {
+   "shot": "shots/04_catch.jpg"
+  },
+  {
+   "shot": "shots/06_catch_result.jpg"
+  },
+  {
+   "click": "result:result_next",
+   "x": 225,
+   "y": 523
+  },
+  {
+   "click": "hud:run",
+   "x": 143,
+   "y": 719
+  },
+  {
+   "shot": "shots/07_after_run.jpg"
+  },
+  {
+   "log": [
+    "野生的赤影狐出现了！",
+    "墨猫使出了怪谈斩！",
+    "对赤影狐造成了 36 点伤害",
+    "赤影狐使出了影遁击！",
+    "墨猫受到了 12 点伤害",
+    "要怎么做？",
+    "墨猫使出了影爪！",
+    "对赤影狐造成了 16 点伤害",
+    "赤影狐使出了狐咬！",
+    "墨猫受到了 8 点伤害",
+    "要怎么做？",
+    "墨猫使出了影爪！",
+    "对赤影狐造成了 15 点伤害",
+    "赤影狐使出了影遁击！",
+    "墨猫受到了 12 点伤害",
+    "要怎么做？",
+    "墨猫使出了影爪！",
+    "对赤影狐造成了 15 点伤害",
+    "赤影狐倒下了！获得经验 32",
+    "野生的虎煞出现了！",
+    "使用了伤药，HP 回复 30",
+    "虎煞使出了撕咬！",
+    "墨猫受到了 10 点伤害",
+    "要怎么做？",
+    "墨猫使出了影爪！",
+    "对虎煞造成了 15 点伤害",
+    "虎煞使出了虎扑！",
+    "墨猫受到了 13 点伤害",
+    "要怎么做？",
+    "墨猫使出了影爪！",
+    "对虎煞造成了 15 点伤害",
+    "虎煞使出了撕咬！",
+    "墨猫受到了 10 点伤害",
+    "要怎么做？",
+    "墨猫使出了影爪！",
+    "对虎煞造成了 16 点伤害",
+    "虎煞使出了虎扑！",
+    "墨猫受到了 12 点伤害",
+    "要怎么做？",
+    "投出了预告信！（成功率 63%）",
+    "捕获成功！虎煞成为了伙伴",
+    "野生的血钳蟹出现了！",
+    "成功逃跑了！",
+    "野生的白幽熊出现了！"
+   ]
+  }
+ ]
+}

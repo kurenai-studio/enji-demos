@@ -1,0 +1,1265 @@
+{
+ "harness": {
+  "ok": true,
+  "name": "ResultDialog"
+ },
+ "nodeCount": 23,
+ "rows": [
+  {
+   "path": "",
+   "children": [
+    "Dim",
+    "result_dialog"
+   ],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.5,
+    0.5,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.UIOpacity",
+     "opacity": 255
+    }
+   ],
+   "ui": {
+    "w": 1440,
+    "h": 2560,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "Dim",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "ce64358b-f6fe-413d-abd3-b8a5ba8203f8@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      0,
+      0,
+      0,
+      170
+     ],
+     "frameSize": [
+      16,
+      16
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "type": "cc.BlockInputEvents"
+    }
+   ],
+   "ui": {
+    "w": 1440,
+    "h": 2560,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "result_dialog",
+   "children": [
+    "dialog_plate",
+    "title_slash",
+    "sub_bar",
+    "lines_panel",
+    "lines_hazard",
+    "spike_bl",
+    "spike_br",
+    "title_banner",
+    "result_next"
+   ],
+   "pos": [
+    0,
+    -20,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Widget",
+     "alignFlags": 18,
+     "top": 0,
+     "bottom": 0,
+     "left": 0,
+     "right": 0,
+     "alignMode": 2
+    }
+   ],
+   "ui": {
+    "w": 1200,
+    "h": 1160,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "result_dialog/dialog_plate",
+   "children": [],
+   "pos": [
+    0,
+    -32,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "fe146bbc-4e41-4bd8-b282-1845128274ac@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      1218,
+      1116
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 1224,
+    "h": 1120,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "result_dialog/title_slash",
+   "children": [],
+   "pos": [
+    440,
+    332,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "7c8b84e3-268e-4d60-a6e3-cdd80188fd1e@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      336,
+      76
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 344,
+    "h": 80,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "result_dialog/sub_bar",
+   "children": [
+    "result_sub"
+   ],
+   "pos": [
+    0,
+    244,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "a9c16e40-8041-48d3-89ad-438109ada0de@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      1074,
+      124
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 1080,
+    "h": 128,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "result_dialog/sub_bar/result_sub",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "赤影狐 成为了伙伴",
+     "fontSize": 52,
+     "lineHeight": 62,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 1,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 1000,
+    "h": 80,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "result_dialog/lines_panel",
+   "children": [
+    "lines_tag",
+    "result_line_0",
+    "lines_rule",
+    "result_line_1"
+   ],
+   "pos": [
+    0,
+    -12,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "ce05fa3a-9380-48ff-ba40-e1a9791919cd@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      1074,
+      372
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 1080,
+    "h": 376,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "result_dialog/lines_panel/lines_tag",
+   "children": [
+    "Text"
+   ],
+   "pos": [
+    -392,
+    112,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "4e9f026e-e266-4261-a480-eac2d2915316@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      194,
+      84
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 200,
+    "h": 88,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "result_dialog/lines_panel/lines_tag/Text",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "结算",
+     "fontSize": 36,
+     "lineHeight": 43,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 1,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 176,
+    "h": 64,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "result_dialog/lines_panel/result_line_0",
+   "children": [],
+   "pos": [
+    -96,
+    16,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "获得经验 24",
+     "fontSize": 60,
+     "lineHeight": 72,
+     "color": [
+      17,
+      17,
+      17,
+      255
+     ],
+     "bold": true,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 768,
+    "h": 80,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "result_dialog/lines_panel/lines_rule",
+   "children": [],
+   "pos": [
+    0,
+    -44,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "ce64358b-f6fe-413d-abd3-b8a5ba8203f8@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      34,
+      30,
+      32,
+      255
+     ],
+     "frameSize": [
+      16,
+      16
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 960,
+    "h": 8,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "result_dialog/lines_panel/result_line_1",
+   "children": [],
+   "pos": [
+    -96,
+    -104,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "队伍 2/6",
+     "fontSize": 60,
+     "lineHeight": 72,
+     "color": [
+      17,
+      17,
+      17,
+      255
+     ],
+     "bold": true,
+     "hAlign": 0,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 768,
+    "h": 80,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "result_dialog/lines_hazard",
+   "children": [],
+   "pos": [
+    0,
+    -236,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "c78cf548-63f4-4bc7-a9c4-30d6d82372c0@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      1074,
+      52
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 1080,
+    "h": 56,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "result_dialog/spike_bl",
+   "children": [],
+   "pos": [
+    -540,
+    -520,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "90a2bfde-4600-4c11-8983-d2dee7c319ff@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      137,
+      138
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 144,
+    "h": 144,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "result_dialog/spike_br",
+   "children": [],
+   "pos": [
+    540,
+    -520,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "cef4918c-b042-401a-b4bf-4fba10bcc9c5@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      136,
+      137
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 144,
+    "h": 144,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "result_dialog/title_banner",
+   "children": [
+    "result_title"
+   ],
+   "pos": [
+    0,
+    460,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "74336193-bd0e-4a24-bd67-e3e081fd3e2f@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      1218,
+      260
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 1224,
+    "h": 264,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "result_dialog/title_banner/result_title",
+   "children": [],
+   "pos": [
+    0,
+    -8,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "捕获成功",
+     "fontSize": 128,
+     "lineHeight": 154,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 1,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 560,
+    "h": 160,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "result_dialog/result_next",
+   "children": [
+    "next_rim",
+    "next_face",
+    "next_label",
+    "next_arrow"
+   ],
+   "pos": [
+    0,
+    -372,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Button",
+     "target": "result_dialog/result_next",
+     "transition": 3,
+     "zoomScale": 0.94,
+     "interactable": true
+    }
+   ],
+   "ui": {
+    "w": 760,
+    "h": 144,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "result_dialog/result_next/next_rim",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "286c6388-e331-42d0-b010-f5de124e5763@f9941",
+     "spriteType": 0,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      778,
+      164
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 784,
+    "h": 168,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "result_dialog/result_next/next_face",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Sprite",
+     "frame": "e12bcebe-94fc-48de-82a4-a96a21f1c3b9@f9941",
+     "spriteType": 1,
+     "sizeMode": 0,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "frameSize": [
+      754,
+      140
+     ],
+     "border": [
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ],
+   "ui": {
+    "w": 760,
+    "h": 144,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "result_dialog/result_next/next_label",
+   "children": [],
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "下一战",
+     "fontSize": 64,
+     "lineHeight": 77,
+     "color": [
+      255,
+      255,
+      255,
+      255
+     ],
+     "bold": true,
+     "hAlign": 1,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 240,
+    "h": 80,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  },
+  {
+   "path": "result_dialog/result_next/next_arrow",
+   "children": [],
+   "pos": [
+    284,
+    0,
+    0
+   ],
+   "quat": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "euler": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "layer": 33554432,
+   "active": true,
+   "comps": [
+    {
+     "type": "cc.Label",
+     "string": "▶",
+     "fontSize": 50,
+     "lineHeight": 60,
+     "color": [
+      245,
+      240,
+      232,
+      255
+     ],
+     "bold": true,
+     "hAlign": 1,
+     "vAlign": 1,
+     "overflow": 2
+    }
+   ],
+   "ui": {
+    "w": 56,
+    "h": 56,
+    "ax": 0.5,
+    "ay": 0.5
+   }
+  }
+ ],
+ "errors": []
+}
