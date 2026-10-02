@@ -3,13 +3,15 @@ import type { IView } from '../enji/IView';
 import { ensureCanvas } from '../enji/helpers';
 import { ClothHud } from './xpbd/ClothHud';
 import { ClothInteraction } from './xpbd/ClothInteraction';
-import { ClothScene, QUALITY, STIFFNESS } from './xpbd/ClothScene';
+import { ClothScene, PD_SETTINGS, QUALITY, STIFFNESS } from './xpbd/ClothScene';
 import { OrbitCamera } from './xpbd/OrbitCamera';
 
 const { ccclass } = _decorator;
 
 const VIEW = { eye: new Vec3(2.0, 1.9, 2.7), target: new Vec3(0, 0.75, 0) };
 const COMPARE_VIEW = { eye: new Vec3(0.5, 1.75, 3.4), target: new Vec3(0, 1.3, 0) };
+/** From the side, so the flaps' swing angle reads. */
+const PD_VIEW = { eye: new Vec3(3.6, 2.3, 2.0), target: new Vec3(0, 1.55, -0.6) };
 
 /**
  * XPBD cloth playground: a CPU solver in typed arrays streamed into a dynamic
@@ -54,7 +56,8 @@ export class MainView extends Component implements IView {
             cyclePreset: () => {
                 if (!this.cloth) return;
                 this.cloth.cyclePreset();
-                const view = this.cloth.preset === 'compare' ? COMPARE_VIEW : VIEW;
+                const preset = this.cloth.preset;
+                const view = preset === 'compare' ? COMPARE_VIEW : preset === 'pd' ? PD_VIEW : VIEW;
                 this.orbit?.setView(view.eye, view.target);
                 this.refreshButtons();
             },
@@ -114,7 +117,7 @@ export class MainView extends Component implements IView {
         hud.setButton('pause', cloth.paused ? 'Resume' : 'Pause', cloth.paused);
         hud.setButton('wind', 'Wind', cloth.wind);
         hud.setButton('stiffness', STIFFNESS[cloth.stiffness].name);
-        hud.setButton('substeps', `${cloth.substeps} substeps`);
+        hud.setButton('substeps', cloth.preset === 'pd' ? `PD ${PD_SETTINGS[cloth.pdSetting].name}` : `${cloth.substeps} substeps`);
         hud.setButton('self', 'Self collide', cloth.selfCollision);
         hud.setButton('quality', `${QUALITY[cloth.quality].name}${cloth.autoQuality ? ' (auto)' : ''}`);
     }
@@ -124,15 +127,24 @@ export class MainView extends Component implements IView {
         this.frameTime += dt;
         if (this.frameTime < 0.5 || !this.hud || !this.cloth) return;
         const cloth = this.cloth;
-        const n = cloth.level.segments;
+        const n = cloth.segments;
         const sag = cloth.sag;
+        const flaps = cloth.flaps;
         const cm = (m: number) => `${(m * 100).toFixed(1)} cm`;
-        this.hud.setStatus([
+        const head = [
             `FPS ${(this.frames / this.frameTime).toFixed(0)} · solver ${cloth.simMs.toFixed(2)} ms`,
             `${n}×${n} · ${cloth.particleCount} particles · ${cloth.constraintCount} constraints`,
-            `${cloth.substeps} substeps · self collision ${cloth.selfCollision ? 'on' : 'off'}`,
-            sag ? `Sag: PBD (blue) ${cm(sag.pbd)} · XPBD (red) ${cm(sag.xpbd)}` : '',
-        ]);
+        ];
+        // Green is the PD flap, red the XPBD one: time and worst edge stretch now.
+        const flap = (f: { label: string; ms: number; stretch: number }, colour: string) =>
+            `${colour} ${f.label} · ${f.ms.toFixed(1)} ms · stretch ${(f.stretch * 100).toFixed(0)}%`;
+        this.hud.setStatus(flaps
+            ? [...head, flap(flaps[0], 'Green'), flap(flaps[1], 'Red')]
+            : [
+                ...head,
+                `${cloth.substeps} substeps · self collision ${cloth.selfCollision ? 'on' : 'off'}`,
+                sag ? `Sag: PBD (blue) ${cm(sag.pbd)} · XPBD (red) ${cm(sag.xpbd)}` : '',
+            ]);
         // Auto quality may have changed the level since the last refresh.
         this.refreshButtons();
         this.frames = 0;

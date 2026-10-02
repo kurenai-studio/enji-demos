@@ -1,5 +1,6 @@
 import { Material, Mesh, MeshRenderer, Node, primitives, sys, utils, Vec3, Vec4 } from 'cc';
 import { loadEffect, updateDynamicMesh } from '../../enji/helpers';
+import type { PdSolver } from './ProjectiveDynamics';
 import { GROUP_BEND, GROUP_SHEAR, GROUP_STRETCH, XpbdCloth } from './XpbdCloth';
 
 export interface QualityLevel {
@@ -35,14 +36,33 @@ const RUBBER = 3;
 /** Multipliers of the quality level's substep count. */
 export const SUBSTEP_SCALES: readonly number[] = [0.5, 1, 2, 4];
 
-export type Preset = 'drape' | 'curtain' | 'compare';
-export const PRESETS: readonly Preset[] = ['drape', 'curtain', 'compare'];
+export type Preset = 'drape' | 'curtain' | 'compare' | 'pd';
+export const PRESETS: readonly Preset[] = ['drape', 'curtain', 'compare', 'pd'];
+
+export interface PdSetting {
+    name: string;
+    solver: PdSolver;
+    /** Implicit Euler steps per frame. */
+    steps: number;
+    iterations: number;
+}
+
+/** What the substep button cycles through in the PD scene; the XPBD flap keeps the quality level's substeps. */
+export const PD_SETTINGS: readonly PdSetting[] = [
+    { name: 'direct 1×5', solver: 'direct', steps: 1, iterations: 5 },
+    { name: 'direct 5×2', solver: 'direct', steps: 5, iterations: 2 },
+    { name: 'Chebyshev 1×10', solver: 'chebyshev', steps: 1, iterations: 10 },
+    { name: 'Chebyshev 2×20', solver: 'chebyshev', steps: 2, iterations: 20 },
+];
 
 const CLOTH_SIZE = 1.6;
 const CLOTH_MASS = 0.4;
 const COMPARE_SIZE = 1.1;
 const COMPARE_HEIGHT = 2.0;
 const COMPARE_OFFSET = 0.65;
+/** PD scene: flaps held along their back edge, starting flat, PD above XPBD (portrait screens stack better than they sit side by side). */
+const FLAP_HEIGHTS = [2.75, 1.45];
+const PD_MAX_SEGMENTS = 32;
 const SPHERE_RADIUS = 0.45;
 const LIGHT = new Vec4(0.45, 0.8, 0.4, 0);
 /** Auto quality drops a level when the solver averages more than this per frame. */
@@ -57,6 +77,8 @@ interface ClothBody {
     geometry: primitives.IDynamicGeometry;
     minPos: Vec3;
     maxPos: Vec3;
+    /** Solver time for this cloth, smoothed, in ms. */
+    ms: number;
 }
 
 export interface ClothPick {
@@ -68,8 +90,9 @@ export interface ClothPick {
 /**
  * Cloths, collider sphere and ground; owns the solvers, the dynamic meshes they
  * stream into, the scene presets and the quality level. The compare preset
- * hangs a PBD sheet (blue) next to an XPBD sheet (red). Call `update(dt)` once
- * per frame.
+ * hangs a PBD sheet (blue) next to an XPBD sheet (red); the PD preset swings a
+ * Projective Dynamics flap (green) next to an XPBD flap (red). Call
+ * `update(dt)` once per frame.
  */
 export class ClothScene {
     preset: Preset = 'drape';
@@ -78,6 +101,8 @@ export class ClothScene {
     autoQuality = true;
     stiffness = COTTON;
     substepScale = 1;
+    /** Index into PD_SETTINGS for the PD flap. */
+    pdSetting = 0;
     selfCollision = true;
     paused = false;
     wind = false;
@@ -97,7 +122,7 @@ export class ClothScene {
 
     private constructor(
         parent: Node,
-        private readonly clothMaterials: readonly Material[],
+        private readonly clothMaterials: Readonly<Record<'xpbd' | 'pbd' | 'pd', Material>>,
         private readonly groundMaterial: Material,
         sphereMaterial: Material,
     ) {
@@ -128,6 +153,11 @@ export class ClothScene {
         pbd.setProperty('lightDir', LIGHT);
         pbd.setProperty('frontColor', new Vec4(0.16, 0.42, 0.85, 1));
         pbd.setProperty('backColor', new Vec4(0.7, 0.82, 0.95, 1));
+        const pd = new Material();
+        pd.initialize({ effectAsset: clothEffect });
+        pd.setProperty('lightDir', LIGHT);
+        pd.setProperty('frontColor', new Vec4(0.18, 0.62, 0.36, 1));
+        pd.setProperty('backColor', new Vec4(0.75, 0.92, 0.78, 1));
         const ground = new Material();
         ground.initialize({ effectAsset: litEffect, defines: { USE_GRID: true } });
         ground.setProperty('lightDir', LIGHT);
@@ -136,7 +166,7 @@ export class ClothScene {
         sphere.initialize({ effectAsset: litEffect });
         sphere.setProperty('lightDir', LIGHT);
         sphere.setProperty('baseColor', new Vec4(0.2, 0.5, 1.0, 1));
-        return new ClothScene(parent, [xpbd, pbd], ground, sphere);
+        return new ClothScene(parent, { xpbd, pbd, pd }, ground, sphere);
     }
 
     get level(): QualityLevel {
@@ -149,6 +179,11 @@ export class ClothScene {
 
     get sphere(): XpbdCloth['sphere'] {
         return this.bodies[0].sim.sphere;
+    }
+
+    /** Particles per side of the cloths in the scene (the PD scene caps the quality level's). */
+    get segments(): number {
+        return this.bodies[0].sim.segments;
     }
 
     get particleCount(): number {
@@ -171,7 +206,8 @@ export class ClothScene {
 
     /** Recreates the cloths for the current preset and quality level. */
     rebuild(): void {
-        const n = this.level.segments;
+        // The banded direct solve grows with the cube of the grid side, so the PD scene stops at Medium.
+        const n = this.preset === 'pd' ? Math.min(this.level.segments, PD_MAX_SEGMENTS) : this.level.segments;
         this.releaseGrab();
         let sims: XpbdCloth[];
         if (this.preset === 'compare') {
@@ -188,6 +224,22 @@ export class ClothScene {
             });
             sims = [sheet(-COMPARE_OFFSET), sheet(COMPARE_OFFSET)];
             sims[0].method = 'pbd';
+        } else if (this.preset === 'pd') {
+            // Held along the back edge (row 0), the flaps fall and swing through the vertical.
+            const backEdge = Array.from({ length: n }, (_, col) => [col, 0] as const);
+            const FLAP_OFFSETS = [-0.55, 0.55];
+            const flap = (i: number) => new XpbdCloth({
+                segments: n,
+                size: COMPARE_SIZE,
+                mass: CLOTH_MASS,
+                orientation: 'horizontal',
+                height: FLAP_HEIGHTS[i],
+                pins: backEdge,
+                tethers: false,
+                offsetX: FLAP_OFFSETS[i],
+            });
+            sims = [flap(0), flap(1)];
+            sims[0].method = 'pd';
         } else {
             const curtain = this.preset === 'curtain';
             sims = [new XpbdCloth({
@@ -202,6 +254,7 @@ export class ClothScene {
         for (const sim of sims) {
             sim.sphere.r = SPHERE_RADIUS;
             if (this.preset === 'compare') sim.placeSphere(0, SPHERE_RADIUS, -1.1);
+            else if (this.preset === 'pd') sim.placeSphere(0, SPHERE_RADIUS, 8);
             else if (this.preset === 'curtain') sim.placeSphere(-0.3, SPHERE_RADIUS, 1.1);
             else sim.placeSphere(0, 0.6, 0);
         }
@@ -211,13 +264,16 @@ export class ClothScene {
         this.applySettings();
         this.overBudgetFrames = 0;
         this.syncSphere();
+        this.sphereNode.active = this.preset !== 'pd';
     }
 
     update(dt: number): void {
         this.time += dt;
         const start = performance.now();
         if (!this.paused) {
-            const step = Math.min(Math.max(dt, 1 / 120), 1 / 30);
+            // The PD factor depends on the time step, so the PD scene runs a fixed
+            // step for both flaps (slow motion if frames are late) instead of refactoring.
+            const step = this.preset === 'pd' ? 1 / 60 : Math.min(Math.max(dt, 1 / 120), 1 / 30);
             for (const body of this.bodies) {
                 const cloth = body.sim;
                 if (this.wind) {
@@ -228,7 +284,9 @@ export class ClothScene {
                 } else {
                     cloth.windDrag = 0;
                 }
+                const t0 = performance.now();
                 cloth.step(step);
+                body.ms += (performance.now() - t0 - body.ms) * 0.1;
                 cloth.computeNormals();
                 body.minPos.set(cloth.minPos.x, cloth.minPos.y, cloth.minPos.z);
                 body.maxPos.set(cloth.maxPos.x, cloth.maxPos.y, cloth.maxPos.z);
@@ -249,8 +307,18 @@ export class ClothScene {
         else if (this.preset === 'compare' && this.stiffness === RUBBER) this.stiffness = COTTON;
         this.preset = next;
         this.wind = next === 'curtain';
-        this.selfCollision = next !== 'compare';
+        this.selfCollision = next !== 'compare' && next !== 'pd';
         this.rebuild();
+    }
+
+    /** PD scene only: per flap, what runs it, its solver time and its worst grid edge stretch right now. */
+    get flaps(): { label: string; ms: number; stretch: number }[] | null {
+        if (this.preset !== 'pd') return null;
+        return this.bodies.map(({ sim, ms }) => ({
+            label: sim.method === 'pd' ? `PD ${PD_SETTINGS[this.pdSetting].name}` : `XPBD ${sim.substeps} substeps`,
+            ms,
+            stretch: worstStretch(sim),
+        }));
     }
 
     /** Manual choice; turns automatic quality off. */
@@ -265,8 +333,10 @@ export class ClothScene {
         this.applySettings();
     }
 
+    /** Substep multiplier, or in the PD scene the PD flap's solver setting. */
     cycleSubsteps(): void {
-        this.substepScale = (this.substepScale + 1) % SUBSTEP_SCALES.length;
+        if (this.preset === 'pd') this.pdSetting = (this.pdSetting + 1) % PD_SETTINGS.length;
+        else this.substepScale = (this.substepScale + 1) % SUBSTEP_SCALES.length;
         this.applySettings();
     }
 
@@ -344,22 +414,28 @@ export class ClothScene {
         });
         const old = renderer.mesh;
         renderer.mesh = mesh;
-        renderer.setSharedMaterial(this.clothMaterials[sim.method === 'pbd' ? 1 : 0], 0);
+        renderer.setSharedMaterial(this.clothMaterials[sim.method], 0);
         old?.destroy();
         // Later uploads skip the UVs: updateSubMesh maps buffers to attributes in order (positions, normals, uvs).
         delete geometry.uvs;
-        return { sim, renderer, geometry, minPos, maxPos };
+        return { sim, renderer, geometry, minPos, maxPos, ms: 0 };
     }
 
     /** Stiffness, substeps and self collision onto every cloth. PBD is matched to XPBD at the level's own substep count. */
     private applySettings(): void {
         const s = STIFFNESS[this.stiffness];
+        const pd = PD_SETTINGS[this.pdSetting];
         for (const { sim } of this.bodies) {
             sim.compliance[GROUP_STRETCH] = s.stretch;
             sim.compliance[GROUP_SHEAR] = s.shear;
             sim.compliance[GROUP_BEND] = s.bend;
             sim.matchPbdStiffness(this.level.substeps);
             sim.substeps = this.substeps;
+            if (sim.method === 'pd') {
+                sim.substeps = pd.steps;
+                sim.pd.solver = pd.solver;
+                sim.pd.iterations = pd.iterations;
+            }
             sim.selfCollision = this.selfCollision;
             sim.selfCollisionEvery = 2;
         }
@@ -382,4 +458,23 @@ export class ClothScene {
         this.sphereNode.setScale(s.r, s.r, s.r);
         this.groundMaterial.setProperty('sphere', this.sphereUniform.set(s.x, s.y, s.z, s.r));
     }
+}
+
+/** Largest relative stretch of any row or column edge of the grid. */
+function worstStretch(sim: XpbdCloth): number {
+    const n = sim.segments;
+    const p = sim.pos;
+    const rest = sim.spacing;
+    let worst = 0;
+    for (let row = 0; row < n; row++) {
+        for (let col = 0; col < n; col++) {
+            const a = (row * n + col) * 3;
+            if (col < n - 1) worst = Math.max(worst, Math.hypot(p[a] - p[a + 3], p[a + 1] - p[a + 4], p[a + 2] - p[a + 5]));
+            if (row < n - 1) {
+                const b = a + n * 3;
+                worst = Math.max(worst, Math.hypot(p[a] - p[b], p[a + 1] - p[b + 1], p[a + 2] - p[b + 2]));
+            }
+        }
+    }
+    return worst / rest - 1;
 }

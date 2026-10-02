@@ -13,7 +13,11 @@
  * `method = 'pbd'` switches to classic Position Based Dynamics (Müller et al.
  * 2007) for comparison: each sweep moves a constraint a fixed fraction k of the
  * way to its rest length, so the material stiffens as the substep count grows.
+ * `method = 'pd'` replaces the constraint sweep by a Projective Dynamics
+ * implicit Euler solve over the same constraints (see `ProjectiveDynamics.ts`);
+ * prediction, tethers and colliders stay the same.
  */
+import { PdSystem } from './ProjectiveDynamics';
 
 export interface ClothLayout {
     /** Particles per side; the cloth has `segments * segments` particles. */
@@ -33,7 +37,7 @@ export interface ClothLayout {
     offsetX?: number;
 }
 
-export type SolverMethod = 'xpbd' | 'pbd';
+export type SolverMethod = 'xpbd' | 'pbd' | 'pd';
 
 export const GROUP_STRETCH = 0;
 export const GROUP_SHEAR = 1;
@@ -78,6 +82,8 @@ export class XpbdCloth {
     windDrag = 0;
 
     readonly sphere = { x: 0, y: 0.5, z: 0, r: 0.4 };
+    /** Projective Dynamics state, used when `method` is 'pd'. */
+    readonly pd: PdSystem;
 
     private readonly prev: Float32Array;
     private readonly vel: Float32Array;
@@ -129,6 +135,8 @@ export class XpbdCloth {
         this.buildParticles(layout);
         this.buildIndices();
         this.buildConstraints();
+        // Bending constraints reach two rows down, so the row-ordered system has a bandwidth of 2n.
+        this.pd = new PdSystem(this.count, 2 * n, this.ca, this.cb, this.rest, this.groupEnd);
         this.sphereFrom.x = this.sphere.x;
         this.sphereFrom.y = this.sphere.y;
         this.sphereFrom.z = this.sphere.z;
@@ -202,7 +210,8 @@ export class XpbdCloth {
                 pos[k + 2] = this.grabFrom.z + (this.grabTo.z - this.grabFrom.z) * t;
             }
 
-            this.solveConstraints(h);
+            if (this.method === 'pd') this.pd.solve(pos, invMass, h, this.compliance, grab, this.grabSavedInvMass);
+            else this.solveConstraints(h);
             if (this.selfCollision && (s + 1) % this.selfCollisionEvery === 0) this.solveSelfCollisions();
             if (this.tetherPins.length > 0) this.solveTethers();
             this.collide(

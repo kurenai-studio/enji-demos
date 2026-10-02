@@ -70,6 +70,56 @@ sheets matched at 10 substeps, 8 s after release
 The XPBD sag still moves by about 2 cm, because one sweep per substep does not
 fully converge the soft constraints. The PBD sag changes by a factor of 60.
 
+## Projective Dynamics
+
+| Direct, 1 step × 5 iterations | Chebyshev, 1 step × 10 iterations |
+|---|---|
+| ![PD direct](shots/pd-direct.jpg) | ![PD Chebyshev](shots/pd-chebyshev.jpg) |
+
+A fourth scene hangs two cotton flaps from their back edge, PD in green and
+XPBD in red. They start flat and fall through the vertical. The substep button
+cycles the PD flap's solver: a banded Cholesky global step, or Jacobi
+accelerated with Chebyshev (Wang 2015). XPBD keeps the quality level's
+substeps. The PD scene is capped at 32×32 because the banded factor grows with
+the cube of the grid side.
+
+PD (Bouaziz et al. 2014) is an implicit Euler step on the same distance
+constraints. The local step shortens every edge to its rest length; the global
+step solves `(M/h² + Σ w GᵀG) x = Ms/h² + Σ w Gᵀp` with `w = 1/α`. Zero
+compliance (stretch on cotton) uses a finite weight of 10⁴ N/m, otherwise the
+matrix would be infinite. The matrix only depends on the time step, the
+stiffness and the pins, so it is factored once; grabbing a particle is a
+rank-1 update that matches a refactor to rounding error
+(`node --no-warnings --import ./tools/ts-resolve.mjs tools/pd.mts`).
+
+Headless, 32×32 cotton flaps, free-edge angle below the horizontal at 0.25 s /
+0.5 s / 1 s (90° = hanging straight down), and how far the free edge then
+swings past the vertical:
+
+| Setting | 0.25 s | 0.5 s | 1 s | Past vertical | Worst stretch | Fastest frame |
+|---|---|---|---|---|---|---|
+| XPBD 10 substeps | 17° | 87° | 156° | 98.5 cm | 5.1% | 1.6 ms |
+| XPBD 40 substeps | 17° | 89° | 158° | 98.8 cm | 0.8% | 6.4 ms |
+| PD direct 1×5 | 5° | 11° | 30° | 24.5 cm | 1.0% | 2.7 ms |
+| PD direct 5×2 | 12° | 42° | 117° | 65.3 cm | 0.7% | 5.6 ms |
+| PD Chebyshev 1×10 | 16° | 57° | 123° | 96.6 cm | 116% | 1.2 ms |
+| PD Chebyshev 2×10 | 16° | 71° | 149° | 102.7 cm | 47% | 2.5 ms |
+
+The direct solve is accurate (stretch around 1%) and overdamped: five
+iterations in one implicit Euler step barely leave the horizontal, and even
+five steps of two iterations only reach 117° at 1 s against XPBD's 156°.
+Chebyshev at 10 iterations keeps XPBD's swing, at XPBD's cost, but the
+unconverged local step lets the cloth stretch past 100%. More implicit Euler
+steps beat more iterations inside one step, the same lesson as XPBD's small
+steps. A rubber sheet hung by its top edge (the PBD comparison) is the other
+way around: PD's equilibrium sag is 9.4 cm after two direct iterations, and
+XPBD at 10 substeps sits at 10.4 cm because one Gauss-Seidel sweep does not
+finish the soft constraints.
+
+The first factorisation of a 32×32 cotton flap takes about 5–12 ms in Node.
+Later frames reuse it. The PD scene therefore steps a fixed 1/60 s, so a slow
+device plays in slow motion instead of refactoring every time `dt` changes.
+
 ## Self collision
 
 | Self collision on | Self collision off |
@@ -116,9 +166,10 @@ pinch to zoom.
 
 - Drag the cloth to grab a particle, or drag the ball to move it. Drag anywhere
   else to orbit. Zoom with the wheel or a pinch.
-- The buttons switch the scene (drape, curtain, compare), reset, pause, cycle
-  stiffness (silk, cotton, leather, rubber), multiply the substeps, toggle self
-  collision and wind, unpin, and set quality.
+- The buttons switch the scene (drape, curtain, compare, pd), reset, pause, cycle
+  stiffness (silk, cotton, leather, rubber), multiply the substeps (or, in the
+  PD scene, cycle the PD solver), toggle self collision and wind, unpin, and
+  set quality.
 - Keys: `C` scene, `R` reset, `Space` pause, `B` stiffness, `N` substeps, `S`
   self collision, `W` wind, `U` unpin, `Q` quality.
 
@@ -151,5 +202,8 @@ Enji preview measurements:
   show a gap of 0.9 grid spacings (4.6 cm on Medium), and a fast thin object
   could still pass between particles.
 - Dihedral bending, and strain limiting beyond tethers.
+- Projective Dynamics on area and bending constraints as in the 2014 paper;
+  here it shares the cloth's distance constraints. A sparse Cholesky would
+  take the direct solve past 32×32.
 
 Made with Enji 0.4 (`feat/3d-water`).
