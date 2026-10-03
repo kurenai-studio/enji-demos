@@ -2,8 +2,9 @@
 // Derivatives against finite differences, the PSD projection, and the IPC
 // guarantee (no boundary edges ever cross) on every scene.
 import { neoHookeanHessian, peDistance2, peDistance2Derivatives, projectPsd } from '../assets/game/ipc/Geometry';
-import { IpcWorld } from '../assets/game/ipc/IpcWorld';
-import { buildScene, SCENE_NAMES } from '../assets/game/ipc/Scenes';
+import { DEFAULT_PARAMS, IpcWorld } from '../assets/game/ipc/IpcWorld';
+import { rectShape } from '../assets/game/ipc/Mesh2D';
+import { buildScene, rigidAsFem, SCENE_NAMES } from '../assets/game/ipc/Scenes';
 
 let failures = 0;
 function check(name: string, ok: boolean, detail = ''): void {
@@ -125,14 +126,14 @@ for (const model of ['ipc', 'penalty'] as const) {
     const eps = 1e-8;
     for (let k = 0; k < 60; k++) {
         const i = world.points[(k * 37) % world.points.length];
-        if (world.kinematic[i]) continue;
+        if (world.kinematic[i] || world.aff[i] >= 0) continue;
         for (let c = 0; c < 2; c++) {
             const idx = 2 * i + c;
             const x0 = world.x[idx];
             world.x[idx] = x0 + eps;
-            const ep = world.energy(world.x);
+            const ep = world.energy(world.x, 0);
             world.x[idx] = x0 - eps;
-            const em = world.energy(world.x);
+            const em = world.energy(world.x, 0);
             world.x[idx] = x0;
             const fd = (ep - em) / (2 * eps);
             err = Math.max(err, Math.abs(fd - world.grad[idx]));
@@ -140,6 +141,113 @@ for (const model of ['ipc', 'penalty'] as const) {
         }
     }
     check(`${model} energy gradient`, err < 1e-5 * Math.max(1, scale), `max error ${err.toExponential(1)} (largest ${scale.toExponential(1)}, ${contacts} contact + friction terms)`);
+}
+
+// Rigid bodies: gradient over their six unknowns (inertia, orthogonality, contact
+// and friction through x = p + A x̄, and a grab on a rigid vertex) against finite differences.
+{
+    const crates = SCENE_NAMES.indexOf('Crates');
+    const world = new IpcWorld(buildScene(crates).bodies, 'ipc') as any;
+    for (let i = 0; i < 90; i++) world.step();
+    const plank = world.bodies.find((b: any) => b.affine >= 0 && b.count > 60);
+    const gv = plank.start + 7;
+    world.grab(world.x[2 * gv], world.x[2 * gv + 1], 1e-3);
+    world.moveGrab(world.x[2 * gv] + 0.01, world.x[2 * gv + 1] + 0.02);
+    world.xn.set(world.x);
+    world.qn.set(world.q);
+    for (let k = 0; k < world.q.length; k++) world.qTilde[k] = world.q[k] + 1e-3 * Math.sin(k);
+    world.lagFriction();
+    for (let k = 0; k < world.q.length; k++) world.q[k] += 3e-6 * Math.cos(5 * k);
+    world.syncAffine();
+    world.findPairs(world.x, null, 0);
+    world.assemble();
+    world.gatherRhs();
+    let err = 0;
+    let scale = 0;
+    const eps = 1e-7;
+    for (let a = 0; a < world.rigidCount; a++) {
+        for (let c = 0; c < 6; c++) {
+            const idx = 6 * a + c;
+            const q0 = world.q[idx];
+            world.q[idx] = q0 + eps;
+            world.syncAffine();
+            const ep = world.energy(world.x, 0);
+            world.q[idx] = q0 - eps;
+            world.syncAffine();
+            const em = world.energy(world.x, 0);
+            world.q[idx] = q0;
+            world.syncAffine();
+            const analytic = -world.rhs[2 * world.abdDof[a] + c];
+            err = Math.max(err, Math.abs((ep - em) / (2 * eps) - analytic));
+            scale = Math.max(scale, Math.abs(analytic));
+        }
+    }
+    check('rigid-body (ABD) energy gradient', err < 1e-5 * Math.max(1, scale), `max error ${err.toExponential(1)} (largest ${scale.toExponential(1)}, ${world.contactCount} contact + friction terms)`);
+}
+
+// A lone rigid body: free fall matches implicit Euler exactly, and a spinning one stays a rotation.
+{
+    const shape = rectShape(0, 1, 0.3, 0.1, 6, 2);
+    const world = new IpcWorld([{ shape, young: 0, poisson: 0, density: 300, rigid: true, color: [1, 1, 1] }], 'ipc') as any;
+    const h = world.params.dt;
+    let vy = 0;
+    let y = world.q[1];
+    for (let i = 0; i < 60; i++) {
+        world.step();
+        vy += h * world.params.gravity;
+        y += h * vy;
+    }
+    check('rigid body free fall = implicit Euler', Math.abs(world.q[1] - y) < 1e-6, `y ${world.q[1].toFixed(6)} vs ${y.toFixed(6)}`);
+
+    const spin = new IpcWorld([{ shape, young: 0, poisson: 0, density: 300, rigid: true, color: [1, 1, 1] }], 'ipc', { ...DEFAULT_PARAMS, gravity: 0 }) as any;
+    const omega = 6;
+    spin.qv.set([0, 0, 0, omega, -omega, 0]);
+    let worst = 0;
+    for (let i = 0; i < 120; i++) {
+        spin.step();
+        worst = Math.max(worst, spin.orthogonalityError());
+    }
+    const spinLeft = Math.hypot(spin.qv[2], spin.qv[3]) / omega;
+    check(
+        'spinning rigid body stays a rotation',
+        worst < 1e-3,
+        `max ‖AᵀA − I‖ ${worst.toExponential(1)}, ${(spinLeft * 100).toFixed(0)}% of the spin left after 2 s (implicit Euler damping)`,
+    );
+}
+
+// Rigid bodies as ABD against the same bodies as stiff FEM, both with IPC.
+{
+    const crates = SCENE_NAMES.indexOf('Crates');
+    const defs = buildScene(crates).bodies;
+    const rigidBodies = defs.map((d, i) => (d.rigid ? i : -1)).filter((i) => i >= 0);
+    const strains: number[] = [];
+    for (const [name, bodies] of [['ABD', defs], ['stiff FEM', rigidAsFem(defs)]] as const) {
+        const world = new IpcWorld(bodies, 'ipc');
+        let crossings = 0;
+        let strain = 0;
+        let ms = 0;
+        let newton = 0;
+        let cg = 0;
+        const steps = 240;
+        for (let i = 0; i < steps; i++) {
+            world.step();
+            crossings += world.countCrossings();
+            ms += world.stats.ms;
+            newton += world.stats.newton;
+            cg += world.stats.cg;
+            for (const k of rigidBodies) {
+                const b = world.bodies[k];
+                for (let t = b.triStart; t < b.triStart + b.triCount; t++) strain = Math.max(strain, world.strain(t));
+            }
+        }
+        strains.push(strain);
+        check(
+            `Crates, rigid bodies as ${name}: no crossings`,
+            crossings === 0,
+            `${2 * world.dofCount} unknowns, ${(ms / steps).toFixed(1)} ms/step, ${(newton / steps).toFixed(1)} Newton, ${(cg / steps).toFixed(0)} CG/step, max rigid strain ${strain.toExponential(1)}`,
+        );
+    }
+    check('ABD bodies stay stiffer than the stiff FEM ones', strains[0] < strains[1] / 3, `${strains[0].toExponential(1)} vs ${strains[1].toExponential(1)}`);
 }
 
 // The IPC guarantee on every scene: no crossing boundary edges, distances stay positive, no NaN.

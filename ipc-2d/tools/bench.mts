@@ -3,8 +3,8 @@
 // Reports solver cost per 60 Hz step (median, 95th percentile, worst), Newton
 // iterations, the smallest contact distance, crossing boundary edges, and a
 // per-scene outcome.
-import { type ContactModel, IpcWorld } from '../assets/game/ipc/IpcWorld';
-import { buildScene, SCENE_NAMES } from '../assets/game/ipc/Scenes';
+import { type BodyDef, type ContactModel, DEFAULT_PARAMS, IpcWorld } from '../assets/game/ipc/IpcWorld';
+import { buildScene, RIGID_AS_FEM, rigidAsFem, SCENE_NAMES } from '../assets/game/ipc/Scenes';
 
 const seconds = Number(process.argv[2] ?? 6);
 
@@ -108,4 +108,39 @@ for (let s = 0; s < SCENE_NAMES.length; s++) {
             `  min gap ${(minDistance * 1000).toFixed(3)} mm  crossing in ${crossingSteps} steps (max ${maxCrossings})  ${outcome(s, world, track)}`,
         );
     }
+}
+
+// Crates with IPC: rigid bodies as affine bodies (several orthogonality stiffnesses) or as stiff FEM.
+console.log('\nCrates, IPC: rigid bodies as ABD or as stiff FEM');
+const crateDefs = buildScene(SCENE_NAMES.indexOf('Crates')).bodies;
+const rigidIndices = crateDefs.map((d, i) => (d.rigid ? i : -1)).filter((i) => i >= 0);
+const runs: [string, BodyDef[], number][] = [
+    ...[1e6, 1e7, 1e8].map((k): [string, BodyDef[], number] => [`ABD κ ${k.toExponential(0)}`, crateDefs, k]),
+    [`FEM E ${RIGID_AS_FEM.young.toExponential(0)}`, rigidAsFem(crateDefs), DEFAULT_PARAMS.abdStiffness],
+];
+for (const [name, defs, kappa] of runs) {
+    const world = new IpcWorld(defs, 'ipc', { ...DEFAULT_PARAMS, abdStiffness: kappa });
+    const times: number[] = [];
+    let newton = 0;
+    let cg = 0;
+    let strain = 0;
+    let crossings = 0;
+    const steps = Math.round(seconds * 60);
+    for (let i = 0; i < steps; i++) {
+        world.step();
+        times.push(world.stats.ms);
+        newton += world.stats.newton;
+        cg += world.stats.cg;
+        crossings += world.countCrossings();
+        for (const k of rigidIndices) {
+            const b = world.bodies[k];
+            for (let t = b.triStart; t < b.triStart + b.triCount; t++) strain = Math.max(strain, world.strain(t));
+        }
+    }
+    times.sort((a, b) => a - b);
+    const pct = (q: number) => times[Math.min(times.length - 1, Math.floor(q * times.length))].toFixed(1);
+    console.log(
+        `${name.padEnd(12)} ${2 * world.dofCount} unknowns  step ${pct(0.5)} ms (p95 ${pct(0.95)})  Newton ${(newton / steps).toFixed(1)}/step  CG ${(cg / steps).toFixed(0)}/step` +
+        `  max rigid strain ${strain.toExponential(1)}  crossings ${crossings}`,
+    );
 }

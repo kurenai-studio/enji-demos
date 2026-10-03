@@ -8,11 +8,13 @@ export interface SceneDef {
     view: [number, number, number, number];
 }
 
-export const SCENE_NAMES = ['Pile', 'Squeeze', 'Bullet'];
+export const SCENE_NAMES = ['Pile', 'Squeeze', 'Bullet', 'Crates'];
 
 const JELLY = { young: 3e4, poisson: 0.4, density: 100 };
 const RUBBER = { young: 1e5, poisson: 0.4, density: 150 };
 const STIFF = { young: 1e6, poisson: 0.3, density: 400 };
+/** What a rigid body becomes in the "stiff FEM" comparison: 100× the stiff material. */
+export const RIGID_AS_FEM = { young: 1e8, poisson: 0.3 };
 
 const WALL_COLOR = [0.24, 0.26, 0.32];
 const PISTON_COLOR = [0.42, 0.45, 0.52];
@@ -32,6 +34,16 @@ const WALL = 0.1;
 
 function soft(shape: Shape, material: typeof JELLY, color: readonly number[], vx = 0, vy = 0): BodyDef {
     return { shape, ...material, color, vx, vy };
+}
+
+/** A rigid body (affine body dynamics); the material only matters for the stiff-FEM comparison. */
+function rigid(shape: Shape, color: readonly number[], vx = 0, vy = 0): BodyDef {
+    return { shape, ...STIFF, ...RIGID_AS_FEM, rigid: true, color, vx, vy };
+}
+
+/** The same scene with every rigid body simulated as a very stiff FEM body instead. */
+export function rigidAsFem(bodies: readonly BodyDef[]): BodyDef[] {
+    return bodies.map((b) => (b.rigid ? { ...b, rigid: false } : b));
 }
 
 function fixed(shape: Shape, color = WALL_COLOR, motion?: (t: number) => [number, number]): BodyDef {
@@ -63,7 +75,7 @@ function pile(): SceneDef {
             soft(arcShape(-0.05, 0.85, 0.08, 0.17, 0.35 * Math.PI, 1.65 * Math.PI, 2, 14), JELLY, COLORS[2]),
             soft(arcShape(0.45, 0.9, 0.07, 0.15, 0, 2 * Math.PI, 2, 18), RUBBER, COLORS[3]),
             soft(rectShape(-0.35, 1.35, 0.55, 0.12, 11, 2, -0.3), JELLY, COLORS[4]),
-            soft(diskShape(0.3, 1.5, 0.11, 3), STIFF, COLORS[5]),
+            rigid(diskShape(0.3, 1.5, 0.11, 3), COLORS[5]),
             soft(diskShape(-0.1, 1.85, 0.13, 4), JELLY, COLORS[6], 0.8, 0),
         ],
     };
@@ -99,11 +111,32 @@ function bullet(): SceneDef {
         bodies: [
             ...container(),
             ...slabs,
-            soft(diskShape(-0.6, 0.45, 0.05, 2), STIFF, COLORS[5], 30, 0),
+            rigid(diskShape(-0.6, 0.45, 0.05, 2), COLORS[5], 30, 0),
+        ],
+    };
+}
+
+/** Rigid crates, a plank, a ring and a hook dropped onto a jelly mattress and the bare floor. */
+function crates(): SceneDef {
+    return {
+        name: 'Crates',
+        view: VIEW,
+        bodies: [
+            ...container(),
+            soft(rectShape(-0.38, 0.085, 0.76, 0.16, 16, 3), JELLY, COLORS[2]),
+            rigid(rectShape(0.4, 0.16, 0.3, 0.3, 6, 6), COLORS[1]),
+            rigid(rectShape(-0.42, 0.42, 0.24, 0.24, 5, 5, 0.25), COLORS[0]),
+            rigid(rectShape(0.42, 0.62, 0.2, 0.2, 4, 4, 0.6), COLORS[3]),
+            rigid(rectShape(0.0, 1.0, 1.0, 0.06, 25, 2, -0.12), COLORS[5]),
+            rigid(arcShape(-0.35, 1.45, 0.07, 0.13, 0, 2 * Math.PI, 2, 18), COLORS[4]),
+            rigid(arcShape(0.3, 1.45, 0.08, 0.14, 0.3 * Math.PI, 1.7 * Math.PI, 2, 14), COLORS[6]),
+            rigid(rectShape(0.0, 1.8, 0.16, 0.16, 4, 4, 0.7), COLORS[1]),
+            rigid(rectShape(-0.45, 1.95, 0.2, 0.12, 5, 3, -0.4), COLORS[3]),
+            soft(diskShape(0.42, 1.95, 0.1, 3), JELLY, COLORS[0], -0.5, 0),
         ],
     };
 }
 
 export function buildScene(index: number): SceneDef {
-    return [pile, squeeze, bullet][index]();
+    return [pile, squeeze, bullet, crates][index]();
 }

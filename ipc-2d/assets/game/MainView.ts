@@ -5,14 +5,15 @@ import { Hud } from './ipc/Hud';
 import { IpcInteraction } from './ipc/IpcInteraction';
 import { IpcView } from './ipc/IpcView';
 import { DEFAULT_PARAMS, IpcWorld, type ContactModel } from './ipc/IpcWorld';
-import { buildScene, SCENE_NAMES, type SceneDef } from './ipc/Scenes';
+import { buildScene, rigidAsFem, SCENE_NAMES, type SceneDef } from './ipc/Scenes';
 
 const { ccclass } = _decorator;
 
-type Mode = 'compare' | 'ipc' | 'penalty';
-const MODES: Mode[] = ['compare', 'ipc', 'penalty'];
-const MODE_NAMES: Record<Mode, string> = { compare: 'IPC vs penalty', ipc: 'IPC', penalty: 'Penalty' };
+type Mode = 'compare' | 'abd' | 'ipc' | 'penalty';
+const MODES: Mode[] = ['compare', 'abd', 'ipc', 'penalty'];
+const MODE_NAMES: Record<Mode, string> = { compare: 'IPC vs penalty', abd: 'ABD vs FEM', ipc: 'IPC', penalty: 'Penalty' };
 const MODEL_NAMES: Record<ContactModel, string> = { ipc: 'IPC', penalty: 'Penalty' };
+const CRATES = SCENE_NAMES.indexOf('Crates');
 /** Newton time budget per world and step (ms); 0 runs Newton to convergence. */
 const BUDGETS = [6, 3, 0];
 /** Frames skipped, then frames averaged, before the start-up quality check. */
@@ -34,17 +35,21 @@ interface Meter {
     minGap: number;
     crossings: number;
     crossingSteps: number;
+    /** Largest ‖FᵀF − I‖ over the rigid bodies' triangles. */
+    strain: number;
 }
 
 function meter(): Meter {
-    return { steps: 0, ms: 0, newton: 0, cut: 0, contacts: 0, minGap: Infinity, crossings: 0, crossingSteps: 0 };
+    return { steps: 0, ms: 0, newton: 0, cut: 0, contacts: 0, minGap: Infinity, crossings: 0, crossingSteps: 0, strain: 0 };
 }
 
 /**
  * Small-scale IPC (Li et al. 2020) in 2D: implicit Neo-Hookean bodies with a
  * log-barrier contact potential, CCD-filtered Newton steps and lagged
  * friction, next to the same solver with a penalty spring instead of the
- * barrier. Red outlines are boundary edges that cross another edge.
+ * barrier. Red outlines are boundary edges that cross another edge. Rigid
+ * bodies are affine bodies (Lan et al. 2022) in the same solve; the ABD mode
+ * puts them next to the same bodies as very stiff FEM.
  */
 @ccclass('MainView')
 export class MainView extends Component implements IView {
@@ -53,6 +58,8 @@ export class MainView extends Component implements IView {
     private view: IpcView | null = null;
     private interaction: IpcInteraction | null = null;
     private worlds: IpcWorld[] = [];
+    private names: string[] = [];
+    private rigidBodies: number[] = [];
     private scene: SceneDef | null = null;
     private sceneIndex = 0;
     private mode: Mode = 'compare';
@@ -96,6 +103,7 @@ export class MainView extends Component implements IView {
             cycleMode: () => {
                 this.autoFrames = -1;
                 this.mode = MODES[(MODES.indexOf(this.mode) + 1) % MODES.length];
+                if (this.mode === 'abd' && !buildScene(this.sceneIndex).bodies.some((b) => b.rigid)) this.sceneIndex = CRATES;
                 this.reset();
             },
             cycleScene: () => {
@@ -157,6 +165,10 @@ export class MainView extends Component implements IView {
             m.minGap = Math.min(m.minGap, s.minDistance);
             m.crossings = Math.max(m.crossings, crossings);
             if (crossings > 0) m.crossingSteps++;
+            for (const k of this.rigidBodies) {
+                const b = w.bodies[k];
+                for (let t = b.triStart; t < b.triStart + b.triCount; t++) m.strain = Math.max(m.strain, w.strain(t));
+            }
         });
         this.view.update(this.metresPerPixel);
         this.updateHud(dt);
@@ -181,16 +193,27 @@ export class MainView extends Component implements IView {
             this.applyBudget();
             this.autoFrames = 0;
             this.autoTime = 0;
-        } else if (this.budget === 1 && this.mode === 'compare' && fps < AUTO_SINGLE_FPS) {
+        } else if (this.budget === 1 && this.worlds.length > 1 && fps < AUTO_SINGLE_FPS) {
             this.mode = 'ipc';
             this.reset();
         }
     }
 
     private reset(): void {
-        this.scene = buildScene(this.sceneIndex);
-        const models: ContactModel[] = this.mode === 'compare' ? ['ipc', 'penalty'] : [this.mode];
-        this.worlds = models.map((m) => new IpcWorld(this.scene!.bodies, m, { ...DEFAULT_PARAMS }));
+        const scene = buildScene(this.sceneIndex);
+        this.scene = scene;
+        this.rigidBodies = scene.bodies.map((b, i) => (b.rigid ? i : -1)).filter((i) => i >= 0);
+        if (this.mode === 'abd') {
+            this.worlds = [
+                new IpcWorld(scene.bodies, 'ipc', { ...DEFAULT_PARAMS }),
+                new IpcWorld(rigidAsFem(scene.bodies), 'ipc', { ...DEFAULT_PARAMS }),
+            ];
+            this.names = ['ABD', 'FEM'];
+        } else {
+            const models: ContactModel[] = this.mode === 'compare' ? ['ipc', 'penalty'] : [this.mode];
+            this.worlds = models.map((m) => new IpcWorld(scene.bodies, m, { ...DEFAULT_PARAMS }));
+            this.names = models.map((m) => MODEL_NAMES[m]);
+        }
         this.meters = this.worlds.map(meter);
         this.grabbing = false;
         this.applyBudget();
@@ -304,12 +327,13 @@ export class MainView extends Component implements IView {
         const worlds = this.worlds;
         const w0 = worlds[0];
         const side = (i: number) => (worlds.length > 1 ? (i === 0 ? 'L ' : 'R ') : '');
+        const abd = this.mode === 'abd';
         const lines = [
             `FPS ${(this.frames / this.frameTime).toFixed(0)} · ${SCENE_NAMES[this.sceneIndex]} · ${worlds.length > 1 ? '2 × ' : ''}${w0.vertexCount} vertices · dt 1/60 s`,
-            ...worlds.map((w, i) => `${side(i)}${MODEL_NAMES[w.model]} ${describe(this.meters[i])}`),
+            ...worlds.map((w, i) => `${side(i)}${this.names[i]} ${describe(this.meters[i])}`),
         ];
         if (worlds.length === 1) lines.push(`${describeContacts(this.meters[0])}`);
-        lines.push('drag a body · red outline = edges crossing');
+        lines.push(abd ? 'rigid: 6 unknowns per body (L), 2 per vertex (R)' : 'drag a body · red outline = edges crossing');
         this.hud.setStatus(lines);
         this.labels.forEach((label, i) => {
             const w = worlds[i];
@@ -319,6 +343,13 @@ export class MainView extends Component implements IView {
             const problems: string[] = [];
             if (m.crossings > 0) problems.push(`${m.crossings} crossings`);
             if (lost > 0) problems.push(`${lost} ${lost > 1 ? 'bodies' : 'body'} escaped`);
+            if (abd) {
+                const name = i === 0 ? 'ABD' : 'Stiff FEM';
+                problems.unshift(`${2 * w.dofCount} unknowns`, `strain ${(m.strain * 100).toFixed(m.strain < 0.01 ? 2 : 1)}%`);
+                label.string = `${name} · ${problems.join(' · ')}`;
+                label.color = m.crossings > 0 || lost > 0 ? LABEL_BAD : LABEL_COLOR;
+                return;
+            }
             const name = w.model === 'ipc' ? 'IPC barrier' : 'Penalty spring';
             label.string = problems.length ? `${name} · ${problems.join(' · ')}` : `${name}${w.model === 'ipc' ? ' · never crosses' : ''}`;
             label.color = problems.length ? LABEL_BAD : LABEL_COLOR;
