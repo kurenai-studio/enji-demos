@@ -1,0 +1,10 @@
+{
+    "name": "rigid-3d",
+    "type": "3d",
+    "version": "3.8.8",
+    "uuid": "0850ea2f-b556-4fa9-806b-cedb842aa049",
+    "creator": {
+        "version": "3.8.8",
+        "dependencies": {}
+    }
+}
