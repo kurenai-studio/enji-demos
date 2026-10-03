@@ -1,0 +1,10 @@
+{
+    "name": "rollback-netcode",
+    "type": "2d",
+    "version": "3.8.8",
+    "uuid": "a6240ae4-baea-40a6-8e11-a31790fc5145",
+    "creator": {
+        "version": "3.8.8",
+        "dependencies": {}
+    }
+}
