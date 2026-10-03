@@ -8,11 +8,9 @@ import {
     EventKeyboard,
     EventMouse,
     EventTouch,
-    Graphics,
     input,
     Input,
     KeyCode,
-    Label,
     Layers,
     Material,
     Mesh,
@@ -27,8 +25,10 @@ import {
     view,
 } from 'cc';
 import type { IView } from '../enji/IView';
-import { addLabel } from '../enji/helpers';
+import { ensureCanvas } from '../enji/helpers';
+import { Hud } from './water/Hud';
 import { PBFSolver } from './water/PBFSolver';
+import { applyQuality, QUALITY, type WaterQuality } from './water/Quality';
 import { SurfaceMesher } from './water/SurfaceMesher';
 import { ParticleMesh } from './water/ParticleMesh';
 
@@ -37,11 +37,16 @@ const { ccclass } = _decorator;
 // Tank interior in tank-local metres. The tank node pivots at its floor centre.
 const TANK_MIN: [number, number, number] = [-1, 0, -0.45];
 const TANK_MAX: [number, number, number] = [1, 1.3, 0.45];
-const KERNEL_H = 0.1;
-const SPACING = 0.05;
 const DAM = { x1: -0.2, y1: 0.95 };
-const DROP_SIDE = 8;
 const EXTRA_BLOCKS = 3;
+/**
+ * Start-up check: skip the first frames, then average a window; if the frame rate or the
+ * simulation budget misses, drop one quality level and check again.
+ */
+const AUTO_WARMUP = 30;
+const AUTO_SAMPLES = 60;
+const AUTO_MIN_FPS = 50;
+const AUTO_MAX_WORK_MS = 12;
 const SHAKE_AMPLITUDE = 0.12;
 const SHAKE_HZ = 1.1;
 const TILTS = [0, 12, -12];
@@ -55,11 +60,6 @@ enum ViewMode {
     Both = 2,
 }
 const VIEW_NAMES = ['Surface', 'Particles', 'Both'];
-
-interface HudButton {
-    label: Label;
-    text: () => string;
-}
 
 @ccclass('MainView')
 export class MainView extends Component implements IView {
@@ -94,10 +94,16 @@ export class MainView extends Component implements IView {
     private vorticityOn = false;
     private simTime = 0;
 
-    private hud!: Label;
-    private buttons: HudButton[] = [];
+    private hud: Hud | null = null;
+    private qualityIndex = 0;
+    private autoQuality = true;
+    private autoFrames = 0;
+    private autoTime = 0;
+    private autoWorkMs = 0;
+    private pinchDistance = 0;
     private fps = 60;
     private simMs = 0;
+    private lastWorkMs = 0;
     private meshMs = 0;
     private uploadMs = 0;
     private hudTimer = 0;
@@ -111,18 +117,7 @@ export class MainView extends Component implements IView {
             cam.priority = 1 << 30;
         }
 
-        this.solver = new PBFSolver(this.initialCount() + EXTRA_BLOCKS * DROP_SIDE ** 3, KERNEL_H, SPACING, { min: TANK_MIN, max: TANK_MAX });
-        this.solver.iterations = ITERATION_LEVELS[this.iterationIndex];
-        this.solver.vorticity = 0;
-        this.resetDam();
-        this.mesher = new SurfaceMesher(
-            [TANK_MIN[0] - SHAKE_AMPLITUDE, TANK_MIN[1], TANK_MIN[2]],
-            [TANK_MAX[0] + SHAKE_AMPLITUDE, TANK_MAX[1] + 0.35, TANK_MAX[2]],
-            0.045,
-            0.09,
-        );
-        this.particles = new ParticleMesh(this.solver.capacity, SPACING * 0.45);
-
+        this.configure(0);
         this.buildUi(root);
         input.on(Input.EventType.KEY_DOWN, this.onKey, this);
         input.on(Input.EventType.MOUSE_WHEEL, this.onWheel, this);
@@ -140,14 +135,44 @@ export class MainView extends Component implements IView {
     onDestroy(): void {
         input.off(Input.EventType.KEY_DOWN, this.onKey, this);
         input.off(Input.EventType.MOUSE_WHEEL, this.onWheel, this);
+        this.hud?.destroy();
     }
 
-    private initialCount(): number {
-        const s = SPACING;
+    private get quality(): WaterQuality {
+        return QUALITY[this.qualityIndex];
+    }
+
+    private static capacity(q: WaterQuality): number {
+        const s = q.spacing;
         const nx = Math.floor((DAM.x1 - TANK_MIN[0]) / s);
         const ny = Math.floor((DAM.y1 - TANK_MIN[1]) / s);
         const nz = Math.floor((TANK_MAX[2] - TANK_MIN[2]) / s);
-        return nx * ny * nz;
+        return nx * ny * nz + EXTRA_BLOCKS * q.dropSide ** 3;
+    }
+
+    /** Solver, mesher and particle view for a quality level; restarts the dam break. */
+    private configure(index: number): void {
+        this.qualityIndex = index;
+        const q = this.quality;
+        this.solver = new PBFSolver(MainView.capacity(q), q.kernel, q.spacing, { min: TANK_MIN, max: TANK_MAX });
+        applyQuality(this.solver, q);
+        this.solver.iterations = ITERATION_LEVELS[this.iterationIndex];
+        this.solver.vorticity = this.vorticityOn ? 0.0004 : 0;
+        this.resetDam();
+        this.mesher = new SurfaceMesher(
+            [TANK_MIN[0] - SHAKE_AMPLITUDE, TANK_MIN[1], TANK_MIN[2]],
+            [TANK_MAX[0] + SHAKE_AMPLITUDE, TANK_MAX[1] + 0.35, TANK_MAX[2]],
+            q.meshCell,
+            q.meshRadius,
+        );
+        this.particles = new ParticleMesh(this.solver.capacity, q.spacing * 0.45);
+        this.simMs = this.meshMs = 0;
+        if (this.ready) director.getScene()!.globals.shadows.shadowMapSize = index === 0 ? 2048 : 1024;
+    }
+
+    private setQuality(index: number): void {
+        this.configure(index);
+        this.refreshButtons();
     }
 
     // ------------------------------------------------------------------ world
@@ -190,9 +215,10 @@ export class MainView extends Component implements IView {
         const shadows = director.getScene()!.globals.shadows;
         shadows.enabled = true;
         shadows.type = renderer.scene.ShadowType.ShadowMap;
-        shadows.shadowMapSize = 2048;
+        shadows.shadowMapSize = this.qualityIndex === 0 ? 2048 : 1024;
 
-        this.box(world, 'Ground', [0, -0.36, 0], [14, 0.02, 14], 'ground', false, true);
+        // Ground beyond the shadow map reads as fully shadowed, which shows as black wedges on portrait screens.
+        this.box(world, 'Ground', [0, -0.36, 0], [14, 0.02, 14], 'ground', false, false);
 
         const tank = new Node('Tank');
         world.addChild(tank);
@@ -231,11 +257,14 @@ export class MainView extends Component implements IView {
         const particleNode = new Node('Particles');
         tank.addChild(particleNode);
         this.particleRenderer = particleNode.addComponent(MeshRenderer);
+        // Sized for the largest level, so switching quality reuses the mesh.
+        const maxParticles = Math.max(...QUALITY.map((q) => MainView.capacity(q)));
         this.particleMesh = utils.MeshUtils.createDynamicMesh(0, this.placeholderGeometry(true, lo, hi), undefined, {
             maxSubMeshes: 1,
-            maxSubMeshVertices: this.particles.capacity * 6,
-            maxSubMeshIndices: this.particles.capacity * 24,
+            maxSubMeshVertices: maxParticles * 6,
+            maxSubMeshIndices: maxParticles * 24,
         });
+        this.particleIndexUpload = new Uint32Array(maxParticles * 24);
         this.particleRenderer.mesh = this.particleMesh;
         this.setMaterial(this.particleRenderer, 'particles');
         this.particleRenderer.shadowCastingMode = MeshRenderer.ShadowCastingMode.ON;
@@ -302,6 +331,7 @@ export class MainView extends Component implements IView {
         this.frame++;
         const step = Math.min(dt, 1 / 45);
         const s = this.solver;
+        const t0Frame = performance.now();
 
         if (!this.paused) {
             this.simTime += step;
@@ -339,7 +369,10 @@ export class MainView extends Component implements IView {
         const t2 = performance.now();
         this.meshMs += (t2 - t1 - this.meshMs) * 0.1;
         this.upload();
-        this.uploadMs += (performance.now() - t2 - this.uploadMs) * 0.1;
+        const t3 = performance.now();
+        this.uploadMs += (t3 - t2 - this.uploadMs) * 0.1;
+        this.lastWorkMs = t3 - t0Frame;
+        this.checkQuality(dt);
 
         this.hudTimer -= dt;
         if (this.hudTimer <= 0) {
@@ -366,11 +399,20 @@ export class MainView extends Component implements IView {
         }
         if (this.viewMode !== ViewMode.Surface && this.particleMesh) {
             const p = this.particles;
+            // After a switch to a lower quality level the buffer still holds more octahedra; zero them.
+            let indices = p.indices.subarray(0, p.indexCount);
+            if (this.uploadedParticleIndices > p.indexCount) {
+                const padded = this.particleIndexUpload.subarray(0, this.uploadedParticleIndices);
+                padded.fill(0);
+                padded.set(indices);
+                indices = padded;
+            }
+            this.uploadedParticleIndices = p.indexCount;
             this.particleMesh.updateSubMesh(0, {
                 positions: p.positions.subarray(0, p.vertexCount * 3),
                 normals: p.normals.subarray(0, p.vertexCount * 3),
                 colors: p.colors.subarray(0, p.vertexCount * 4),
-                indices32: p.indices.subarray(0, p.indexCount),
+                indices32: indices,
                 minPos: lo,
                 maxPos: hi,
             });
@@ -379,6 +421,8 @@ export class MainView extends Component implements IView {
     }
 
     private uploadedWaterIndices = 0;
+    private uploadedParticleIndices = 0;
+    private particleIndexUpload = new Uint32Array(0);
 
     /**
      * Enji's preview runtime draws the whole preallocated index buffer of a dynamic mesh
@@ -408,10 +452,37 @@ export class MainView extends Component implements IView {
     }
 
     private dropBlock(): void {
-        const side = DROP_SIDE * SPACING;
+        const q = this.quality;
+        const side = q.dropSide * q.spacing;
         const x0 = 0.25 + (Math.random() - 0.5) * 0.4;
         const z0 = -side / 2 + (Math.random() - 0.5) * 0.2;
-        this.solver.dropBlock(DROP_SIDE, x0, 0.95, z0, -1.5);
+        this.solver.dropBlock(q.dropSide, x0, 0.95, z0, -1.5);
+    }
+
+    private cycleQuality(): void {
+        this.autoQuality = false;
+        this.setQuality((this.qualityIndex + 1) % QUALITY.length);
+    }
+
+    /** Start-up check; repeats after each drop until a level fits or Low is reached. */
+    private checkQuality(dt: number): void {
+        if (!this.autoQuality || this.paused) return;
+        this.autoFrames += 1;
+        if (this.autoFrames <= AUTO_WARMUP) return;
+        this.autoTime += dt;
+        this.autoWorkMs += this.lastWorkMs;
+        if (this.autoFrames < AUTO_WARMUP + AUTO_SAMPLES) return;
+        const fps = AUTO_SAMPLES / this.autoTime;
+        const workMs = this.autoWorkMs / AUTO_SAMPLES;
+        this.autoFrames = 0;
+        this.autoTime = 0;
+        this.autoWorkMs = 0;
+        if ((fps < AUTO_MIN_FPS || workMs > AUTO_MAX_WORK_MS) && this.qualityIndex < QUALITY.length - 1) {
+            this.setQuality(this.qualityIndex + 1);
+        } else {
+            this.autoQuality = false;
+            this.refreshButtons();
+        }
     }
 
     private toggleShake(): void {
@@ -448,6 +519,7 @@ export class MainView extends Component implements IView {
             case KeyCode.SPACE: this.paused = !this.paused; break;
             case KeyCode.KEY_I: this.cycleIterations(); break;
             case KeyCode.KEY_O: this.toggleVorticity(); break;
+            case KeyCode.KEY_Q: this.cycleQuality(); break;
             default: return;
         }
         this.refreshButtons();
@@ -462,100 +534,84 @@ export class MainView extends Component implements IView {
     // ------------------------------------------------------------------ UI
 
     private buildUi(root: Node): void {
+        const canvas = ensureCanvas(root).node;
         const size = view.getVisibleSize();
-        const halfW = size.width / 2;
-        const halfH = size.height / 2;
 
-        // Full-screen pad behind the HUD: dragging it orbits the camera.
+        // Full-screen pad behind the HUD: one finger orbits, two fingers pinch to zoom.
         const pad = new Node('OrbitPad');
-        pad.layer = root.layer;
-        root.addChild(pad);
-        pad.addComponent(UITransform).setContentSize(size.width, size.height);
+        pad.layer = canvas.layer;
+        canvas.addChild(pad);
+        pad.addComponent(UITransform).setContentSize(size.width * 4, size.height * 4);
         pad.on(Node.EventType.TOUCH_MOVE, (event: EventTouch) => {
-            const delta = event.getUIDelta();
-            this.yaw -= delta.x * 0.3;
-            this.pitch = Math.min(80, Math.max(-5, this.pitch - delta.y * 0.3));
+            const touches = event.getAllTouches();
+            if (touches.length >= 2) {
+                const a = touches[0].getLocation();
+                const b = touches[1].getLocation();
+                const spread = Math.hypot(a.x - b.x, a.y - b.y);
+                if (this.pinchDistance > 1 && spread > 1) {
+                    this.distance = Math.min(12, Math.max(1.8, this.distance * (this.pinchDistance / spread)));
+                }
+                this.pinchDistance = spread;
+            } else {
+                this.pinchDistance = 0;
+                const delta = event.getUIDelta();
+                this.yaw -= delta.x * 0.3;
+                this.pitch = Math.min(80, Math.max(-5, this.pitch - delta.y * 0.3));
+            }
             if (this.ready) this.applyOrbit();
         });
+        const endPinch = () => { this.pinchDistance = 0; };
+        pad.on(Node.EventType.TOUCH_END, endPinch);
+        pad.on(Node.EventType.TOUCH_CANCEL, endPinch);
 
-        const panel = new Node('HudPanel');
-        panel.layer = root.layer;
-        root.addChild(panel);
-        panel.addComponent(UITransform);
-        const g = panel.addComponent(Graphics);
-        g.fillColor = new Color(0, 0, 0, 130);
-        g.roundRect(-halfW + 8, halfH - 8 - 208, 390, 208, 8);
-        g.fill();
-
-        this.hud = addLabel(root, '', { name: 'Hud', fontSize: 17, color: new Color(230, 240, 255, 255) });
-        this.hud.horizontalAlign = Label.HorizontalAlign.LEFT;
-        this.hud.verticalAlign = Label.VerticalAlign.TOP;
-        this.hud.lineHeight = 21;
-        this.hud.node.getComponent(UITransform)!.setAnchorPoint(0, 1);
-        this.hud.node.setPosition(-halfW + 18, halfH - 14, 0);
-
-        const bar = new Node('ButtonBar');
-        bar.layer = root.layer;
-        root.addChild(bar);
-        bar.setPosition(0, -halfH + 34, 0);
-        const defs: [string, () => string, () => void][] = [
-            ['R', () => 'Dam break', () => this.resetDam()],
-            ['S', () => (this.shaking ? 'Shake on' : 'Shake off'), () => this.toggleShake()],
-            ['T', () => `Tilt ${TILTS[this.tiltIndex]}\u00b0`, () => this.cycleTilt()],
-            ['D', () => 'Drop block', () => this.dropBlock()],
-            ['V', () => VIEW_NAMES[this.viewMode], () => this.cycleView()],
-            ['I', () => `Iter ${ITERATION_LEVELS[this.iterationIndex]}`, () => this.cycleIterations()],
-            ['O', () => (this.vorticityOn ? 'Vort on' : 'Vort off'), () => this.toggleVorticity()],
-            ['P', () => (this.paused ? 'Resume' : 'Pause'), () => { this.paused = !this.paused; }],
-        ];
-        const width = Math.min(112, (size.width - 20) / defs.length - 6);
-        const total = defs.length * (width + 6) - 6;
-        defs.forEach(([key, text, action], index) => {
-            const node = new Node(`Btn${key}`);
-            node.layer = root.layer;
-            bar.addChild(node);
-            node.setPosition(-total / 2 + width / 2 + index * (width + 6), 0, 0);
-            node.addComponent(UITransform).setContentSize(width, 42);
-            const bg = node.addComponent(Graphics);
-            bg.fillColor = new Color(18, 26, 44, 220);
-            bg.strokeColor = new Color(110, 170, 255, 210);
-            bg.lineWidth = 2;
-            bg.roundRect(-width / 2, -21, width, 42, 9);
-            bg.fill();
-            bg.stroke();
-            const label = addLabel(node, '', { name: 'Text', fontSize: 15 });
-            label.lineHeight = 17;
-            const button: HudButton = { label, text: () => `${text()} [${key}]` };
-            node.on(Node.EventType.TOUCH_END, () => {
-                action();
-                this.refreshButtons();
-                this.updateHud();
-            });
-            this.buttons.push(button);
-        });
+        const tap = (action: () => void) => () => {
+            action();
+            this.refreshButtons();
+            this.updateHud();
+        };
+        this.hud = new Hud(canvas, [
+            { id: 'reset', onTap: tap(() => this.resetDam()) },
+            { id: 'shake', onTap: tap(() => this.toggleShake()) },
+            { id: 'tilt', onTap: tap(() => this.cycleTilt()) },
+            { id: 'drop', onTap: tap(() => this.dropBlock()) },
+            { id: 'view', onTap: tap(() => this.cycleView()) },
+            { id: 'iter', onTap: tap(() => this.cycleIterations()) },
+            { id: 'vort', onTap: tap(() => this.toggleVorticity()) },
+            { id: 'quality', onTap: tap(() => this.cycleQuality()) },
+            { id: 'pause', onTap: tap(() => { this.paused = !this.paused; }) },
+        ]);
         this.refreshButtons();
     }
 
     private refreshButtons(): void {
-        for (const b of this.buttons) b.label.string = b.text();
+        const hud = this.hud;
+        if (!hud) return;
+        hud.setButton('reset', 'Dam break');
+        hud.setButton('shake', 'Shake', this.shaking);
+        hud.setButton('tilt', `Tilt ${TILTS[this.tiltIndex]}\u00b0`, this.tiltIndex !== 0);
+        hud.setButton('drop', 'Drop block');
+        hud.setButton('view', VIEW_NAMES[this.viewMode]);
+        hud.setButton('iter', `Iter ${ITERATION_LEVELS[this.iterationIndex]}`);
+        hud.setButton('vort', 'Vorticity', this.vorticityOn);
+        hud.setButton('quality', `${this.quality.name}${this.autoQuality ? ' (auto)' : ''}`);
+        hud.setButton('pause', this.paused ? 'Resume' : 'Pause', this.paused);
     }
 
     private updateHud(): void {
         const s = this.solver;
         const m = this.mesher;
         const tris = this.viewMode === ViewMode.Particles ? this.particles.indexCount / 3 : m.indexCount / 3;
-        this.hud.string = [
-            `PBF water 3D   ${this.paused ? '[PAUSED]' : ''}`,
-            `FPS ${this.fps.toFixed(1)}   particles ${s.count}`,
-            `solver iters ${s.iterations}  substeps ${s.substeps}  vorticity ${this.vorticityOn ? 'on' : 'off'}`,
-            `sim ${this.simMs.toFixed(1)} ms   mesh ${this.meshMs.toFixed(1)} ms   upload ${this.uploadMs.toFixed(1)} ms`,
-            `neighbours ${s.avgNeighbors.toFixed(1)}   density err avg ${(s.avgDensityError * 100).toFixed(1)}% max ${(s.densityError * 100).toFixed(0)}%`,
-            `surface nets grid ${m.resolution}   tris ${tris | 0}`,
-            `view ${VIEW_NAMES[this.viewMode]}   tilt ${this.tilt.toFixed(0)}\u00b0   shake ${this.shaking ? 'on' : 'off'}`,
-            `drag: orbit   wheel: zoom`,
-        ].join('\n');
+        this.hud?.setStatus([
+            `FPS ${this.fps.toFixed(0)} · sim ${this.simMs.toFixed(1)} ms · mesh ${this.meshMs.toFixed(1)} ms${this.paused ? ' · paused' : ''}`,
+            `${this.quality.name}: ${s.count} particles · ${s.iterations} iterations`,
+            `neighbours ${s.avgNeighbors.toFixed(0)} · density error ${(s.avgDensityError * 100).toFixed(1)}% avg`,
+            `surface grid ${m.resolution} · ${tris | 0} tris`,
+            `tilt ${this.tilt.toFixed(0)}\u00b0 · drag orbits, pinch or wheel zooms`,
+        ]);
         (globalThis as any).__water = {
             fps: this.fps,
+            quality: this.quality.name,
+            autoQuality: this.autoQuality,
             particles: s.count,
             iterations: s.iterations,
             simMs: this.simMs,

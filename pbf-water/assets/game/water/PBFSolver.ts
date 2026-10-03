@@ -55,12 +55,21 @@ export class PBFSolver {
     private readonly wy: Float32Array;
     private readonly wz: Float32Array;
 
-    static readonly MAX_NEIGHBORS = 64;
+    /**
+     * Each pair is stored once, in the list of its lower index ("forward" neighbours), and
+     * every pair pass updates both particles. The cap applies to forward neighbours.
+     */
+    static readonly MAX_NEIGHBORS = 48;
     private readonly neighbors: Int32Array;
     private readonly neighborCount: Int32Array;
     /** Per-pair spiky gradient factor and s_corr kernel ratio, filled by computeLambda for applyDelta. */
     private readonly pairGrad: Float32Array;
     private readonly pairW: Float32Array;
+    /** Per-particle sums for the lambda denominator: Σ∇C and Σ|∇_j C|². */
+    private readonly gradX: Float32Array;
+    private readonly gradY: Float32Array;
+    private readonly gradZ: Float32Array;
+    private readonly grad2: Float32Array;
 
     private readonly gridNx: number;
     private readonly gridNy: number;
@@ -105,6 +114,7 @@ export class PBFSolver {
         this.lambda = f(); this.density = f();
         this.dvx = f(); this.dvy = f(); this.dvz = f();
         this.wx = f(); this.wy = f(); this.wz = f();
+        this.gradX = f(); this.gradY = f(); this.gradZ = f(); this.grad2 = f();
         this.neighbors = new Int32Array(capacity * PBFSolver.MAX_NEIGHBORS);
         this.neighborCount = new Int32Array(capacity);
         this.pairGrad = new Float32Array(capacity * PBFSolver.MAX_NEIGHBORS);
@@ -301,6 +311,8 @@ export class PBFSolver {
             sorted[s] = s;
         }
 
+        // Storage is sorted by cell index, so every particle in a later row of cells has a
+        // higher index: only those rows, and the own row from i + 1 on, hold forward neighbours.
         const h2 = this.h2;
         const maxN = PBFSolver.MAX_NEIGHBORS;
         let total = 0;
@@ -314,19 +326,17 @@ export class PBFSolver {
             const zi = pz[i];
             const base = i * maxN;
             let count = 0;
-            const k0 = ck > 0 ? ck - 1 : 0;
             const k1 = ck < nz - 1 ? ck + 1 : ck;
             const j0 = cj > 0 ? cj - 1 : 0;
             const j1 = cj < ny - 1 ? cj + 1 : cj;
             const i0 = ci > 0 ? ci - 1 : 0;
             const i1 = ci < nx - 1 ? ci + 1 : ci;
-            for (let kk = k0; kk <= k1; kk++) {
-                for (let jj = j0; jj <= j1; jj++) {
+            for (let kk = ck; kk <= k1; kk++) {
+                for (let jj = kk === ck ? cj : j0; jj <= j1; jj++) {
                     const row = nx * (jj + ny * kk);
-                    const start = cellStart[row + i0];
+                    const start = kk === ck && jj === cj ? i + 1 : cellStart[row + i0];
                     const end = cellStart[row + i1 + 1];
                     for (let j = start; j < end; j++) {
-                        if (j === i) continue;
                         const dx = xi - px[j];
                         const dy = yi - py[j];
                         const dz = zi - pz[j];
@@ -339,7 +349,7 @@ export class PBFSolver {
             neighborCount[i] = count;
             total += count;
         }
-        this.avgNeighbors = n > 0 ? total / n : 0;
+        this.avgNeighbors = n > 0 ? (2 * total) / n : 0;
     }
 
     private permute(a: Float32Array): void {
@@ -352,7 +362,7 @@ export class PBFSolver {
 
     private computeLambda(): void {
         const n = this.count;
-        const { px, py, pz, neighbors, neighborCount, lambda, density, pairGrad, pairW } = this;
+        const { px, py, pz, neighbors, neighborCount, lambda, density, pairGrad, pairW, gradX, gradY, gradZ, grad2 } = this;
         const invDenom = 1 / this.sCorrDenom;
         const h = this.h;
         const h2 = this.h2;
@@ -362,13 +372,16 @@ export class PBFSolver {
         const maxN = PBFSolver.MAX_NEIGHBORS;
         const self = poly6 * h2 * h2 * h2;
         const eps = this.relaxation;
-        let maxErr = 0;
-        let sumErr = 0;
+        density.fill(self, 0, n);
+        gradX.fill(0, 0, n);
+        gradY.fill(0, 0, n);
+        gradZ.fill(0, 0, n);
+        grad2.fill(0, 0, n);
         for (let i = 0; i < n; i++) {
             const xi = px[i];
             const yi = py[i];
             const zi = pz[i];
-            let rho = self;
+            let rho = 0;
             let gix = 0;
             let giy = 0;
             let giz = 0;
@@ -388,6 +401,7 @@ export class PBFSolver {
                 const d = h2 - r2;
                 const w = poly6 * d * d * d;
                 rho += w;
+                density[j] += w;
                 pairW[base + m] = w * invDenom;
                 if (r2 > 1e-12) {
                     const r = Math.sqrt(r2);
@@ -398,22 +412,35 @@ export class PBFSolver {
                     const gx = g * dx;
                     const gy = g * dy;
                     const gz = g * dz;
+                    const g2 = gx * gx + gy * gy + gz * gz;
                     gix += gx;
                     giy += gy;
                     giz += gz;
-                    sumGrad2 += gx * gx + gy * gy + gz * gz;
+                    sumGrad2 += g2;
+                    gradX[j] -= gx;
+                    gradY[j] -= gy;
+                    gradZ[j] -= gz;
+                    grad2[j] += g2;
                 } else {
                     pairGrad[base + m] = 0;
                 }
             }
-            density[i] = rho;
+            density[i] += rho;
+            gradX[i] += gix;
+            gradY[i] += giy;
+            gradZ[i] += giz;
+            grad2[i] += sumGrad2;
+        }
+        let maxErr = 0;
+        let sumErr = 0;
+        for (let i = 0; i < n; i++) {
             // Unilateral constraint: only resist compression, so the free surface does not clump.
-            let c = rho * invRho0 - 1;
+            let c = density[i] * invRho0 - 1;
             if (c < 0) c = 0;
             if (c > maxErr) maxErr = c;
             sumErr += c;
-            sumGrad2 += gix * gix + giy * giy + giz * giz;
-            lambda[i] = -c / (sumGrad2 + eps);
+            const g2 = grad2[i] + gradX[i] * gradX[i] + gradY[i] * gradY[i] + gradZ[i] * gradZ[i];
+            lambda[i] = -c / (g2 + eps);
         }
         this.densityError = maxErr;
         this.avgDensityError = n > 0 ? sumErr / n : 0;
@@ -425,6 +452,9 @@ export class PBFSolver {
         const invRho0 = 1 / this.restDensity;
         const maxN = PBFSolver.MAX_NEIGHBORS;
         const k = this.sCorrK;
+        dvx.fill(0, 0, n);
+        dvy.fill(0, 0, n);
+        dvz.fill(0, 0, n);
         for (let i = 0; i < n; i++) {
             const xi = px[i];
             const yi = py[i];
@@ -442,22 +472,31 @@ export class PBFSolver {
                 const w = pairW[base + m];
                 const w2 = w * w;
                 const g = (li + lambda[j] - k * w2 * w2) * gs;
-                ddx += g * (xi - px[j]);
-                ddy += g * (yi - py[j]);
-                ddz += g * (zi - pz[j]);
+                const ex = g * (xi - px[j]);
+                const ey = g * (yi - py[j]);
+                const ez = g * (zi - pz[j]);
+                ddx += ex;
+                ddy += ey;
+                ddz += ez;
+                dvx[j] -= ex;
+                dvy[j] -= ey;
+                dvz[j] -= ez;
             }
-            dvx[i] = ddx * invRho0;
-            dvy[i] = ddy * invRho0;
-            dvz[i] = ddz * invRho0;
+            dvx[i] += ddx;
+            dvy[i] += ddy;
+            dvz[i] += ddz;
         }
         for (let i = 0; i < n; i++) {
-            px[i] += dvx[i];
-            py[i] += dvy[i];
-            pz[i] += dvz[i];
+            px[i] += dvx[i] * invRho0;
+            py[i] += dvy[i] * invRho0;
+            pz[i] += dvz[i] * invRho0;
         }
     }
 
-    /** omega_i = sum_j (v_j - v_i) x gradW; f = eps (N x omega), N = normalize(grad |omega|). */
+    /**
+     * omega_i = sum_j (v_j - v_i) x gradW; f = eps (N x omega), N = normalize(grad |omega|).
+     * Both pair terms come out identical for i and j, so each forward pair adds its term to both.
+     */
     private confineVorticity(dt: number): void {
         const n = this.count;
         const { px, py, pz, vx, vy, vz, wx, wy, wz, neighbors, neighborCount, dvx, dvy, dvz } = this;
@@ -465,6 +504,9 @@ export class PBFSolver {
         const h2 = this.h2;
         const spiky = this.spikyGrad;
         const maxN = PBFSolver.MAX_NEIGHBORS;
+        wx.fill(0, 0, n);
+        wy.fill(0, 0, n);
+        wz.fill(0, 0, n);
         for (let i = 0; i < n; i++) {
             let ox = 0;
             let oy = 0;
@@ -487,20 +529,31 @@ export class PBFSolver {
                 const ux = vx[j] - vx[i];
                 const uy = vy[j] - vy[i];
                 const uz = vz[j] - vz[i];
-                ox += uy * gz - uz * gy;
-                oy += uz * gx - ux * gz;
-                oz += ux * gy - uy * gx;
+                const cx = uy * gz - uz * gy;
+                const cy = uz * gx - ux * gz;
+                const cz = ux * gy - uy * gx;
+                ox += cx;
+                oy += cy;
+                oz += cz;
+                wx[j] += cx;
+                wy[j] += cy;
+                wz[j] += cz;
             }
-            wx[i] = ox;
-            wy[i] = oy;
-            wz[i] = oz;
+            wx[i] += ox;
+            wy[i] += oy;
+            wz[i] += oz;
         }
-        const eps = this.vorticity * dt;
+        // |omega| per particle, stored in grad2 (free after the constraint iterations).
+        const mag = this.grad2;
+        for (let i = 0; i < n; i++) mag[i] = Math.sqrt(wx[i] * wx[i] + wy[i] * wy[i] + wz[i] * wz[i]);
+        dvx.fill(0, 0, n);
+        dvy.fill(0, 0, n);
+        dvz.fill(0, 0, n);
         for (let i = 0; i < n; i++) {
+            const wi = mag[i];
             let nx = 0;
             let ny = 0;
             let nz = 0;
-            const wi = Math.sqrt(wx[i] * wx[i] + wy[i] * wy[i] + wz[i] * wz[i]);
             const base = i * maxN;
             const cnt = neighborCount[i];
             for (let m = 0; m < cnt; m++) {
@@ -512,28 +565,34 @@ export class PBFSolver {
                 if (r2 >= h2 || r2 < 1e-12) continue;
                 const r = Math.sqrt(r2);
                 const t = h - r;
-                const wj = Math.sqrt(wx[j] * wx[j] + wy[j] * wy[j] + wz[j] * wz[j]);
-                const g = ((wj - wi) * spiky * t * t) / r;
-                nx -= g * dx;
-                ny -= g * dy;
-                nz -= g * dz;
+                const g = ((mag[j] - wi) * spiky * t * t) / r;
+                const ex = g * dx;
+                const ey = g * dy;
+                const ez = g * dz;
+                nx -= ex;
+                ny -= ey;
+                nz -= ez;
+                dvx[j] -= ex;
+                dvy[j] -= ey;
+                dvz[j] -= ez;
             }
+            dvx[i] += nx;
+            dvy[i] += ny;
+            dvz[i] += nz;
+        }
+        const eps = this.vorticity * dt;
+        for (let i = 0; i < n; i++) {
+            let nx = dvx[i];
+            let ny = dvy[i];
+            let nz = dvz[i];
             const len = Math.sqrt(nx * nx + ny * ny + nz * nz);
-            if (len < 1e-6) {
-                dvx[i] = dvy[i] = dvz[i] = 0;
-                continue;
-            }
+            if (len < 1e-6) continue;
             nx /= len;
             ny /= len;
             nz /= len;
-            dvx[i] = eps * (ny * wz[i] - nz * wy[i]);
-            dvy[i] = eps * (nz * wx[i] - nx * wz[i]);
-            dvz[i] = eps * (nx * wy[i] - ny * wx[i]);
-        }
-        for (let i = 0; i < n; i++) {
-            vx[i] += dvx[i];
-            vy[i] += dvy[i];
-            vz[i] += dvz[i];
+            vx[i] += eps * (ny * wz[i] - nz * wy[i]);
+            vy[i] += eps * (nz * wx[i] - nx * wz[i]);
+            vz[i] += eps * (nx * wy[i] - ny * wx[i]);
         }
     }
 
@@ -545,6 +604,9 @@ export class PBFSolver {
         const poly6 = this.poly6;
         const c = this.xsph / (poly6 * h2 * h2 * h2) * 8;
         const maxN = PBFSolver.MAX_NEIGHBORS;
+        dvx.fill(0, 0, n);
+        dvy.fill(0, 0, n);
+        dvz.fill(0, 0, n);
         for (let i = 0; i < n; i++) {
             let ax = 0;
             let ay = 0;
@@ -560,18 +622,24 @@ export class PBFSolver {
                 if (r2 >= h2) continue;
                 const d = h2 - r2;
                 const w = poly6 * d * d * d;
-                ax += (vx[j] - vx[i]) * w;
-                ay += (vy[j] - vy[i]) * w;
-                az += (vz[j] - vz[i]) * w;
+                const ux = (vx[j] - vx[i]) * w;
+                const uy = (vy[j] - vy[i]) * w;
+                const uz = (vz[j] - vz[i]) * w;
+                ax += ux;
+                ay += uy;
+                az += uz;
+                dvx[j] -= ux;
+                dvy[j] -= uy;
+                dvz[j] -= uz;
             }
-            dvx[i] = ax * c;
-            dvy[i] = ay * c;
-            dvz[i] = az * c;
+            dvx[i] += ax;
+            dvy[i] += ay;
+            dvz[i] += az;
         }
         for (let i = 0; i < n; i++) {
-            vx[i] += dvx[i];
-            vy[i] += dvy[i];
-            vz[i] += dvz[i];
+            vx[i] += dvx[i] * c;
+            vy[i] += dvy[i] * c;
+            vz[i] += dvz[i] * c;
         }
     }
 }
