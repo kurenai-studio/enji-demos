@@ -8,6 +8,8 @@ export interface SsaoActions {
     cycleRadius(): void;
     toggleBlur(): void;
     toggleUpsample(): void;
+    cycleSsr(): void;
+    toggleRefine(): void;
     togglePause(): void;
 }
 
@@ -108,6 +110,8 @@ export class SsaoInteraction {
             case KeyCode.KEY_D: this.actions.cycleRadius(); break;
             case KeyCode.KEY_B: this.actions.toggleBlur(); break;
             case KeyCode.KEY_U: this.actions.toggleUpsample(); break;
+            case KeyCode.KEY_R: this.actions.cycleSsr(); break;
+            case KeyCode.KEY_F: this.actions.toggleRefine(); break;
             case KeyCode.SPACE: this.actions.togglePause(); break;
             default: break;
         }

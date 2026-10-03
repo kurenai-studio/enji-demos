@@ -1,7 +1,8 @@
 // Depth and normal pre-pass into an 8-bit render texture at AO resolution.
-// rg: linear view depth / depthFar in two bytes (16 bits), ba: view-space
-// normal xy * 0.5 + 0.5 (z is rebuilt, facing the camera). Sample it with
-// NEAREST filtering: interpolated packed depth is meaningless.
+// rg: linear view depth / depthFar in two bytes (16 bits), ba: world normal,
+// octahedral, byte 127 = 0 so floors and walls are exact (encodeNormal in
+// AoMath.ts). The passes that read it rotate the normal into view space.
+// Sample it with NEAREST filtering: interpolated packed values are meaningless.
 CCEffect %{
   techniques:
   - passes:
@@ -22,7 +23,7 @@ CCProgram vs %{
   vec4 vert () {
     vec4 view = cc_matView * cc_matWorld * vec4(a_position, 1.0);
     v_depth = -view.z;
-    v_normal = (cc_matView * vec4((cc_matWorldIT * vec4(a_normal, 0.0)).xyz, 0.0)).xyz;
+    v_normal = (cc_matWorldIT * vec4(a_normal, 0.0)).xyz;
     return cc_matProj * view;
   }
 }%
@@ -39,6 +40,9 @@ CCProgram fs %{
     float hi = floor(d * 255.0) / 255.0;
     float lo = (d - hi) * 255.0;
     vec3 n = normalize(v_normal);
-    return vec4(hi, lo, n.xy * 0.5 + 0.5);
+    n /= abs(n.x) + abs(n.y) + abs(n.z);
+    vec2 p = n.xy;
+    if (n.z < 0.0) p = (1.0 - abs(n.yx)) * vec2(n.x >= 0.0 ? 1.0 : -1.0, n.y >= 0.0 ? 1.0 : -1.0);
+    return vec4(hi, lo, (floor(p * 127.0 + 0.5) + 127.0) / 255.0);
   }
 }%

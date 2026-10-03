@@ -45,6 +45,35 @@ export function unpackDepth(hi: number, lo: number): number {
     return hi + lo / 255;
 }
 
+/**
+ * World-space unit normal as two bytes (0..254), octahedral: the normal is
+ * projected onto |x| + |y| + |z| = 1 and the lower half folded over the
+ * corners. Byte 127 is exactly 0 and 0 / 254 exactly ∓1, so floors and walls
+ * are stored without error; view-space xy (the obvious encoding) tilts a
+ * floor by up to a degree, which moves its reflections by several texels.
+ */
+export function encodeNormal(x: number, y: number, z: number): [number, number] {
+    const s = Math.abs(x) + Math.abs(y) + Math.abs(z);
+    let px = x / s, py = y / s;
+    if (z < 0) {
+        const fx = (1 - Math.abs(py)) * (px >= 0 ? 1 : -1);
+        py = (1 - Math.abs(px)) * (py >= 0 ? 1 : -1);
+        px = fx;
+    }
+    return [Math.round(px * 127) + 127, Math.round(py * 127) + 127];
+}
+
+/** Inverse of encodeNormal; writes a unit vector. */
+export function decodeNormal(a: number, b: number, out: Float64Array | number[]): void {
+    let x = (a - 127) / 127, y = (b - 127) / 127;
+    const z = 1 - Math.abs(x) - Math.abs(y);
+    const t = Math.max(-z, 0);
+    x += x >= 0 ? -t : t;
+    y += y >= 0 ? -t : t;
+    const l = Math.hypot(x, y, z);
+    out[0] = x / l; out[1] = y / l; out[2] = z / l;
+}
+
 export interface AoSettings {
     /** World-space radius of the hemisphere, metres. */
     radius: number;
@@ -59,8 +88,8 @@ export interface AoSettings {
 
 /**
  * A G-buffer as the shader sees it: per texel, view depth (positive, metres,
- * already quantised) and view-space normal xy (z rebuilt, facing the camera).
- * Depth ≥ far marks the sky.
+ * already quantised) and view-space normal (decoded from the stored world
+ * normal and rotated by the view matrix). Depth ≥ far marks the sky.
  */
 export interface GBuffer {
     width: number;
@@ -68,6 +97,7 @@ export interface GBuffer {
     depth: Float64Array;
     nx: Float64Array;
     ny: Float64Array;
+    nz: Float64Array;
     /** tan of half the horizontal and vertical field of view. */
     tanX: number;
     tanY: number;
@@ -88,7 +118,7 @@ export function ambientOcclusion(g: GBuffer, x: number, y: number, s: AoSettings
     const pz = -d;
     const nx = g.nx[k];
     const ny = g.ny[k];
-    const nz = Math.sqrt(Math.max(0, 1 - nx * nx - ny * ny));
+    const nz = g.nz[k];
     const bias = slopeBias(s.bias, px, py, pz, nx, ny, nz, (s.slopeScale * 2 * g.tanY) / g.height);
 
     // Tangent frame rotated per pixel by the dither rank.

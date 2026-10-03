@@ -1,11 +1,16 @@
 // Scene shading: vertex-colour albedo, a sky/ground hemisphere ambient and one
 // directional sun, no shadow map. AO comes from the (blurred) AO texture at
 // this fragment's screen position and only darkens the ambient term.
-// viewMode: 0 split (left no AO, right AO), 1 AO, 2 no AO, 3 AO only.
-// The AO texture is smaller than the screen. Bilinear upsampling mixes AO
-// across silhouettes (light rims round dark contacts); the depth-aware path
-// weights the four nearest AO texels by how close their depth (gb of the AO
-// texture) is to this fragment's own depth (joint bilateral upsampling).
+// Reflections: vertex alpha is the reflectance at normal incidence (F0);
+// Schlick's Fresnel mixes in the mirror direction's colour, which is the SSR
+// hit where it found one (ssrTex: rgb premultiplied by the confidence a) and a
+// sky/ground gradient where it did not.
+// viewMode: 0 split (left: no AO, environment reflections only; right: all),
+// 1 all on, 2 off, 3 AO buffer, 4 SSR buffer.
+// The AO and SSR textures are smaller than the screen. Bilinear upsampling
+// mixes them across silhouettes; the depth-aware path weights the four
+// nearest texels by how close their depth (gb of the AO texture) is to this
+// fragment's own depth (joint bilateral upsampling).
 CCEffect %{
   techniques:
   - passes:
@@ -13,6 +18,7 @@ CCEffect %{
       frag: fs:frag
       properties:
         aoTex: { value: white }
+        ssrTex: { value: black }
         sunDir: { value: [0.45, 0.8, 0.35, 0] }
         params: { value: [0, 1, 1, 0] }
         aoSize: { value: [4, 4, 40, 0] }
@@ -26,12 +32,14 @@ CCProgram vs %{
   in vec3 a_normal;
   in vec4 a_color;
   out vec3 v_normal;
-  out vec3 v_color;
+  out vec4 v_color;
+  out vec3 v_world;
   out vec4 v_clip;
   vec4 vert () {
     vec4 world = cc_matWorld * vec4(a_position, 1.0);
     v_normal = (cc_matWorldIT * vec4(a_normal, 0.0)).xyz;
-    v_color = a_color.rgb;
+    v_color = a_color;
+    v_world = world.xyz;
     v_clip = cc_matProj * cc_matView * world;
     return v_clip;
   }
@@ -41,57 +49,87 @@ CCProgram fs %{
   precision highp float;
   #include <builtin/uniforms/cc-global>
   in vec3 v_normal;
-  in vec3 v_color;
+  in vec4 v_color;
+  in vec3 v_world;
   in vec4 v_clip;
   uniform sampler2D aoTex;
+  uniform sampler2D ssrTex;
   uniform LitParams {
     vec4 sunDir;
-    // x: view mode, y: AO strength (0..1), z: 1 depth-aware upsampling, 0 bilinear
+    // x: view mode, y: AO strength (0..1), z: 1 depth-aware upsampling, 0 bilinear, w: 1 sample SSR
     vec4 params;
-    // xy: AO texture size, z: depth far
+    // xy: AO / SSR texture size, z: depth far, w: 1 write F0 to alpha (the colour pass, so SSR skips matte texels)
     vec4 aoSize;
   };
 
-  float upsampledAo (vec2 suv, float depth) {
+  // AO and SSR at this fragment, both through the same upsampling weights.
+  void upsample (vec2 suv, float depth, out float ao, out vec4 ssr) {
+    if (params.z < 0.5) {
+      ao = texture(aoTex, suv).r;
+      ssr = params.w > 0.5 ? texture(ssrTex, suv) : vec4(0.0);
+      return;
+    }
     vec2 f = suv * aoSize.xy - 0.5;
     vec2 i0 = floor(f);
     vec2 t = f - i0;
     float sum = 0.0;
+    vec4 ssrSum = vec4(0.0);
     float weights = 0.0;
     float nearest = 1e9;
-    float nearestAo = 1.0;
+    vec2 nearestUv = suv;
     for (int k = 0; k < 4; k++) {
       vec2 o = vec2(float(k - (k / 2) * 2), float(k / 2));
-      vec4 a = texture(aoTex, (i0 + o + 0.5) / aoSize.xy);
+      vec2 uv = (i0 + o + 0.5) / aoSize.xy;
+      vec4 a = texture(aoTex, uv);
       float dk = abs((a.g + a.b / 255.0) * aoSize.z - depth);
-      float ak = a.r;
       vec2 b = mix(1.0 - t, t, o);
       // Texels within 2% of this depth count fully, beyond 6% not at all.
       float w = b.x * b.y * (1.0 - smoothstep(0.02, 0.06, dk / depth));
-      sum += ak * w;
+      sum += a.r * w;
+      if (params.w > 0.5) ssrSum += texture(ssrTex, uv) * w;
       weights += w;
-      if (dk < nearest) { nearest = dk; nearestAo = ak; }
+      if (dk < nearest) { nearest = dk; nearestUv = uv; }
+    }
+    if (weights > 1e-3) {
+      ao = sum / weights;
+      ssr = ssrSum / weights;
+      return;
     }
     // Thinner than a texel: no neighbour matches, take the closest in depth.
-    return weights > 1e-3 ? sum / weights : nearestAo;
+    ao = texture(aoTex, nearestUv).r;
+    ssr = params.w > 0.5 ? texture(ssrTex, nearestUv) : vec4(0.0);
   }
 
   vec4 frag () {
     vec2 suv = v_clip.xy / v_clip.w * 0.5 + 0.5;
-    float raw = params.z > 0.5 ? upsampledAo(suv, v_clip.w) : texture(aoTex, suv).r;
+    float raw;
+    vec4 ssr;
+    upsample(suv, v_clip.w, raw, ssr);
     float ao = mix(1.0, raw, params.y);
     float mode = params.x;
-    bool useAo = mode < 0.5 ? suv.x >= 0.5 : mode < 1.5 || mode > 2.5;
+    bool full = mode < 0.5 ? suv.x >= 0.5 : mode < 1.5 || mode > 2.5;
 
     vec3 n = normalize(v_normal);
     vec3 sky = vec3(0.62, 0.66, 0.74);
     vec3 ground = vec3(0.30, 0.28, 0.26);
-    vec3 ambient = mix(ground, sky, n.y * 0.5 + 0.5) * (useAo ? ao : 1.0);
+    vec3 ambient = mix(ground, sky, n.y * 0.5 + 0.5) * (full ? ao : 1.0);
     float sun = max(dot(n, normalize(sunDir.xyz)), 0.0);
-    vec3 color = v_color * (ambient + sun * vec3(0.55, 0.52, 0.46));
-    if (mode > 2.5) color = vec3(ao);
+    vec3 color = v_color.rgb * (ambient + sun * vec3(0.55, 0.52, 0.46));
+
+    float f0 = v_color.a;
+    if (f0 > 0.0) {
+      vec3 v = normalize(v_world - cc_cameraPos.xyz);
+      vec3 r = reflect(v, n);
+      float c = max(dot(-v, n), 0.0);
+      float fresnel = f0 + (1.0 - f0) * pow(1.0 - c, 5.0);
+      vec3 env = mix(ground, sky, smoothstep(-0.15, 0.15, r.y));
+      vec3 reflected = full ? env * (1.0 - ssr.a) + ssr.rgb : env;
+      color = mix(color, reflected, fresnel);
+    }
+    if (mode > 2.5 && mode < 3.5) color = vec3(ao);
+    if (mode > 3.5) color = ssr.rgb + vec3(0.04, 0.0, 0.06) * (1.0 - ssr.a);
     // Divider in split mode, one pixel wide.
     if (mode < 0.5 && abs(suv.x - 0.5) * cc_screenSize.x < 1.0) color = vec3(1.0);
-    return vec4(color, 1.0);
+    return vec4(color, aoSize.w > 0.5 ? f0 : 1.0);
   }
 }%

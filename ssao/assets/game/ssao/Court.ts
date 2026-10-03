@@ -1,14 +1,16 @@
 import { Mat4, primitives, Quat, Vec3 } from 'cc';
 
-type Rgb = readonly [number, number, number];
+/** Albedo rgb and reflectance at normal incidence (F0, Schlick), stored in the vertex colour's alpha. */
+type Rgb = readonly [number, number, number, number];
 
-const FLOOR: Rgb = [0.8, 0.78, 0.74];
-const WALL: Rgb = [0.86, 0.82, 0.75];
-const STONE: Rgb = [0.74, 0.74, 0.76];
-const CRATE: Rgb = [0.78, 0.6, 0.42];
-const CLAY: Rgb = [0.82, 0.5, 0.38];
-const TEAL: Rgb = [0.4, 0.66, 0.68];
-const BALL: Rgb = [0.9, 0.86, 0.5];
+const FLOOR: Rgb = [0.8, 0.78, 0.74, 0.12];
+const PANEL: Rgb = [0.07, 0.08, 0.09, 0.6];
+const WALL: Rgb = [0.86, 0.82, 0.75, 0];
+const STONE: Rgb = [0.74, 0.74, 0.76, 0];
+const CRATE: Rgb = [0.78, 0.6, 0.42, 0];
+const CLAY: Rgb = [0.82, 0.5, 0.38, 0];
+const TEAL: Rgb = [0.4, 0.66, 0.68, 0.15];
+const BALL: Rgb = [0.9, 0.86, 0.5, 0.3];
 
 /** Appends transformed primitives into one vertex-coloured geometry. */
 class GeometryBuilder {
@@ -30,7 +32,7 @@ class GeometryBuilder {
             this.positions.push(this.v.x, this.v.y, this.v.z);
             Vec3.transformQuat(this.v, this.v.set(n[i], n[i + 1], n[i + 2]), q);
             this.normals.push(this.v.x, this.v.y, this.v.z);
-            this.colors.push(color[0], color[1], color[2], 1);
+            this.colors.push(color[0], color[1], color[2], color[3]);
         }
         for (const i of g.indices!) this.indices.push(base + i);
     }
@@ -54,12 +56,14 @@ class GeometryBuilder {
 /**
  * A walled corner full of creases and contacts, the cases SSAO is for: a
  * floor meeting two walls, a staircase, columns on plinths, stacked crates,
- * a cluster of touching spheres and a torus lying on the floor. One static
- * mesh.
+ * a cluster of touching spheres and a torus lying on the floor; and for the
+ * reflections, a glossy floor with a polished dark slab. One static mesh.
  */
 export function buildCourt(): primitives.IGeometry {
     const b = new GeometryBuilder();
     b.box(FLOOR, 0, -0.2, 0, 14, 0.2, 14);
+    // A polished dark slab under the ball's path, 2 mm proud of the floor.
+    b.box(PANEL, 0.2, -0.1, -0.3, 3.4, 0.102, 3.4);
     b.box(WALL, 0, 0, -4.15, 10.3, 3.2, 0.3);
     b.box(WALL, -5, 0, 0.85, 0.3, 3.2, 10);
     // Skirting along both walls: two small extra creases.
