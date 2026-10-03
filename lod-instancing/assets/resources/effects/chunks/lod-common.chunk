@@ -1,0 +1,71 @@
+// Shared by lod-tree and lod-impostor. Constants mirror Shading.ts, the
+// texture layouts mirror Pack.ts and the masks mirror Lod.ts.
+#define SUN_DIR vec3(0.45, 0.72, 0.53)
+#define SUN_COLOR vec3(2.2, 2.0, 1.7)
+#define SKY_COLOR vec3(0.34, 0.42, 0.55)
+#define GROUND_COLOR vec3(0.12, 0.11, 0.08)
+#define FOG_COLOR vec3(0.5, 0.58, 0.68)
+#define FOG_DENSITY 0.0045
+#define TEX_WIDTH 1024.0
+
+vec3 lodTint (float level) {
+  return level < 0.5 ? vec3(0.9, 0.25, 0.2) : level < 1.5 ? vec3(0.95, 0.75, 0.2) : level < 2.5 ? vec3(0.25, 0.75, 0.35) : vec3(0.3, 0.5, 0.95);
+}
+
+// Lambert sun plus a sky/ground hemisphere, with a soft wrap so the shaded
+// side of a crown is not flat.
+vec3 shade (vec3 albedo, vec3 n) {
+  vec3 l = normalize(SUN_DIR);
+  float ndl = max(0.0, (dot(n, l) + 0.25) / 1.25);
+  vec3 ambient = mix(GROUND_COLOR, SKY_COLOR, n.y * 0.5 + 0.5);
+  return albedo * (SUN_COLOR * ndl + ambient);
+}
+
+// Fraction of the surface colour left after distance d: exp(-(d ρ)²).
+float fogVisibility (float d) {
+  float x = d * FOG_DENSITY;
+  return exp(-x * x);
+}
+
+vec3 toDisplay (vec3 c) {
+  return pow(clamp(c, 0.0, 1.0), vec3(1.0 / 2.2));
+}
+
+// 4×4 Bayer, (i + 0.5) / 16.
+float bayer4 (vec2 fragCoord) {
+  vec2 p = mod(floor(fragCoord), 4.0);
+  // Row-major [0 8 2 10 / 12 4 14 6 / 3 11 1 9 / 15 7 13 5].
+  vec4 r = p.y < 0.5 ? vec4(0.0, 8.0, 2.0, 10.0) : p.y < 1.5 ? vec4(12.0, 4.0, 14.0, 6.0) : p.y < 2.5 ? vec4(3.0, 11.0, 1.0, 9.0) : vec4(15.0, 7.0, 13.0, 5.0);
+  float v = p.x < 0.5 ? r.x : p.x < 1.5 ? r.y : p.x < 2.5 ? r.z : r.w;
+  return (v + 0.5) / 16.0;
+}
+
+bool keeps (float code, float d) {
+  return code > 0.0 ? d < code : d >= -code;
+}
+
+vec4 texel (highp sampler2D tex, float index, float rows) {
+  vec2 ij = vec2(mod(index, TEX_WIDTH), floor(index / TEX_WIDTH));
+  return texture(tex, (ij + 0.5) / vec2(TEX_WIDTH, rows));
+}
+
+// Entry `local` of `bucket`: (instance index, fade code); false past the count.
+bool readEntry (highp sampler2D listTex, float rows, float bucket, float local, out vec2 entry) {
+  vec4 h = texel(listTex, bucket, rows);
+  entry = vec2(0.0);
+  if (local >= h.y) return false;
+  float e = h.x + local;
+  vec4 v = texel(listTex, floor(e * 0.5), rows);
+  entry = mod(e, 2.0) < 0.5 ? v.xy : v.zw;
+  return true;
+}
+
+// (x, y, z, scale) and (cos yaw, sin yaw, tint, species).
+void readInstance (highp sampler2D instTex, float rows, float index, out vec4 a, out vec4 b) {
+  a = texel(instTex, index * 2.0, rows);
+  b = texel(instTex, index * 2.0 + 1.0, rows);
+}
+
+vec3 rotateYaw (vec3 p, float c, float s) {
+  return vec3(p.x * c + p.z * s, p.y, -p.x * s + p.z * c);
+}

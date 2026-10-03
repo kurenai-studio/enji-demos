@@ -1,0 +1,141 @@
+// Camera-facing billboards textured from the impostor atlas. The quad turns
+// about the vertical axis; the atlas frame comes from the horizontal view
+// direction relative to the tree's yaw, blended between the two nearest
+// frames. Lighting uses the baked normal, rebuilt in the billboard's frame.
+//   DATA_TEX  GPU path (quad corner and copy index; instance from the textures)
+//   default   merged path (tree base, corner and parameters as attributes)
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: imp-vs:vert
+      frag: imp-fs:frag
+      properties:
+        instTex: { value: black }
+        listTex: { value: black }
+        atlas: { value: white }
+        slot: { value: [0, 0, 3, 0] }
+        lookF: { value: [0, 3, 0, 0] }
+        dims: { value: [1, 1, 1, 0] }
+        sizes: { value: [1, 1, 1, 0] }
+        centers: { value: [0, 0, 0, 0] }
+}%
+
+CCProgram imp-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #if DATA_TEX
+    // (corner u in -0.5..0.5, corner v in 0..1, copy)
+    in vec3 a_position;
+    uniform highp sampler2D instTex;
+    uniform highp sampler2D listTex;
+  #else
+    in vec3 a_position;
+    in vec4 a_corner;
+    in vec4 a_param;
+  #endif
+  uniform ImpVert {
+    // x: bucket, y: first copy (DATA_TEX)
+    vec4 slot;
+    // x: instance texture rows, y: list texture rows, z: fog distance scale
+    vec4 dims;
+    // Per species: cell side and cell-centre height, object units.
+    vec4 sizes;
+    vec4 centers;
+  };
+  out vec2 v_uv;
+  out float v_frame;
+  out float v_species;
+  out float v_tint;
+  out float v_code;
+  out vec3 v_right;
+  out vec3 v_toCam;
+  out float v_fog;
+  #include "./chunks/lod-common.chunk"
+
+  #define FRAMES 8.0
+  #define TAU 6.28318530718
+
+  vec4 vert () {
+    vec3 base;
+    vec2 corner;
+    float species, scale, c, s, tint;
+    float code = 1.0;
+    #if DATA_TEX
+      vec2 entry;
+      if (!readEntry(listTex, dims.y, slot.x, slot.y + a_position.z, entry)) return vec4(0.0, 0.0, 2.0, 1.0);
+      vec4 i0, i1;
+      readInstance(instTex, dims.x, entry.x, i0, i1);
+      base = i0.xyz; scale = i0.w; c = i1.x; s = i1.y; tint = i1.z; species = i1.w;
+      corner = a_position.xy;
+      code = entry.y;
+    #else
+      base = a_position;
+      corner = a_corner.xy;
+      species = a_corner.z;
+      scale = a_param.x; c = a_param.y; s = a_param.z; tint = a_param.w;
+    #endif
+    float size = (species < 0.5 ? sizes.x : species < 1.5 ? sizes.y : sizes.z) * scale;
+    float center = (species < 0.5 ? centers.x : species < 1.5 ? centers.y : centers.z) * scale;
+    vec2 t = cc_cameraPos.xz - base.xz;
+    t = length(t) > 1e-4 ? normalize(t) : vec2(0.0, 1.0);
+    vec3 right = vec3(t.y, 0.0, -t.x);
+    vec3 world = base + right * corner.x * size + vec3(0.0, center + (corner.y - 0.5) * size, 0.0);
+    float yaw = atan(s, c);
+    float a = (atan(t.x, t.y) - yaw) / (TAU / FRAMES);
+    v_frame = mod(mod(a, FRAMES) + FRAMES, FRAMES);
+    v_uv = vec2(corner.x + 0.5, corner.y);
+    v_species = species;
+    v_tint = tint;
+    v_code = code;
+    v_right = right;
+    v_toCam = vec3(t.x, 0.0, t.y);
+    v_fog = fogVisibility(distance(world, cc_cameraPos.xyz) * dims.z);
+    return cc_matViewProj * vec4(world, 1.0);
+  }
+}%
+
+CCProgram imp-fs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  in vec2 v_uv;
+  in float v_frame;
+  in float v_species;
+  in float v_tint;
+  in float v_code;
+  in vec3 v_right;
+  in vec3 v_toCam;
+  in float v_fog;
+  uniform sampler2D atlas;
+  uniform ImpFrag {
+    // x: 1 tints by level, y: level
+    vec4 lookF;
+  };
+  #include "./chunks/lod-common.chunk"
+
+  #define FRAMES 8.0
+  #define ROWS 6.0
+
+  vec4 frag () {
+    // Gradients of the in-frame coordinates, taken before any discard: the frame index
+    // jumps between pixels, so implicit derivatives would pick the smallest mip.
+    vec2 gx = dFdx(v_uv) * vec2(1.0 / FRAMES, -1.0 / ROWS);
+    vec2 gy = dFdy(v_uv) * vec2(1.0 / FRAMES, -1.0 / ROWS);
+    if (!keeps(v_code, bayer4(gl_FragCoord.xy))) discard;
+    // Blend the two nearest frames by the fractional part; the test applies to the blend.
+    float f0 = floor(v_frame);
+    float w = v_frame - f0;
+    float row = floor(v_species + 0.5);
+    vec2 uv0 = vec2((f0 + v_uv.x) / FRAMES, (row + 1.0 - v_uv.y) / ROWS);
+    vec2 uv1 = vec2((mod(f0 + 1.0, FRAMES) + v_uv.x) / FRAMES, uv0.y);
+    vec2 normalRows = vec2(0.0, 3.0 / ROWS);
+    vec4 albedo = mix(textureGrad(atlas, uv0, gx, gy), textureGrad(atlas, uv1, gx, gy), w);
+    // Fixed threshold; the mips' alpha is scaled so that this keeps level 0's coverage.
+    if (albedo.a < 0.5) discard;
+    vec3 nb = mix(textureGrad(atlas, uv0 + normalRows, gx, gy).xyz, textureGrad(atlas, uv1 + normalRows, gx, gy).xyz, w) * 2.0 - 1.0;
+    vec3 n = normalize(nb.x * v_right + vec3(0.0, nb.y, 0.0) + nb.z * v_toCam);
+    vec3 color = pow(albedo.rgb, vec3(2.2)) * v_tint;
+    if (lookF.x > 0.5) color = lodTint(lookF.y) * (0.35 + 0.65 * dot(color, vec3(2.0)));
+    vec3 c = mix(FOG_COLOR, shade(color, n), v_fog);
+    return vec4(toDisplay(c), 1.0);
+  }
+}%

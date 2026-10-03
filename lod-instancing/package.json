@@ -1,0 +1,10 @@
+{
+    "name": "lod-instancing",
+    "type": "3d",
+    "version": "3.8.8",
+    "uuid": "6f21d821-6dee-4c46-a399-c77033ae0694",
+    "creator": {
+        "version": "3.8.8",
+        "dependencies": {}
+    }
+}

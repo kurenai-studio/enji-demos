@@ -1,0 +1,113 @@
+// Vertex-coloured, sun-lit, fogged meshes for every path.
+//   default        world matrix from the node (nodes, merged chunks, ground)
+//   USE_INSTANCING engine instancing (the matrix arrives per instance)
+//   DATA_TEX       GPU path: the mesh holds K copies of one level; copy k reads
+//                  entry slot.y + k of bucket slot.x from the list texture,
+//                  then the instance's transform
+//   FADE           (with DATA_TEX) buckets of fading trees: dither by the entry's
+//                  code; steady buckets skip the discard and keep early depth
+//   BAKE_ALBEDO / BAKE_NORMAL  impostor bake outputs (unlit colour, normal)
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: tree-vs:vert
+      frag: tree-fs:frag
+      properties:
+        instTex: { value: black }
+        listTex: { value: black }
+        slot: { value: [0, 0, 0, 0] }
+        look: { value: [0, 0, 0, 0] }
+        dims: { value: [1, 1, 1, 0] }
+}%
+
+CCProgram tree-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/uniforms/cc-local-batched>
+  in vec3 a_position;
+  in vec3 a_normal;
+  in vec4 a_color;
+  #if USE_INSTANCING
+    in vec4 a_matWorld0;
+    in vec4 a_matWorld1;
+    in vec4 a_matWorld2;
+  #endif
+  #if DATA_TEX
+    in float a_copy;
+    uniform highp sampler2D instTex;
+    uniform highp sampler2D listTex;
+  #endif
+  uniform TreeVert {
+    // x: bucket, y: first copy, z: level (DATA_TEX)
+    vec4 slot;
+    // x: 1 tints by level, y: level (other paths; < 0 never tinted)
+    vec4 look;
+    // x: instance texture rows, y: list texture rows, z: fog distance scale
+    vec4 dims;
+  };
+  out vec3 v_color;
+  out vec3 v_normal;
+  out float v_fog;
+  out float v_code;
+  #include "./chunks/lod-common.chunk"
+
+  vec4 vert () {
+    vec3 world;
+    vec3 normal;
+    vec3 color = a_color.rgb;
+    float code = 1.0;
+    float level = look.y;
+    #if DATA_TEX
+      vec2 entry;
+      if (!readEntry(listTex, dims.y, slot.x, slot.y + a_copy, entry)) return vec4(0.0, 0.0, 2.0, 1.0);
+      vec4 i0, i1;
+      readInstance(instTex, dims.x, entry.x, i0, i1);
+      world = i0.xyz + rotateYaw(a_position * i0.w, i1.x, i1.y);
+      normal = rotateYaw(a_normal, i1.x, i1.y);
+      color *= i1.z;
+      code = entry.y;
+      level = slot.z;
+    #elif USE_INSTANCING
+      mat4 m = mat4(
+        vec4(a_matWorld0.xyz, 0.0), vec4(a_matWorld1.xyz, 0.0), vec4(a_matWorld2.xyz, 0.0),
+        vec4(a_matWorld0.w, a_matWorld1.w, a_matWorld2.w, 1.0));
+      world = (m * vec4(a_position, 1.0)).xyz;
+      normal = (m * vec4(a_normal, 0.0)).xyz;
+    #else
+      world = (cc_matWorld * vec4(a_position, 1.0)).xyz;
+      normal = (cc_matWorldIT * vec4(a_normal, 0.0)).xyz;
+    #endif
+    if (look.x > 0.5 && level >= 0.0) color = lodTint(level) * (0.35 + 0.65 * dot(color, vec3(2.0)));
+    v_color = color;
+    v_normal = normal;
+    v_fog = fogVisibility(distance(world, cc_cameraPos.xyz) * dims.z);
+    v_code = code;
+    return cc_matViewProj * vec4(world, 1.0);
+  }
+}%
+
+CCProgram tree-fs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  in vec3 v_color;
+  in vec3 v_normal;
+  in float v_fog;
+  in float v_code;
+  #include "./chunks/lod-common.chunk"
+
+  vec4 frag () {
+    #if FADE
+      if (!keeps(v_code, bayer4(gl_FragCoord.xy))) discard;
+    #endif
+    vec3 n = normalize(v_normal);
+    #if BAKE_ALBEDO
+      // Gamma-encoded: dark foliage would band in 8 linear bits.
+      return vec4(toDisplay(v_color), 1.0);
+    #elif BAKE_NORMAL
+      return vec4(n * 0.5 + 0.5, 1.0);
+    #else
+      vec3 c = mix(FOG_COLOR, shade(v_color, n), v_fog);
+      return vec4(toDisplay(c), 1.0);
+    #endif
+  }
+}%
