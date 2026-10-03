@@ -1,0 +1,10 @@
+{
+    "name": "stable-fluids",
+    "type": "2d",
+    "version": "3.8.8",
+    "uuid": "2bfcd6d5-1052-4c90-b621-49df45cefeba",
+    "creator": {
+        "version": "3.8.8",
+        "dependencies": {}
+    }
+}

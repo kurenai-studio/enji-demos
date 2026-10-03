@@ -1,0 +1,34 @@
+// Shows a fluid grid: the CPU writes one RGBA8 texel per cell every frame,
+// linear filtering smooths it across the quad.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: vs:vert
+      frag: fs:frag
+      depthStencilState: { depthTest: false, depthWrite: false }
+      rasterizerState: { cullMode: none }
+      properties:
+        fieldTex: { value: black }
+}%
+
+CCProgram vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/uniforms/cc-local>
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  out vec2 v_uv;
+  vec4 vert () {
+    v_uv = a_texCoord;
+    return cc_matProj * cc_matView * cc_matWorld * vec4(a_position, 1.0);
+  }
+}%
+
+CCProgram fs %{
+  precision highp float;
+  in vec2 v_uv;
+  uniform sampler2D fieldTex;
+  vec4 frag () {
+    return vec4(texture(fieldTex, v_uv).rgb, 1.0);
+  }
+}%
