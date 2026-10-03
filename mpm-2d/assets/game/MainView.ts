@@ -4,7 +4,7 @@ import { ensureCanvas } from '../enji/helpers';
 import { Hud } from './mpm/Hud';
 import { MpmInteraction } from './mpm/MpmInteraction';
 import { FRAME_TIME, MpmSim, passesPerFrame, type SolverSetting } from './mpm/MpmSim';
-import { ELASTIC, LIQUID, type MpmWorld, type SolverKind } from './mpm/MpmWorld';
+import { ELASTIC, LIQUID, type MpmWorld, SNOW, type SolverKind } from './mpm/MpmWorld';
 import { MpmView } from './mpm/MpmView';
 import { SCENE_NAMES } from './mpm/Scenes';
 
@@ -330,14 +330,19 @@ function getVisibleWidth(): number {
     return ccView.getVisibleSize().width;
 }
 
-/** Liquid volume (mean det F) and jelly area error: what an under-resolved step costs. */
+/** Liquid volume (mean det F), jelly area error and snow packing (mean Jp): what an under-resolved step costs. */
 function health(w: MpmWorld): string {
     let liquid = 0;
     let jSum = 0;
     let jelly = 0;
     let err = 0;
+    let snow = 0;
+    let jp = 0;
     for (let i = 0; i < w.count; i++) {
-        if (w.material[i] === LIQUID) {
+        if (w.material[i] === SNOW) {
+            snow++;
+            jp += w.jac[i];
+        } else if (w.material[i] === LIQUID) {
             liquid++;
             jSum += w.jac[i];
         } else if (w.material[i] === ELASTIC) {
@@ -348,5 +353,6 @@ function health(w: MpmWorld): string {
     const parts: string[] = [];
     if (liquid) parts.push(`liquid ${((jSum / liquid) * 100).toFixed(0)}%`);
     if (jelly) parts.push(`jelly ±${Math.min(99, (err / jelly) * 100).toFixed(0)}%`);
+    if (snow) parts.push(`snow Jp ${(jp / snow).toFixed(2)}`);
     return parts.join(' ') || 'ok';
 }

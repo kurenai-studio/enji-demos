@@ -1,7 +1,7 @@
 # 2D MPM: PB-MPM vs MLS-MPM
 
 Two Material Point Method solvers on the CPU, for Cocos Creator 3.8, built and
-previewed with Enji, sized to run on phones. Liquid, jelly, sand and a
+previewed with Enji, sized to run on phones. Liquid, jelly, sand, snow and a
 viscoplastic material share one particle and grid layout. The default view runs
 the same scene twice with the same number of grid passes per frame:
 **Position Based MPM** (Lewin, EA SEED 2024) on the left, explicit **MLS-MPM**
@@ -22,7 +22,8 @@ row because the weights are separable.
   F = (I + Δt·C)·F. Materials: liquid with a J-based equation of state, jelly
   with fixed corotated elasticity, sand with Hencky elasticity and a
   Drucker–Prager return mapping (Klár et al. 2016), visco as jelly with a yield
-  band on the singular values.
+  band on the singular values, snow as in Stomakhin et al. 2013 (see
+  [Snow](#snow)).
 - `PbMpm.ts`: a CPU port of the EA SEED reference
   ([electronicarts/pbmpm](https://github.com/electronicarts/pbmpm), BSD 3-Clause).
   The grid carries displacements instead of velocities. Each substep runs
@@ -38,9 +39,12 @@ row because the weights are separable.
   frame, so a slow device plays in slow motion instead of falling behind.
 - `MpmView.ts`: all particles go into one dynamic mesh drawn as round point
   sprites (`mpm-points.effect`). Liquid is coloured by speed, jelly by its
-  area change, sand with grain noise.
+  area change, sand with grain noise, snow from white (packed) to grey-blue
+  (torn) by its plastic volume Jp.
 - `tools/bench.mts`: runs the scenes headless in Node and prints cost, liquid
   volume (mean det F) and jelly area error per setting.
+- `tools/test.mts`: snow checks, headless (`node --import ./tools/ts-resolve.mjs
+  tools/test.mts`).
 
 ### The budget
 
@@ -106,12 +110,78 @@ sand, the green viscoplastic block and the jelly disc fall into a liquid
 layer: the sand sinks in and throws up grains, the visco block sags where it
 lands and keeps the bent shape instead of springing back like the jelly.
 
+## Snow
+
+Snow follows Stomakhin et al. 2013, "A material point method for snow
+simulation". F is split into an elastic part F_E and a plastic volume ratio
+Jp. After each update the singular values of F_E are clamped to
+[1 − θc, 1 + θs] (θc = 2.5·10⁻², θs = 7.5·10⁻³) and Jp absorbs whatever was
+clamped off, so Jp · det F_E is conserved. Stress is scaled by the hardening
+h = e^{ξ(1 − Jp)} with ξ = 10: packed snow (Jp < 1) gets stiffer, torn snow
+(Jp > 1) softer. h is capped at 6 so a crushed clump cannot outrun MLS-MPM's
+explicit step. The Snowball scene throws two snowballs at a snow bank.
+
+| 10 passes, frame 50 | 10 passes, frame 180 |
+|---|---|
+| ![Snowball, 10 passes, impact](shots/snow-10-impact.jpg) | ![Snowball, 10 passes, settled](shots/snow-10-settled.jpg) |
+
+| 20 passes, frame 50 | 20 passes, frame 180 |
+|---|---|
+| ![Snowball, 20 passes, impact](shots/snow-20-impact.jpg) | ![Snowball, 20 passes, settled](shots/snow-20-settled.jpg) |
+
+MLS-MPM (right) is the paper's model with fixed corotated stress times h. The
+big ball packs where it hits (white), cracks and sheds torn chunks (grey) but
+stays a mound on top of the bank; the small one breaks up against the right
+wall.
+
+PB-MPM (left) has no stress to bound, so the model is translated, not ported:
+
+- Each singular value is pulled back towards 1 by at most θ·h, θc when
+  compressed and θs when stretched. Deformation past that is left alone and
+  goes into Jp.
+- When compressed, 70% of the target (times min(1, h)) restores volume instead
+  of shape. The shape part only pushes back along the squeezed axis, so a ball
+  would pack on impact without spreading; restoring volume pushes it sideways,
+  which is what stretches and tears it.
+- The plastic window in the update is θ·h instead of θ. In Stomakhin's model
+  the yield stress grows with h; with PB-MPM's fixed stiffness that is a yield
+  strain growing with h, so packed snow stops packing once it can carry the
+  load.
+
+How faithful that is depends on the budget, because an unconverged PB-MPM
+solve leaves particles overlapping and snow reads overlap as packing. Even
+jelly at rest is compressed by up to 10% at 120 Hz × 5, against 1% at
+240 Hz × 10, and θc is only 2.5%. At 10 passes the snowballs pack into the
+bank (scene mean Jp 0.46) instead of breaking; at 20 passes they splat and
+tear (Jp 0.88). At 40 passes the test ball spreads as far as MLS-MPM's,
+though it stays in one torn piece. Hardening
+past 6 would stop the packing sooner but makes PB-MPM blow up at 120 Hz × 5
+(cap 7 already does).
+
+`tools/test.mts`, headless: a ball of radius 8 thrown down at 60 cells/s on
+a 48×64 grid (spread is the growth of the x standard deviation after 90
+frames, pieces are clusters of at least 4 particles), and a 32×16 bank left
+to settle.
+
+| Setting | Passes | Snowball spread | Jelly ball spread | Pieces | Bank top, frame 30 → 210 | Bank mean Jp |
+|---|---|---|---|---|---|---|
+| PB-MPM 120 Hz × 5 | 10 | ×1.49 | ×0.99 | 5 | 13.04 → 12.86 | 0.89 |
+| PB-MPM 240 Hz × 5 | 20 | ×2.53 | ×1.00 | 2 | 14.74 → 14.49 | 1.04 |
+| PB-MPM 240 Hz × 10 | 40 | ×2.95 | ×1.00 | 1 | 15.62 → 15.63 | 1.01 |
+| MLS-MPM 600 Hz | 10 | ×2.19 | ×1.08 | 2 | 15.67 → 15.68 | 1.00 |
+
+The bank was seeded 16 cells high. The test also checks that the clamp holds
+exactly, that Jp · det F_E is conserved (error 2·10⁻¹⁶), and that the Snowball
+scene stays finite in both solvers at 10 and 20 passes. In the browser the
+Snowball scene costs about 7.5 ms per solver per frame at 20 passes on full
+grids (heavily loaded desktop); it has not been measured on a phone yet.
+
 ## Controls
 
 - Drag through the material to grab it (or push it, with the Tool button). In
   compare mode the same hand acts on both sides.
 - Buttons: PB vs MLS / PB-MPM only / MLS-MPM only; scene (dam break, sand
-  column, mixed); budget (5, 10, 20, 40 passes); MLS stiffness ×1 / ×4; tool;
+  column, mixed, snowball); budget (5, 10, 20, 40 passes); MLS stiffness ×1 / ×4; tool;
   reset.
 - Keys: `S` solver, `C` scene, `B` budget, `K` stiffness, `T` tool, `R` reset,
   `Q` full / lite grids.
@@ -161,6 +231,9 @@ side.
   bad default.
 - Multithreading: the P2G scatter would need per-thread grids or colouring.
 - A liquid surface (marching squares over the grid mass) instead of points.
+- PB-MPM snow that breaks at 10 passes: it needs a packing measure that
+  ignores solver overlap.
+- Phone measurements for the Snowball scene.
 - 3D, and moving colliders.
 
 Made with Enji 0.3.

@@ -1,5 +1,5 @@
-import { GUARDIAN, LIQUID, type MpmWorld, SAND, wallKeep } from './MpmWorld';
-import { plasticity, recompose, svd2 } from './Svd2';
+import { GUARDIAN, LIQUID, type MpmWorld, SAND, SNOW, wallKeep } from './MpmWorld';
+import { plasticity, recompose, snowHardening, snowPlasticity, svd2 } from './Svd2';
 
 const svd = new Float64Array(6);
 const m4 = new Float64Array(4);
@@ -81,7 +81,8 @@ function p2g(world: MpmWorld, g: Float64Array, dt: number): void {
             t10 = t01;
             t11 = s * s * s0 + c * c * s1;
         } else {
-            // Fixed corotated: τ = 2μ (F − R) Fᵀ + λ (J − 1) J I.
+            // Fixed corotated: τ = 2μ (F − R) Fᵀ + λ (J − 1) J I; snow scales μ and λ by its hardening.
+            const hard = mat === SNOW ? snowHardening(jac[p], prm.snowHardening) : 1;
             const a00 = f00[p];
             const a01 = f01[p];
             const a10 = f10[p];
@@ -96,11 +97,12 @@ function p2g(world: MpmWorld, g: Float64Array, dt: number): void {
             const g10 = a10 - s;
             const g11 = a11 - c;
             const J = a00 * a11 - a01 * a10;
-            const vol = lambda * (J - 1) * J;
-            t00 = 2 * mu * (g00 * a00 + g01 * a01) + vol;
-            t01 = 2 * mu * (g00 * a10 + g01 * a11);
-            t10 = 2 * mu * (g10 * a00 + g11 * a01);
-            t11 = 2 * mu * (g10 * a10 + g11 * a11) + vol;
+            const vol = hard * lambda * (J - 1) * J;
+            const mu2 = 2 * hard * mu;
+            t00 = mu2 * (g00 * a00 + g01 * a01) + vol;
+            t01 = mu2 * (g00 * a10 + g01 * a11);
+            t10 = mu2 * (g10 * a00 + g11 * a01);
+            t11 = mu2 * (g10 * a10 + g11 * a11) + vol;
         }
         // Affine momentum A = −dt V 4 τ + m C, scattered as m w v + w A (xᵢ − xₚ).
         const k = -dt * volume[p] * 4;
@@ -213,7 +215,8 @@ function g2p(world: MpmWorld, g: Float64Array, dt: number): void {
             svd2(e00 * a00 + e01 * a10, e00 * a01 + e01 * a11, e10 * a00 + e11 * a10, e10 * a01 + e11 * a11, svd);
             svd[2] = Math.min(Math.max(svd[2], 0.1), 1e4);
             svd[3] = Math.min(Math.max(svd[3], 0.1), 1e4);
-            logJp[p] = plasticity(mat, svd, logJp[p], prm.frictionAngle, prm.elasticityRatio, prm.plasticity);
+            if (mat === SNOW) jac[p] = snowPlasticity(svd, jac[p], prm.snowCompression, prm.snowStretch);
+            else logJp[p] = plasticity(mat, svd, logJp[p], prm.frictionAngle, prm.elasticityRatio, prm.plasticity);
             recompose(svd, svd[2], svd[3], m4);
             f00[p] = m4[0];
             f01[p] = m4[1];

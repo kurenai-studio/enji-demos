@@ -63,8 +63,17 @@ export class MpmSim {
         });
     }
 
+    /** Reseeds every world. Scenes give velocities in cells/s; PB-MPM stores motion per substep. */
     reset(): void {
-        for (const world of this.worlds) buildScene(world, this.scene);
+        this.worlds.forEach((world, i) => {
+            buildScene(world, this.scene);
+            if (world.solver !== 'pb') return;
+            const dt = this.dt(i);
+            for (let p = 0; p < world.count; p++) {
+                world.vx[p] *= dt;
+                world.vy[p] *= dt;
+            }
+        });
     }
 
     get particleCount(): number {

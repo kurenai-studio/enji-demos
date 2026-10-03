@@ -8,7 +8,8 @@ export const LIQUID = 0;
 export const ELASTIC = 1;
 export const SAND = 2;
 export const VISCO = 3;
-export const MATERIAL_NAMES = ['Liquid', 'Jelly', 'Sand', 'Visco'];
+export const SNOW = 4;
+export const MATERIAL_NAMES = ['Liquid', 'Jelly', 'Sand', 'Visco', 'Snow'];
 
 export const GUARDIAN = 3;
 /** Particles per cell along each axis when a block is seeded. */
@@ -34,6 +35,10 @@ export interface MpmParams {
     bulkModulus: number;
     youngModulus: number;
     poisson: number;
+    // Snow (Stomakhin et al. 2013): elastic stretch limits and hardening.
+    snowCompression: number;
+    snowStretch: number;
+    snowHardening: number;
 }
 
 export function defaultParams(): MpmParams {
@@ -51,6 +56,9 @@ export function defaultParams(): MpmParams {
         bulkModulus: 1.2e5,
         youngModulus: 1.5e5,
         poisson: 0.25,
+        snowCompression: 2.5e-2,
+        snowStretch: 7.5e-3,
+        snowHardening: 10,
     };
 }
 
@@ -83,7 +91,7 @@ export class MpmWorld {
     readonly c01: Float64Array;
     readonly c10: Float64Array;
     readonly c11: Float64Array;
-    /** Liquid volume ratio det F. */
+    /** Liquid: volume ratio det F. Snow: plastic volume ratio Jp (below 1 = packed). */
     readonly jac: Float64Array;
     readonly logJp: Float64Array;
     readonly mass: Float64Array;
@@ -139,7 +147,7 @@ export class MpmWorld {
         this.framesSinceBlowUp = 0;
     }
 
-    /** Fills [x0, x1] × [y0, y1] (grid units) with particles of one material. */
+    /** Fills [x0, x1] × [y0, y1] (grid units) with particles of one material, moving at (vx, vy) cells per second. */
     addBlock(material: number, x0: number, y0: number, x1: number, y1: number, vx = 0, vy = 0): void {
         const lo = GUARDIAN + 0.5;
         x0 = Math.max(x0, lo);
@@ -174,10 +182,10 @@ export class MpmWorld {
         }
     }
 
-    /** Fills a disc with particles of one material. */
-    addDisc(material: number, cx: number, cy: number, r: number): void {
+    /** Fills a disc with particles of one material, moving at (vx, vy) cells per second. */
+    addDisc(material: number, cx: number, cy: number, r: number, vx = 0, vy = 0): void {
         const start = this.count;
-        this.addBlock(material, cx - r, cy - r, cx + r, cy + r);
+        this.addBlock(material, cx - r, cy - r, cx + r, cy + r, vx, vy);
         let w = start;
         for (let i = start; i < this.count; i++) {
             const dx = this.px[i] - cx;

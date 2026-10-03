@@ -1,5 +1,5 @@
 import { EffectAsset, Material, Mesh, MeshRenderer, Node, primitives, resources, utils, Vec4 } from 'cc';
-import { ELASTIC, GUARDIAN, LIQUID, type MpmWorld, SAND } from './MpmWorld';
+import { ELASTIC, GUARDIAN, LIQUID, type MpmWorld, SAND, SNOW } from './MpmWorld';
 import type { MpmSim } from './MpmSim';
 
 /** Gap between the two worlds in compare mode, in cells. */
@@ -12,6 +12,8 @@ const LIQUID_FAST = [0.7, 0.86, 1];
 const JELLY = [0.93, 0.34, 0.5];
 const SAND_COLOR = [0.87, 0.71, 0.41];
 const VISCO = [0.36, 0.78, 0.48];
+const SNOW_PACKED = [0.93, 0.97, 1.0];
+const SNOW_TORN = [0.5, 0.56, 0.68];
 const WALL = [0.24, 0.26, 0.32];
 const BACKGROUND = [0.1, 0.11, 0.14];
 
@@ -178,6 +180,13 @@ function particleColor(world: MpmWorld, i: number, dt: number, out: Float32Array
         r = SAND_COLOR[0] * k;
         g = SAND_COLOR[1] * k;
         b = SAND_COLOR[2] * k;
+    } else if (mat === SNOW) {
+        // Fresh snow (Jp = 1) sits between packed (brighter) and torn (grey-blue).
+        const t = Math.min(Math.max((world.jac[i] - 0.85) / 0.35, 0), 1);
+        const k = 0.9 + 0.1 * ((Math.imul(i, 0x9e3779b1) >>> 24) / 255);
+        r = (SNOW_PACKED[0] + (SNOW_TORN[0] - SNOW_PACKED[0]) * t) * k;
+        g = (SNOW_PACKED[1] + (SNOW_TORN[1] - SNOW_PACKED[1]) * t) * k;
+        b = (SNOW_PACKED[2] + (SNOW_TORN[2] - SNOW_PACKED[2]) * t) * k;
     } else {
         const s = world.speed(i, dt);
         const k = 1 + 0.3 * (s / (s + 60));

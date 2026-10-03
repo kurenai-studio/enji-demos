@@ -73,3 +73,27 @@ export function plasticity(material: number, svd: Float64Array, logJp: number, f
     }
     return logJp;
 }
+
+/** Hardening never takes snow past this multiple of its base moduli, so a crushed clump cannot outrun the explicit step. */
+const SNOW_MAX_HARDENING = 6;
+
+/**
+ * Snow plasticity (Stomakhin et al. 2013): the elastic singular values are
+ * clamped to [1 − θc, 1 + θs]; whatever is cut off moves into the plastic
+ * part, whose volume ratio Jp is returned (Jp · det F_E stays the total J).
+ * Σ is written to svd[2..3].
+ */
+export function snowPlasticity(svd: Float64Array, jp: number, compression: number, stretch: number): number {
+    const s0 = svd[2];
+    const s1 = svd[3];
+    const c0 = Math.min(Math.max(s0, 1 - compression), 1 + stretch);
+    const c1 = Math.min(Math.max(s1, 1 - compression), 1 + stretch);
+    svd[2] = c0;
+    svd[3] = c1;
+    return Math.min(Math.max((jp * s0 * s1) / (c0 * c1), 0.2), 5);
+}
+
+/** e^{ξ(1 − Jp)}: packed snow (Jp < 1) gets stiffer, torn snow (Jp > 1) softer. */
+export function snowHardening(jp: number, xi: number): number {
+    return Math.min(Math.exp(xi * (1 - jp)), SNOW_MAX_HARDENING);
+}

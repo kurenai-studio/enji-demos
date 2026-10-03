@@ -3,10 +3,18 @@
 // reference g2p2g.wgsl. Copyright (c) 2024 Electronic Arts. All rights reserved.
 // BSD 3-Clause licence: https://github.com/electronicarts/pbmpm/blob/main/LICENSE.md
 //-----------------------------------------------------------------------------
-import { GUARDIAN, LIQUID, type MpmWorld, SAND, wallKeep } from './MpmWorld';
-import { plasticity, recompose, svd2 } from './Svd2';
+import { GUARDIAN, LIQUID, type MpmWorld, SAND, SNOW, wallKeep } from './MpmWorld';
+import { plasticity, recompose, snowHardening, snowPlasticity, svd2 } from './Svd2';
 
 const svd = new Float64Array(6);
+/**
+ * Weight of the volume-restoring part of the snow target when compressed. The
+ * shape part alone only pushes back along the compressed axis, so a snowball
+ * packs on impact without spreading; restoring volume pushes it sideways,
+ * which is what stretches and tears it. Larger values tear more but let a
+ * resting bank pack down further at low budgets.
+ */
+const SNOW_VOLUME_BLEND = 0.7;
 const m4 = new Float64Array(4);
 
 /**
@@ -171,6 +179,32 @@ function pass(world: MpmWorld, src: Float64Array, dst: Float64Array, gather: boo
                 t01 = m4[1];
                 t10 = m4[2];
                 t11 = m4[3];
+            } else if (mat === SNOW) {
+                // PB-MPM has no stress, so snow's bounded elastic stress becomes a
+                // bounded correction: each singular value is pulled towards 1 by at
+                // most θ times the hardening (θc compressed, θs stretched), and any
+                // deformation past that is left to flow, to be absorbed into Jp.
+                // When compressed, part of the target restores volume instead.
+                svd2(n00, n01, n10, n11, svd);
+                const hard = snowHardening(jac[p], prm.snowHardening);
+                const maxStretch = prm.snowStretch * hard;
+                const maxCompression = prm.snowCompression * hard;
+                const e0 = svd[2] - 1;
+                const e1 = svd[3] - 1;
+                let s0 = svd[2] - Math.min(Math.max(e0, -maxCompression), maxStretch);
+                let s1 = svd[3] - Math.min(Math.max(e1, -maxCompression), maxStretch);
+                const J = svd[2] * svd[3];
+                if (J < 1) {
+                    const blend = SNOW_VOLUME_BLEND * Math.min(1, hard);
+                    const vol = Math.sqrt(Math.max(J, 1e-6));
+                    s0 = (1 - blend) * s0 + blend * (svd[2] / vol);
+                    s1 = (1 - blend) * s1 + blend * (svd[3] / vol);
+                }
+                recompose(svd, s0, s1, m4);
+                t00 = m4[0];
+                t01 = m4[1];
+                t10 = m4[2];
+                t11 = m4[3];
             } else {
                 // Rotation of the polar decomposition, in closed form.
                 const e = (n00 + n11) * 0.5;
@@ -261,7 +295,14 @@ function integrate(world: MpmWorld, p: number, dt: number): void {
         // Lower bound keeps F invertible and stops crushed particles from exploding.
         svd[2] = Math.min(Math.max(svd[2], 0.1), 1e4);
         svd[3] = Math.min(Math.max(svd[3], 0.1), 1e4);
-        world.logJp[p] = plasticity(mat, svd, world.logJp[p], prm.frictionAngle, prm.elasticityRatio, prm.plasticity);
+        if (mat === SNOW) {
+            // Yield stress ∝ hardening in Stomakhin's model; with PB-MPM's fixed
+            // stiffness that is a yield strain ∝ hardening, so packed snow keeps
+            // a wider elastic window and stops packing once it can carry the load.
+            const hard = snowHardening(world.jac[p], prm.snowHardening);
+            world.jac[p] = snowPlasticity(svd, world.jac[p], prm.snowCompression * hard, prm.snowStretch * hard);
+        }
+        else world.logJp[p] = plasticity(mat, svd, world.logJp[p], prm.frictionAngle, prm.elasticityRatio, prm.plasticity);
         recompose(svd, svd[2], svd[3], m4);
         world.f00[p] = m4[0];
         world.f01[p] = m4[1];
