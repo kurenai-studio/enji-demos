@@ -1,0 +1,10 @@
+{
+    "name": "pathfinding-crowd",
+    "type": "3d",
+    "version": "3.8.8",
+    "uuid": "8e9526ef-915d-4788-9e42-27a992d0a2fb",
+    "creator": {
+        "version": "3.8.8",
+        "dependencies": {}
+    }
+}
