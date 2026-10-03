@@ -1,0 +1,10 @@
+{
+    "name": "hdr-particles",
+    "type": "3d",
+    "version": "3.8.8",
+    "uuid": "c2314e2e-c0a1-4cdf-af2c-2e63c59811ac",
+    "creator": {
+        "version": "3.8.8",
+        "dependencies": {}
+    }
+}

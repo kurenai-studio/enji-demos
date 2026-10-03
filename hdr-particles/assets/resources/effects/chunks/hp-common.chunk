@@ -1,0 +1,76 @@
+// Hashes, the 8-bit HDR encodings and the tone maps. Mirrors
+// assets/game/fx/Hdr.ts and the hashes in assets/game/fx/Particles.ts.
+// The pipeline writes shader output to the screen as is, so the composite
+// pass tone maps and gamma encodes itself.
+
+#define HIGH_SCALE 16.0
+
+// Dave Hoskins' "hash without sine".
+float hash13(vec3 p3) {
+  p3 = fract(p3 * 0.1031);
+  p3 += dot(p3, p3.zyx + 31.32);
+  return fract((p3.x + p3.y) * p3.z);
+}
+
+vec3 hash33(vec3 p3) {
+  p3 = fract(p3 * vec3(0.1031, 0.1030, 0.0973));
+  p3 += dot(p3, p3.yxz + 33.33);
+  return fract((p3.xxy + p3.yxx) * p3.zyx);
+}
+
+// Stage target: mode 0 (two ranges) x = c / (1 + c) then a 1/2.2 power;
+// 1 (LDR) linear, clamped; 2 (one range) linear c / 16.
+vec3 encodeStage(vec3 c, float mode) {
+  if (mode < 0.5) return pow(c / (1.0 + c), vec3(1.0 / 2.2));
+  if (mode < 1.5) return c;
+  return c / HIGH_SCALE;
+}
+
+vec3 decodeStage(vec3 e, float mode) {
+  if (mode < 0.5) {
+    vec3 x = min(pow(e, vec3(2.2)), vec3(0.996));
+    return x / (1.0 - x);
+  }
+  if (mode < 1.5) return e;
+  return e * HIGH_SCALE;
+}
+
+// Particles from the low (× 1) and high (× 1/16) additive targets.
+vec3 decodeParticles(vec3 low, vec3 high, float mode) {
+  if (mode > 0.5 && mode < 1.5) return low;
+  if (mode > 1.5) return high * HIGH_SCALE;
+  return mix(low, max(low, high * HIGH_SCALE), step(vec3(0.996), low));
+}
+
+// √(c / (1 + c)): the square root keeps the first step above black small
+// enough that halo tails fade out without an edge.
+vec3 bloomEncode(vec3 c) {
+  return sqrt(c / (1.0 + c));
+}
+
+vec3 bloomDecode(vec3 e) {
+  e = min(e, vec3(0.998));
+  e *= e;
+  return e / (1.0 - e);
+}
+
+// Stephen Hill's ACES fit with three.js's 1/0.6 exposure scale.
+vec3 acesHill(vec3 c) {
+  c /= 0.6;
+  vec3 i = vec3(
+    dot(c, vec3(0.59719, 0.35458, 0.04823)),
+    dot(c, vec3(0.07600, 0.90834, 0.01566)),
+    dot(c, vec3(0.02840, 0.13383, 0.83777)));
+  vec3 f = (i * (i + 0.0245786) - 0.000090537) / (i * (0.983729 * i + 0.4329510) + 0.238081);
+  return clamp(vec3(
+    dot(f, vec3(1.60475, -0.53108, -0.07367)),
+    dot(f, vec3(-0.10208, 1.10813, -0.00605)),
+    dot(f, vec3(-0.00327, -0.07276, 1.07602))), 0.0, 1.0);
+}
+
+// 0: ACES, 1: Reinhard per channel, 2: clamp.
+vec3 toneMap(vec3 c, float mode) {
+  if (mode < 0.5) return acesHill(c);
+  if (mode < 1.5) return c / (1.0 + c);
+  return clamp(c, 0.0, 1.0);
+}

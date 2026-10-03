@@ -1,0 +1,114 @@
+// The bloom chain (Jimenez 2014, "Next Generation Post Processing in Call of
+// Duty: Advanced Warfare"), one effect for its three kinds of pass:
+// 0 prefilter: full-resolution HDR (stage + both particle targets, decoded
+//   per texel) → 2×2 box → soft-knee threshold → half resolution;
+// 1 downsample: 13 bilinear taps of the level above;
+// 2 upsample: 3×3 tent of the coarser level, plus this level's downsample.
+// Levels store √(c / (1 + c)) with dither; no blending happens into them, so
+// the encoding need not be linear. But filtering must not happen in it either
+// (a bright texel next to black averages to far less light), so the levels
+// are NEAREST and both kernels fetch texel centres and decode before
+// weighting: the 13 taps are a 6×6 kernel, the tent a separable 4×4 one.
+// Mirrors bloomChain() in assets/game/fx/Hdr.ts.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: quad-vs:vert
+      frag: fs:frag
+      depthStencilState: { depthTest: false, depthWrite: false }
+      rasterizerState: { cullMode: none }
+      properties:
+        srcTex: { value: black }
+        lowTex: { value: black }
+        highTex: { value: black }
+        bloom: { value: [0, 1, 0.5, 0] }
+        texel: { value: [0.001, 0.001, 0, 1] }
+}%
+
+CCProgram quad-vs %{
+  precision highp float;
+  in vec3 a_position;
+  out vec2 v_uv;
+  vec4 vert () {
+    v_uv = a_position.xy + 0.5;
+    return vec4(a_position.xy * 2.0, 0.0, 1.0);
+  }
+}%
+
+CCProgram fs %{
+  precision highp float;
+  in vec2 v_uv;
+  // prefilter: stage; downsample: the level above; upsample: the coarser level
+  uniform highp sampler2D srcTex;
+  // prefilter: particle low target; upsample: this level's downsample
+  uniform highp sampler2D lowTex;
+  // prefilter: particle high target
+  uniform highp sampler2D highTex;
+  uniform BloomParams {
+    // x: pass kind, y: threshold, z: knee, w: HDR mode
+    vec4 bloom;
+    // xy: one texel of srcTex, z: frame seed, w: 1 dither
+    vec4 texel;
+  };
+  #include "./chunks/hp-common.chunk"
+
+  vec3 hdrAt (vec2 uv) {
+    vec3 s = decodeStage(texture(srcTex, uv).rgb, bloom.w);
+    return s + decodeParticles(texture(lowTex, uv).rgb, texture(highTex, uv).rgb, bloom.w);
+  }
+
+  // Texel (i, j) of srcTex, decoded.
+  vec3 texelAt (vec2 ij) {
+    return bloomDecode(texture(srcTex, (ij + 0.5) * texel.xy).rgb);
+  }
+
+  // Per-axis texel weights, f the fractional position between texel centres.
+  // 13 taps = ½ (3×3 tent of taps 2 apart) + ½ (2×2 box of taps at ±1); each
+  // bilinear tap spreads (1 − f, f) over two texels, 6 texels per axis.
+  float outerWeight (int k, float f) {
+    float g = 1.0 - f;
+    return k == 0 || k == 4 ? g * 0.25 : k == 1 || k == 5 ? f * 0.25 : k == 2 ? g * 0.5 : f * 0.5;
+  }
+  float innerWeight (int k, float f) {
+    float g = 1.0 - f;
+    return k == 1 || k == 3 ? g * 0.5 : k == 2 || k == 4 ? f * 0.5 : 0.0;
+  }
+  // 3×3 tent (1, 2, 1) / 4 of bilinear taps 1 apart: 4 texels per axis.
+  float tentWeight (int k, float f) {
+    float g = 1.0 - f;
+    return k == 0 ? g * 0.25 : k == 1 ? f * 0.25 + g * 0.5 : k == 2 ? f * 0.5 + g * 0.25 : f * 0.25;
+  }
+
+  vec4 frag () {
+    vec3 c = vec3(0.0);
+    if (bloom.x < 0.5) {
+      vec2 h = texel.xy * 0.5;
+      c = (hdrAt(v_uv + vec2(-h.x, -h.y)) + hdrAt(v_uv + vec2(h.x, -h.y)) + hdrAt(v_uv + vec2(-h.x, h.y)) + hdrAt(v_uv + vec2(h.x, h.y))) * 0.25;
+      float br = max(c.r, max(c.g, c.b));
+      float rq = clamp(br - bloom.y + bloom.z, 0.0, 2.0 * bloom.z);
+      rq = rq * rq / (4.0 * bloom.z + 1e-5);
+      c *= max(rq, br - bloom.y) / max(br, 1e-4);
+    } else {
+      vec2 pos = v_uv / texel.xy - 0.5;
+      vec2 b = floor(pos);
+      vec2 f = pos - b;
+      if (bloom.x < 1.5) {
+        for (int j = 0; j < 6; j++) {
+          for (int i = 0; i < 6; i++) {
+            float w = 0.5 * (outerWeight(i, f.x) * outerWeight(j, f.y) + innerWeight(i, f.x) * innerWeight(j, f.y));
+            c += w * texelAt(b + vec2(float(i - 2), float(j - 2)));
+          }
+        }
+      } else {
+        for (int j = 0; j < 4; j++) {
+          for (int i = 0; i < 4; i++) {
+            c += tentWeight(i, f.x) * tentWeight(j, f.y) * texelAt(b + vec2(float(i - 1), float(j - 1)));
+          }
+        }
+        c += bloomDecode(texture(lowTex, v_uv).rgb);
+      }
+    }
+    float n = texel.w * (hash13(vec3(gl_FragCoord.xy, texel.z)) - 0.5) / 255.0;
+    return vec4(bloomEncode(c) + n, 1.0);
+  }
+}%

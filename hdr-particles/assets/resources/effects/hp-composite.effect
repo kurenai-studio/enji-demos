@@ -1,0 +1,72 @@
+// Final pass on the main camera, a quad over the whole screen: decodes the
+// stage and particle targets into linear HDR, adds the bloom, applies
+// exposure and the tone map, gamma encodes and dithers to the 8-bit screen.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: quad-vs:vert
+      frag: fs:frag
+      depthStencilState: { depthTest: false, depthWrite: false }
+      rasterizerState: { cullMode: none }
+      properties:
+        stageTex: { value: black }
+        lowTex: { value: black }
+        highTex: { value: black }
+        bloomTex: { value: black }
+        mode: { value: [0, 0, 1, 0.5] }
+        view: { value: [0, 1, 0, 0] }
+        bloomTexel: { value: [0.001, 0.001, 0, 0] }
+}%
+
+CCProgram quad-vs %{
+  precision highp float;
+  in vec3 a_position;
+  out vec2 v_uv;
+  vec4 vert () {
+    v_uv = a_position.xy + 0.5;
+    return vec4(a_position.xy * 2.0, 0.0, 1.0);
+  }
+}%
+
+CCProgram fs %{
+  precision highp float;
+  in vec2 v_uv;
+  uniform highp sampler2D stageTex;
+  uniform highp sampler2D lowTex;
+  uniform highp sampler2D highTex;
+  uniform highp sampler2D bloomTex;
+  uniform CompositeParams {
+    // x: HDR mode, y: tone map, z: exposure (linear), w: bloom strength (0 off)
+    vec4 mode;
+    // x: 1 bloom only, y: 1 dither, z: frame seed
+    vec4 view;
+    // xy: one texel of bloomTex (half resolution)
+    vec4 bloomTexel;
+  };
+  #include "./chunks/hp-common.chunk"
+
+  vec3 bloomTexelAt (vec2 ij) {
+    return bloomDecode(texture(bloomTex, (ij + 0.5) * bloomTexel.xy).rgb);
+  }
+
+  // Bilinear upscale of the bloom, decoding before it interpolates (bloomTex is NEAREST).
+  vec3 bloomAt (vec2 uv) {
+    vec2 pos = uv / bloomTexel.xy - 0.5;
+    vec2 b = floor(pos);
+    vec2 f = pos - b;
+    vec3 top = mix(bloomTexelAt(b), bloomTexelAt(b + vec2(1.0, 0.0)), f.x);
+    vec3 bottom = mix(bloomTexelAt(b + vec2(0.0, 1.0)), bloomTexelAt(b + vec2(1.0, 1.0)), f.x);
+    return mix(top, bottom, f.y);
+  }
+
+  vec4 frag () {
+    vec3 c = decodeStage(texture(stageTex, v_uv).rgb, mode.x);
+    c += decodeParticles(texture(lowTex, v_uv).rgb, texture(highTex, v_uv).rgb, mode.x);
+    vec3 b = bloomAt(v_uv) * mode.w;
+    c = view.x > 0.5 ? b : c + b;
+    c = toneMap(c * mode.z, mode.y);
+    vec3 o = pow(c, vec3(1.0 / 2.2));
+    o += view.y * (hash13(vec3(gl_FragCoord.xy, view.z)) - 0.5) / 255.0;
+    return vec4(o, 1.0);
+  }
+}%
