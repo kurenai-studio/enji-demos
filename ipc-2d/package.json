@@ -1,0 +1,10 @@
+{
+    "name": "ipc-2d",
+    "type": "2d",
+    "version": "3.8.8",
+    "uuid": "ae833cb5-956d-463e-a9a1-b7cab94d5c1c",
+    "creator": {
+        "version": "3.8.8",
+        "dependencies": {}
+    }
+}
