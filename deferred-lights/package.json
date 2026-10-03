@@ -1,0 +1,10 @@
+{
+    "name": "deferred-lights",
+    "type": "3d",
+    "version": "3.8.8",
+    "uuid": "ff4fde64-34b4-46ab-a750-cbc59c7d59f3",
+    "creator": {
+        "version": "3.8.8",
+        "dependencies": {}
+    }
+}

@@ -1,0 +1,44 @@
+// Depth and normal pre-pass into an 8-bit render texture at screen size.
+// rg: linear view depth / depthFar in two bytes (16 bits), ba: view-space
+// normal xy * 0.5 + 0.5 (z is rebuilt, facing the camera). Sampled with
+// NEAREST filtering: interpolated packed depth is meaningless.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: vs:vert
+      frag: fs:frag
+      properties:
+        depthFar: { value: [60, 0, 0, 0] }
+}%
+
+CCProgram vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/uniforms/cc-local>
+  in vec3 a_position;
+  in vec3 a_normal;
+  out float v_depth;
+  out vec3 v_normal;
+  vec4 vert () {
+    vec4 view = cc_matView * cc_matWorld * vec4(a_position, 1.0);
+    v_depth = -view.z;
+    v_normal = (cc_matView * vec4((cc_matWorldIT * vec4(a_normal, 0.0)).xyz, 0.0)).xyz;
+    return cc_matProj * view;
+  }
+}%
+
+CCProgram fs %{
+  precision highp float;
+  in float v_depth;
+  in vec3 v_normal;
+  uniform GBufferParams {
+    vec4 depthFar;
+  };
+  vec4 frag () {
+    float d = clamp(v_depth / depthFar.x, 0.0, 0.9999);
+    float hi = floor(d * 255.0) / 255.0;
+    float lo = (d - hi) * 255.0;
+    vec3 n = normalize(v_normal);
+    return vec4(hi, lo, n.xy * 0.5 + 0.5);
+  }
+}%

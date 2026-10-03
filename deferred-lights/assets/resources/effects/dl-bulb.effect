@@ -1,0 +1,44 @@
+// A small glowing sphere at every light, from the same per-light mesh as the
+// light volumes, shrunk to a fixed size.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: vs:vert
+      frag: fs:frag
+      properties:
+        lightTex: { value: black }
+        bulb: { value: [0.06, 0, 0, 0] }
+}%
+
+CCProgram vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  in vec3 a_position;
+  in float a_lightIndex;
+  uniform highp sampler2D lightTex;
+  uniform BulbParams {
+    // x: radius
+    vec4 bulb;
+  };
+  out vec3 v_color;
+
+  vec4 lightTexel (float index, float k) {
+    float row = floor(index / 32.0);
+    float col = index - row * 32.0;
+    return texture(lightTex, (vec2(col * 2.0 + k, row) + 0.5) / vec2(64.0, 32.0));
+  }
+
+  vec4 vert () {
+    vec4 l = lightTexel(a_lightIndex, 0.0);
+    v_color = lightTexel(a_lightIndex, 1.0).rgb;
+    return cc_matProj * cc_matView * vec4(l.xyz + a_position * bulb.x, 1.0);
+  }
+}%
+
+CCProgram fs %{
+  precision highp float;
+  in vec3 v_color;
+  vec4 frag () {
+    return vec4(mix(v_color, vec3(1.0), 0.55), 1.0);
+  }
+}%

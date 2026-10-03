@@ -1,0 +1,109 @@
+// Light pre-pass, accumulation step. One bounding polyhedron per point light
+// (all lights in one mesh, each vertex carrying its light's index); the
+// vertex shader reads that light's position, radius and colour from the
+// light texture. Back faces only, no depth test: every pixel inside a light's
+// screen footprint is shaded once per light, even with the camera inside the
+// volume. The fragment rebuilds the view position and normal from the
+// G-buffer, skips pixels beyond the radius, and adds
+//   rgb: diffuse light × lightScale,  a: specular luminance × lightScale
+// into an 8-bit target with additive blending. Each light's output is
+// dithered by a 4×4 Bayer pattern shifted per light, so rounding to 8 bits
+// averages out instead of banding. overdraw mode adds one level (1/255) per volume pixel.
+// Mirrors lightTerms() in assets/game/deferred/Shading.ts.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: vs:vert
+      frag: fs:frag
+      depthStencilState: { depthTest: false, depthWrite: false }
+      rasterizerState: { cullMode: front }
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: one
+          blendDst: one
+          blendSrcAlpha: one
+          blendDstAlpha: one
+      properties:
+        gbuffer: { value: white }
+        lightTex: { value: black }
+        proj: { value: [0.5, 0.5, 60, 0] }
+        params: { value: [0.5, 24, 1, 0] }
+}%
+
+CCProgram vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  in vec3 a_position;
+  in float a_lightIndex;
+  uniform highp sampler2D lightTex;
+  out vec4 v_clip;
+  out vec4 v_light;
+  out vec4 v_color;
+
+  // Light texture: 32 lights per row, two texels each (position + radius, colour + intensity).
+  vec4 lightTexel (float index, float k) {
+    float row = floor(index / 32.0);
+    float col = index - row * 32.0;
+    return texture(lightTex, (vec2(col * 2.0 + k, row) + 0.5) / vec2(64.0, 32.0));
+  }
+
+  vec4 vert () {
+    vec4 l = lightTexel(a_lightIndex, 0.0);
+    vec4 c = lightTexel(a_lightIndex, 1.0);
+    v_light = vec4((cc_matView * vec4(l.xyz, 1.0)).xyz, l.w);
+    v_color = vec4(c.rgb * c.a, a_lightIndex);
+    v_clip = cc_matProj * cc_matView * vec4(l.xyz + a_position * l.w, 1.0);
+    return v_clip;
+  }
+}%
+
+CCProgram fs %{
+  precision highp float;
+  in vec4 v_clip;
+  in vec4 v_light;
+  in vec4 v_color;
+  uniform sampler2D gbuffer;
+  uniform LightParams {
+    // x, y: tan of half the horizontal / vertical FOV, z: depth far
+    vec4 proj;
+    // x: light scale, y: gloss, z: 1 dither on, w: 1 overdraw mode
+    vec4 params;
+  };
+
+  // 4×4 Bayer rank in 0..1: the same table as bayer() in Shading.ts.
+  float bayer2 (vec2 c) {
+    return 2.0 * c.x + 3.0 * c.y - 4.0 * c.x * c.y;
+  }
+  float bayer4 (vec2 p) {
+    vec2 c = mod(floor(p), 4.0);
+    return (4.0 * bayer2(mod(c, 2.0)) + bayer2(floor(c * 0.5)) + 0.5) / 16.0;
+  }
+
+  vec4 frag () {
+    if (params.w > 0.5) return vec4(1.0 / 255.0);
+    vec2 suv = v_clip.xy / v_clip.w * 0.5 + 0.5;
+    vec4 g = texture(gbuffer, suv);
+    float d = (g.r + g.g / 255.0) * proj.z;
+    if (d >= proj.z * 0.999) discard;
+    vec3 p = vec3((suv * 2.0 - 1.0) * proj.xy * d, -d);
+    vec3 lv = v_light.xyz - p;
+    float dist = length(lv);
+    if (dist >= v_light.w) discard;
+    vec2 nxy = g.ba * 2.0 - 1.0;
+    vec3 n = vec3(nxy, sqrt(max(0.0, 1.0 - dot(nxy, nxy))));
+    float x = dist / v_light.w;
+    float w = max(0.0, 1.0 - x * x * x * x);
+    float a = w * w / (dist * dist + 1.0);
+    vec3 l = lv / max(dist, 1e-6);
+    float ndl = max(dot(n, l), 0.0);
+    vec3 h = normalize(l + normalize(-p));
+    float spec = pow(max(dot(n, h), 0.0), params.y) * ndl;
+    vec3 diffuse = v_color.rgb * (a * ndl);
+    float specLum = dot(v_color.rgb, vec3(0.2126, 0.7152, 0.0722)) * a * spec;
+    float i = v_color.w;
+    float shift = floor(i * 0.25);
+    float dither = params.z * (bayer4(gl_FragCoord.xy + vec2(i, shift)) - 0.5) / 255.0;
+    return vec4(diffuse * params.x + dither, specLum * params.x + dither);
+  }
+}%
