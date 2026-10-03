@@ -1,0 +1,95 @@
+// Normal-oriented hemisphere SSAO (Crytek 2007, hemisphere form after
+// Chapman / LearnOpenGL) on a full-screen quad at AO resolution. Reads the
+// G-buffer, writes r: visibility (1 open, 0 occluded), gb: the packed depth
+// copied through, so the blur and the upsample read one texture instead of
+// two. The kernel is procedural, so the sample count is a uniform and no
+// array is uploaded. Mirrors ambientOcclusion() in assets/game/ssao/AoMath.ts.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: quad-vs:vert
+      frag: fs:frag
+      depthStencilState: { depthTest: false, depthWrite: false }
+      rasterizerState: { cullMode: none }
+      properties:
+        gbuffer: { value: white }
+        proj: { value: [0.5, 0.5, 40, 0] }
+        params: { value: [0.5, 0.025, 16, 1.5] }
+}%
+
+CCProgram quad-vs %{
+  precision highp float;
+  in vec3 a_position;
+  out vec2 v_uv;
+  vec4 vert () {
+    v_uv = a_position.xy + 0.5;
+    return vec4(a_position.xy * 2.0, 0.0, 1.0);
+  }
+}%
+
+CCProgram fs %{
+  precision highp float;
+  in vec2 v_uv;
+  uniform sampler2D gbuffer;
+  uniform AoParams {
+    // x, y: tan of half the horizontal / vertical FOV, z: depth far, w: slope scale × texel angle (2 tanY / height)
+    vec4 proj;
+    // x: radius (m), y: bias (m), z: sample count, w: intensity exponent
+    vec4 params;
+  };
+
+  float sceneDepth (vec2 uv) {
+    vec2 e = texture(gbuffer, uv).rg;
+    return (e.x + e.y / 255.0) * proj.z;
+  }
+
+  // 4×4 Bayer rank, built from the 2×2 one (0 2 / 3 1): the same table as AoMath.ts BAYER.
+  float bayer2 (vec2 c) {
+    return 2.0 * c.x + 3.0 * c.y - 4.0 * c.x * c.y;
+  }
+  float bayer4 (vec2 p) {
+    vec2 c = mod(floor(p), 4.0);
+    return (4.0 * bayer2(mod(c, 2.0)) + bayer2(floor(c * 0.5)) + 0.5) / 16.0;
+  }
+
+  vec4 frag () {
+    vec4 g = texture(gbuffer, v_uv);
+    float d = (g.r + g.g / 255.0) * proj.z;
+    if (d >= proj.z * 0.999) return vec4(1.0, g.rg, 1.0);
+    vec3 p = vec3((v_uv * 2.0 - 1.0) * proj.xy * d, -d);
+    vec2 nxy = g.ba * 2.0 - 1.0;
+    vec3 n = vec3(nxy, sqrt(max(0.0, 1.0 - dot(nxy, nxy))));
+    // Slope-scaled bias: the depth this surface spans across part of a texel.
+    float c = max(dot(n, -p) / length(p), 0.05);
+    float bias = params.y + length(p) * proj.w * sqrt(1.0 - c * c) / c;
+
+    float a = bayer4(gl_FragCoord.xy) * 6.2831853;
+    vec3 r = vec3(cos(a), sin(a), 0.0);
+    vec3 t = r - n * dot(r, n);
+    if (length(t) < 1e-3) t = vec3(0.0, 0.0, 1.0) - n * n.z;
+    t = normalize(t);
+    vec3 b = cross(n, t);
+
+    float radius = params.x;
+    float count = params.z;
+    float occlusion = 0.0;
+    for (int i = 0; i < 32; i++) {
+      float fi = float(i);
+      if (fi >= count) break;
+      float u = (fi + 0.5) / count;
+      float phi = fi * 2.399963;
+      float rr = sqrt(u);
+      float lt = fract((fi + 0.5) * 0.618034);
+      float s = 0.1 + 0.9 * lt * lt;
+      vec3 h = vec3(rr * cos(phi), rr * sin(phi), sqrt(1.0 - u)) * s;
+      vec3 sp = p + (t * h.x + b * h.y + n * h.z) * radius;
+      vec2 suv = sp.xy / (-sp.z) / proj.xy * 0.5 + 0.5;
+      if (suv.x < 0.0 || suv.x > 1.0 || suv.y < 0.0 || suv.y > 1.0) continue;
+      float sceneZ = -sceneDepth(suv);
+      float range = smoothstep(0.0, 1.0, radius / abs(p.z - sceneZ));
+      occlusion += (sceneZ >= sp.z + bias ? 1.0 : 0.0) * range;
+    }
+    float ao = pow(1.0 - occlusion / count, params.w);
+    return vec4(ao, g.rg, 1.0);
+  }
+}%

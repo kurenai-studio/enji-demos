@@ -1,0 +1,55 @@
+// One direction of a separable depth-aware blur over the AO, at AO
+// resolution: five binomial taps, each weighted down by its depth difference
+// to the centre so occlusion does not bleed across silhouettes. Run twice
+// (x then y) to average out the 4×4 kernel rotation pattern. Input and
+// output both carry r: AO, gb: packed depth; taps land on texel centres, so
+// the linear filter returns the stored bytes unchanged.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: quad-vs:vert
+      frag: fs:frag
+      depthStencilState: { depthTest: false, depthWrite: false }
+      rasterizerState: { cullMode: none }
+      properties:
+        aoTex: { value: white }
+        blur: { value: [0.001, 0, 40, 8] }
+}%
+
+CCProgram quad-vs %{
+  precision highp float;
+  in vec3 a_position;
+  out vec2 v_uv;
+  vec4 vert () {
+    v_uv = a_position.xy + 0.5;
+    return vec4(a_position.xy * 2.0, 0.0, 1.0);
+  }
+}%
+
+CCProgram fs %{
+  precision highp float;
+  in vec2 v_uv;
+  uniform sampler2D aoTex;
+  uniform BlurParams {
+    // xy: one texel along the blur direction, z: depth far, w: depth falloff
+    vec4 blur;
+  };
+
+  vec4 frag () {
+    vec4 c = texture(aoTex, v_uv);
+    float d0 = (c.g + c.b / 255.0) * blur.z;
+    float sum = 0.0;
+    float weights = 0.0;
+    for (int i = -2; i <= 2; i++) {
+      float fi = float(i);
+      vec4 s = texture(aoTex, v_uv + blur.xy * fi);
+      float w = (fi == 0.0 ? 6.0 : abs(fi) == 1.0 ? 4.0 : 1.0);
+      // Relative depth difference, so the falloff works near and far.
+      float d = (s.g + s.b / 255.0) * blur.z;
+      w *= max(0.0, 1.0 - abs(d - d0) * blur.w / max(d0, 0.1));
+      sum += s.r * w;
+      weights += w;
+    }
+    return vec4(sum / max(weights, 1e-4), c.gb, 1.0);
+  }
+}%

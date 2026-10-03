@@ -1,0 +1,10 @@
+{
+    "name": "ssao",
+    "type": "3d",
+    "version": "3.8.8",
+    "uuid": "93420b6a-aa0a-4f1a-be08-7fe0c933b924",
+    "creator": {
+        "version": "3.8.8",
+        "dependencies": {}
+    }
+}
