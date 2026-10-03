@@ -1,0 +1,68 @@
+// Static scenery: vertex-colour albedo, sky/ground hemisphere ambient, one
+// sun, distance fog. Technique 1 is the soft blob shadow under each
+// character (vertex alpha, blended, no depth write).
+CCEffect %{
+  techniques:
+  - name: opaque
+    passes:
+    - vert: vs:vert
+      frag: fs:frag
+      properties:
+        sunDir: { value: [0.45, 0.8, 0.35, 0] }
+  - name: blob
+    passes:
+    - vert: vs:vert
+      frag: fs:frag
+      depthStencilState:
+        depthTest: true
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+      properties:
+        sunDir: { value: [0.45, 0.8, 0.35, 0] }
+}%
+
+CCProgram vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/uniforms/cc-local>
+  in vec3 a_position;
+  in vec3 a_normal;
+  in vec4 a_color;
+  out vec3 v_normal;
+  out vec4 v_color;
+  out float v_dist;
+  vec4 vert () {
+    vec4 world = cc_matWorld * vec4(a_position, 1.0);
+    v_normal = (cc_matWorldIT * vec4(a_normal, 0.0)).xyz;
+    v_color = a_color;
+    vec4 view = cc_matView * world;
+    v_dist = -view.z;
+    return cc_matProj * view;
+  }
+}%
+
+CCProgram fs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  in vec3 v_normal;
+  in vec4 v_color;
+  in float v_dist;
+  uniform LitParams {
+    vec4 sunDir;
+  };
+  vec4 frag () {
+    vec3 n = normalize(v_normal);
+    vec3 sky = vec3(0.62, 0.66, 0.74);
+    vec3 ground = vec3(0.30, 0.28, 0.26);
+    vec3 ambient = mix(ground, sky, n.y * 0.5 + 0.5);
+    float sun = max(dot(n, normalize(sunDir.xyz)), 0.0);
+    vec3 color = v_color.rgb * (ambient + sun * vec3(0.6, 0.56, 0.5));
+    float fog = smoothstep(18.0, 40.0, v_dist);
+    color = mix(color, vec3(0.62, 0.66, 0.74), fog);
+    return vec4(color, v_color.a);
+  }
+}%

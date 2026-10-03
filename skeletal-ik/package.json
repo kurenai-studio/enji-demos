@@ -1,0 +1,10 @@
+{
+    "name": "skeletal-ik",
+    "type": "3d",
+    "version": "3.8.8",
+    "uuid": "81081b76-26d6-4dea-a8b2-e09e5980bec6",
+    "creator": {
+        "version": "3.8.8",
+        "dependencies": {}
+    }
+}
