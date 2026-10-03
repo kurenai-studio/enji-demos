@@ -1,0 +1,10 @@
+{
+    "name": "prt",
+    "type": "3d",
+    "version": "3.8.8",
+    "uuid": "fc6c71d5-198d-425c-a492-f0cba25a70b8",
+    "creator": {
+        "version": "3.8.8",
+        "dependencies": {}
+    }
+}

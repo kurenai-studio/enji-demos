@@ -1,0 +1,93 @@
+// Background sphere around the camera showing the lighting: either the exact
+// sky gradient and lamp discs (Env.radiance), or the SH reconstruction the
+// objects are lit with, Σ_k L_k Y_k(ω), read from the light texture.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: sky-vs:vert
+      frag: sky-fs:frag
+      rasterizerState:
+        cullMode: none
+      depthStencilState:
+        depthWrite: false
+        depthFunc: less_equal
+      properties:
+        lightTex: { value: black }
+        zenith: { value: [0, 0, 0, 0] }
+        horizon: { value: [0, 0, 0, 0] }
+        below: { value: [0, 0, 0, 0] }
+        lamp0: { value: [0, 1, 0, 2] }
+        lamp1: { value: [0, 1, 0, 2] }
+        lamp2: { value: [0, 1, 0, 2] }
+        glow0: { value: [0, 0, 0, 0] }
+        glow1: { value: [0, 0, 0, 0] }
+        glow2: { value: [0, 0, 0, 0] }
+        params: { value: [0, 0, 0, 0] }
+}%
+
+CCProgram sky-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  in vec3 a_position;
+  out vec3 v_dir;
+
+  vec4 vert () {
+    v_dir = a_position;
+    vec4 p = cc_matViewProj * vec4(cc_cameraPos.xyz + a_position, 1.0);
+    // On the far plane, behind everything.
+    return p.xyww;
+  }
+}%
+
+CCProgram sky-fs %{
+  precision highp float;
+  in vec3 v_dir;
+  uniform highp sampler2D lightTex;
+  uniform PrtSky {
+    vec4 zenith;
+    vec4 horizon;
+    vec4 below;
+    // xyz: direction towards the lamp, w: cos of its half-angle (> 1: unused)
+    vec4 lamp0;
+    vec4 lamp1;
+    vec4 lamp2;
+    // rgb: radiance inside the cone
+    vec4 glow0;
+    vec4 glow1;
+    vec4 glow2;
+    // x: 1 shows the SH reconstruction
+    vec4 params;
+  };
+  #include "./chunks/prt-common.chunk"
+
+  vec3 exact (vec3 d) {
+    vec3 c = d.y < 0.0 ? below.rgb : mix(horizon.rgb, zenith.rgb, sqrt(d.y));
+    if (dot(d, lamp0.xyz) >= lamp0.w) c += glow0.rgb;
+    if (dot(d, lamp1.xyz) >= lamp1.w) c += glow1.rgb;
+    if (dot(d, lamp2.xyz) >= lamp2.w) c += glow2.rgb;
+    return c;
+  }
+
+  vec3 reconstructed (vec3 d) {
+    vec4 b[7];
+    shBasis(d, b);
+    vec2 lsize = vec2(TEXELS_PER_VERTEX, 1.0);
+    vec3 c = vec3(0.0);
+    for (int j = 0; j < 7; j++) {
+      float fj = float(j);
+      c.r += dot(b[j], texelAt(lightTex, fj, 0.0, lsize));
+      c.g += dot(b[j], texelAt(lightTex, GROUPS + fj, 0.0, lsize));
+      c.b += dot(b[j], texelAt(lightTex, 2.0 * GROUPS + fj, 0.0, lsize));
+    }
+    return c;
+  }
+
+  vec4 frag () {
+    vec3 d = normalize(v_dir);
+    vec3 c = params.x > 0.5 ? reconstructed(d) : exact(d);
+    // Negative lobes of the SH light show as blue-tinted dark.
+    vec3 neg = max(-c, vec3(0.0));
+    c = max(c, vec3(0.0)) + vec3(0.0, 0.0, 0.6) * dot(neg, vec3(0.33));
+    return vec4(toDisplay(c), 1.0);
+  }
+}%

@@ -1,0 +1,22 @@
+{
+  /* Base configuration. Do not edit this field. */
+  "extends": "./temp/tsconfig.cocos.json",
+
+  /* Add your custom configuration here. */
+  "compilerOptions": {
+    "strict": false,
+    /* Plain `tsc` (5.x and 7.x) cannot use the generated base as is: it resolves
+       with node10 (removed in TypeScript 7) and lists declarations under `types`
+       relative to temp/. */
+    "moduleResolution": "bundler",
+    "lib": ["ES2020", "DOM"],
+    "types": []
+  },
+  "files": [
+    "./temp/declarations/jsb.d.ts",
+    "./temp/declarations/cc.d.ts",
+    "./temp/declarations/cc.custom-macro.d.ts",
+    "./temp/declarations/cc.env.d.ts"
+  ],
+  "include": ["./assets/**/*"]
+}

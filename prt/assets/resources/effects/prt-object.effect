@@ -1,0 +1,44 @@
+// PRT shading per vertex: radiance = Σ_k L_k T_k per channel, with the
+// vertex's 25 RGB transfer coefficients from transferTex (row-packed by vertex
+// index a_vid) and the light's from lightTex. The fragment only tone-maps.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: prt-vs:vert
+      frag: prt-fs:frag
+      properties:
+        transferTex: { value: black }
+        lightTex: { value: black }
+        dims: { value: [1, 0, 0, 0] }
+}%
+
+CCProgram prt-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/uniforms/cc-local>
+  in vec3 a_position;
+  in float a_vid;
+  uniform highp sampler2D transferTex;
+  uniform highp sampler2D lightTex;
+  uniform PrtVert {
+    // x: transfer texture rows
+    vec4 dims;
+  };
+  out vec3 v_radiance;
+  #include "./chunks/prt-common.chunk"
+
+  vec4 vert () {
+    v_radiance = transferDot(transferTex, lightTex, a_vid, dims.x);
+    return cc_matViewProj * cc_matWorld * vec4(a_position, 1.0);
+  }
+}%
+
+CCProgram prt-fs %{
+  precision highp float;
+  in vec3 v_radiance;
+  #include "./chunks/prt-common.chunk"
+
+  vec4 frag () {
+    return vec4(toDisplay(max(v_radiance, vec3(0.0))), 1.0);
+  }
+}%
