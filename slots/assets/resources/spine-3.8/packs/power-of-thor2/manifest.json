@@ -190,42 +190,42 @@
   "spines": [
     {
       "id": "spine_thor2_symbolB1",
-      "dir": "oriSymbols/symbolB1",
+      "dir": "oriSymbols",
       "file": "symbolB1.json"
     },
     {
       "id": "spine_thor2_symbolB2",
-      "dir": "oriSymbols/symbolB2",
+      "dir": "oriSymbols",
       "file": "symbolB2.json"
     },
     {
       "id": "spine_thor2_symbolF12345",
-      "dir": "oriSymbols/symbolF12345",
+      "dir": "oriSymbols",
       "file": "symbolF12345.json"
     },
     {
       "id": "spine_thor2_symbolM1",
-      "dir": "oriSymbols/symbolM1",
+      "dir": "oriSymbols",
       "file": "symbolM1.json"
     },
     {
       "id": "spine_thor2_symbolM2",
-      "dir": "oriSymbols/symbolM2",
+      "dir": "oriSymbols",
       "file": "symbolM2.json"
     },
     {
       "id": "spine_thor2_symbolM3",
-      "dir": "oriSymbols/symbolM3",
+      "dir": "oriSymbols",
       "file": "symbolM3.json"
     },
     {
       "id": "spine_thor2_symbolM4",
-      "dir": "oriSymbols/symbolM4",
+      "dir": "oriSymbols",
       "file": "symbolM4.json"
     },
     {
       "id": "spine_thor2_symbolAKQJTE",
-      "dir": "oriSymbols/symbolAKQJTE",
+      "dir": "oriSymbols",
       "file": "symbolAKQJTE.json"
     }
   ],
@@ -242,7 +242,7 @@
     {
       "id": "fx_thor2_symbol_win",
       "name": "symbol_win",
-      "dir": "effects/symbol_win",
+      "dir": "effects",
       "file": "symbol_win.json",
       "defaultAnim": "play",
       "front": false,
@@ -251,7 +251,7 @@
     {
       "id": "fx_thor2_symbol_eliminate",
       "name": "symbol_eliminate",
-      "dir": "effects/symbol_eliminate",
+      "dir": "effects",
       "file": "symbol_eliminate.json",
       "defaultAnim": "play",
       "front": true,

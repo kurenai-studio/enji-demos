@@ -70,7 +70,7 @@ coins 1.3 / 1.8 / 11, A 0.9 / 1.3 / 9, K 0.7 / 1.1 / 7, Q 0.45 / 0.9 / 4.5, J 0.
 | `assets/game/math/SpirBuilder.ts` | Turns a spin result into SPIR frames (`spinEnd` → `postClear`/dropOut → `reveal` → per tumble `highlight` → `postClear` → `compact` → `bonus-highlight` → `multiCollect`) plus marks for the HUD (tumble amounts, scatter, collect). |
 | `assets/game/MainView.ts` | Layout, HUD, board events (win amounts float from the cluster centre, orb values fly into the multiplier badge), BIG/MEGA/EPIC banners at 20/60/200× bet, free-spin intro/retrigger/summary, auto play. |
 | `assets/game/ui/` | Sprite/label/button helpers (`Art.ts`) and a throttled key-based sound player (`Sfx.ts`). |
-| `assets/resources/spine-3.8/packs/power-of-thor2/` | The Thor 2 pack (without its prefabs and README). |
+| `assets/resources/spine-3.8/packs/power-of-thor2/` | The Thor 2 pack (without its prefabs and README). Eight symbol skeletons share one atlas (`oriSymbols/symbols.png` + `symbol.jpg`); the two cell effects share `effects/light.jpg`. |
 | `assets/resources/audio/` | Sound effects and music from SlotPlayableAdFrame (see its `docs/AUDIO-SLOTS.md` for the key names). |
 | `assets/resources/ui/`, `art/` | Background, logo, reel frame, buttons and panels. The four sheets in `art/` were generated with Cursor's image generation, then chroma-keyed and sliced by `tools/key_art.mjs` with the auto-ui-pipeline Node modules. |
 
@@ -78,8 +78,17 @@ coins 1.3 / 1.8 / 11, A 0.9 / 1.3 / 9, K 0.7 / 1.1 / 7, Q 0.45 / 0.9 / 4.5, J 0.
 
 19 pack images are WebP data (16 under `.png`/`.jpg` names in `oriSymbols/`, the two effect pages and
 `font_symbolF.webp`). Creator 3.8.8 imports them; Enji's image importer cannot decode WebP (Enji issue
-0006). They were transcoded in place: `.png` names to PNG, `.jpg` names to JPEG quality 95 (those pages
-have no alpha), and the font page to `font_symbolF.png` with the `.fnt` `page` line updated.
+0006). `tools/slim-pack.mjs` transcodes them to palette PNG / mozjpeg 88, and folds the eight identical
+symbol atlas copies and the two identical effect pages into one each.
+
+Creator 3.8.8 `web-mobile` (release, no md5 cache): **7.1 MB** on disk, **3.3 MB** gzipped. Sources in
+`assets/resources/` are 2.9 MB (pack 1.7 MB, UI 0.8 MB, audio 0.5 MB). The git tree is larger because of
+`video/slots.mp4` (13.1 MB) and the generated art sources in `art/`.
+
+The live game also has a Thor character Spine. It is not in the CocosSlotsEditor pack (that pack is
+symbols, cell effects and the multiplier font only), and the original HAR sample
+`samples/gameweb3.rsg-games.com.har` is not on this machine. SlotPlayableAdFrame's `charactor/` is
+Storm of Set (Egyptian gods), so it was not used.
 
 ## Tools
 
@@ -92,6 +101,7 @@ have no alpha), and the font page to `font_symbolF.png` with the `.fnt` `page` l
 | `tools/probe.mjs <prefix> <js> [every] [count] [query]` | Evaluate JS in the preview, then take periodic screenshots |
 | `tools/shot.mjs <out> [waitMs] [js]` | One screenshot |
 | `tools/key_art.mjs <artDir>` | Key and slice the generated art into `assets/resources/ui/` |
+| `tools/slim-pack.mjs <CocosSlotsEditor>` | Rebuild the Thor 2 pack from the editor checkout: shared atlas pages, palette PNG / mozjpeg (needs `sharp`; set `SHARP=` if it is not a local dependency) |
 
 The seed scripts are only valid while MainView consumes the RNG the same way (a quiet first board, then
 one `spin()` per spin).
@@ -103,3 +113,4 @@ one `spin()` per spin).
 - The browser blocks music until the first tap; the recorded video has no sound.
 - The ported runtime still has the type errors it had in CocosSlotsEditor; they do not affect the
   preview.
+- No Thor character on the HUD (see above); only the symbol pack.
