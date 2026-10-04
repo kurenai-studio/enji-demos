@@ -1,0 +1,28 @@
+// Unlit vertex colours for the domain backgrounds and walls.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: vs:vert
+      frag: fs:frag
+}%
+
+CCProgram vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/uniforms/cc-local>
+  in vec3 a_position;
+  in vec4 a_color;
+  out vec4 v_color;
+  vec4 vert () {
+    v_color = a_color;
+    return cc_matProj * cc_matView * cc_matWorld * vec4(a_position, 1.0);
+  }
+}%
+
+CCProgram fs %{
+  precision highp float;
+  in vec4 v_color;
+  vec4 frag () {
+    return vec4(v_color.rgb, 1.0);
+  }
+}%

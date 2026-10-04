@@ -1,0 +1,10 @@
+{
+    "name": "xpbi",
+    "type": "2d",
+    "version": "3.8.8",
+    "uuid": "68db6fc9-092b-406a-99f1-67c41e58a0c4",
+    "creator": {
+        "version": "3.8.8",
+        "dependencies": {}
+    }
+}
