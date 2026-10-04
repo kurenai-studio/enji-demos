@@ -96,6 +96,10 @@ export class Hud {
         this.status.string = lines.slice(0, STATUS_LINES).join('\n');
     }
 
+    setStatusVisible(visible: boolean): void {
+        this.statusPanel.active = visible;
+    }
+
     /** True when a UI-space point (origin bottom left) is over a button. */
     contains(x: number, y: number): boolean {
         for (const r of this.buttonRects) {

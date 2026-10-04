@@ -2,12 +2,55 @@
 
 A 3D snow demo for Cocos Creator 3.8, built and previewed with Enji. The idea
 comes from the Lich King cinematic (and its memes): an armoured gauntlet
-sweeps through deep snow. The snow is a full **3D MLS-MPM** simulation with
-the **Stomakhin et al. 2013** snow plasticity: about 17 000 particles on a
-46×26×32 grid with 3 cm cells. The gauntlet is a model built by a Blender
-script. It pushes the snow through eight kinematic capsules, so the furrow,
-the packed walls and the clumps that stick to the claws come from the
-physics. None of it is an animation.
+sweeps through snow. The snow is a full **3D MLS-MPM** simulation with the
+**Stomakhin et al. 2013** snow plasticity. The gauntlet is a model built by a
+Blender script. It pushes the snow through eight kinematic capsules, so the
+wiped line, the packed walls and the clumps that stick to the claws come
+from the physics. None of it is an animation.
+
+The demo opens on **the Lich King shot**. `?view=sandbox` (or the Sandbox
+button) opens a deep tray to dig in freely.
+
+## The Lich King shot
+
+This is the close-up from the *Wrath of the Lich King* opening cinematic
+(2008), the one the memes replace the text in. The gauntlet comes down onto
+fresh snow over a sheet of ice and wipes once across it. Words frozen in the
+ice light up underneath. Here they read **cocos 牛B**.
+
+| The wipe | The words |
+|---|---|
+| ![Mid-wipe](shots/lichking-wipe.jpg) | ![Revealed](shots/lichking-reveal.jpg) |
+
+- **Snow:** a 7 cm layer over a 1.8 × 1.0 m patch, 26 000 particles on a 2.5 cm grid.
+  At this depth its own weight compresses it by at most ρgh/E ≈ 2 % (about
+  0.6 mm), so it goes to sleep as filled, with no settling pass.
+  A wipe keeps about 5 000 particles awake.
+- **The hand** comes in from the upper left. Its fingers trail the wrist
+  (lean −0.55 rad) and the lowest claw sits right on the ice. It wipes 1.1 m in
+  2.1 s, then lifts out to the right. `tools/shot-tune.mts` compares hand poses
+  by how much of the text band they leave bare.
+- **The ice** (`tools/ice_text.py`, PIL) is deep blue with cracks and trapped
+  bubbles. The text is set in Songti SC Black, frosted with a carved bevel, plus
+  a separate glow map. It uses `builtin-standard` with an albedo map and an
+  emissive map. The emissive scale ramps up as the line is uncovered, then breathes.
+  Change the words with `python3 tools/ice_text.py "…"`.
+- **Snow surface:** a wipe leaves one or two particle layers on the ice. The
+  surface leaves out snow within 1.2 cm of the ice, so that dusting reads as
+  translucent, and its iso sits at half of full density, so the line reads as bare ice.
+  Thin snow at the edges of the line is tinted with the blue of the ice.
+- **Framing:** an untouched snowfield, flush with the settled surface, hides the
+  patch's edges. Linear night fog, about 2 500 blowing flakes, and loose powder
+  (awake particles faster than 0.25 m/s) as soft additive points. A vignette and
+  2.2:1 bars appear on landscape screens. The camera pushes in from 55° to 42°.
+
+In the preview, a whole frame of the wipe (simulation, surface and render)
+averages 12.9 ms, with a worst case of 20 ms.
+
+## The sandbox
+
+A 1.2 × 0.78 m tray of snow 25 cm deep: about 17 000 particles on a
+46×26×32 grid with 3 cm cells.
 
 | Mid-sweep | After the sweep | Particles (debug view) |
 |---|---|---|
@@ -29,6 +72,9 @@ it directly.
 | `Frame` | One frame: move the hand, wake or sleep particles, run 6 substeps |
 | `Scenes` / `Setup` | Snow bed (noise drifts, a bank at the back) and the scene constants |
 | `SurfaceMesher` | Surface Nets surface over a particle density field (from `pbf-water`), with a cached field for sleeping snow |
+| `Shot` / `GauntletNode` | The shot's constants, timeline and hand path; placing the model on a hand pose |
+
+`assets/game/ShotView.ts` is the shot and `MainView.ts` the sandbox; `Boot.ts` picks one from the URL.
 
 ### Snow (Stomakhin 2013)
 
@@ -81,7 +127,7 @@ directional light casts shadows.
 
 ## Results
 
-`tools/test.mts` (Node, about 7 s):
+`tools/test.mts` (Node, about 12 s):
 
 | Check | Result |
 |---|---|
@@ -95,6 +141,10 @@ directional light casts shadows.
 | Snow 30 cm to the side | unchanged |
 | Snow packed by the palm (J_P < 0.97) | 5 152 particles |
 | Gauntlet model on the capsules | 97 % of vertices within 3.5 cm |
+| Shot: hand pose at the start of the wipe | lowest claw 10.00 mm above the ice centre |
+| Shot: the wipe | stable, 25 923 particles |
+| Shot: text band left bare by one wipe | 92 % (needs ≥ 85 %) |
+| Shot: snow 30 cm from the line | unchanged |
 
 In the browser preview, simulating a sweep costs 15–30 ms per frame and the
 surface 3–4 ms. Settling a fresh bed costs about 55 ms per frame for its 40
@@ -105,6 +155,10 @@ drops it where the sweep ends. It does not spill sideways into berms the way
 loose powder would.
 
 ## Controls
+
+The shot: **Replay** (`R`), **Pause** (`P`, space), **Info** (`I`) for the status line, **Sandbox** to switch.
+
+The sandbox (`?view=sandbox`):
 
 - **Drag on the snow** to dig with the gauntlet (it follows the pointer, turning toward its motion while it is in the snow).
 - **Sweep** (or `S`) plays the scripted sweep: down at the back left, an arc across, up and out.
@@ -127,6 +181,9 @@ node --no-warnings --import ./tools/ts-resolve.mjs tools/bench.mts
 - A background preview tab is not animated. Screenshots drive frames with `cc.director.tick` and read the canvas in the same evaluate call (`tools/shoot.js`, `tools/grab.py`).
 
 ## Not in this demo yet
+
+- The shot next to the CG: the gauntlet is procedural, the edge of the wipe is
+  ragged rather than one clean stroke, and the glow is emissive only, with no bloom pass.
 
 - Loose powder that spills sideways (lower cohesion near the surface, or a second, weaker snow layer).
 - Snow sparkle / subsurface shading in a custom effect; screen-space surface smoothing.

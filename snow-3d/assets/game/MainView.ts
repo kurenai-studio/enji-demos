@@ -6,6 +6,7 @@ import {
 import type { IView } from '../enji/IView';
 import { ensureCanvas, loadModel } from '../enji/helpers';
 import { BUDGET, stepFrame } from './snow/Frame';
+import { placeGauntlet } from './snow/GauntletNode';
 import { Hand, PARTS, type HandPose } from './snow/Hand';
 import { Hud } from './snow/Hud';
 import { BEDS, bedCapacity, bedHeight, fillBed } from './snow/Scenes';
@@ -463,17 +464,7 @@ export class MainView extends Component implements IView {
             Quat.rotationTo(q, Vec3.UNIT_Y, dir);
             node.setRotation(q);
         });
-        if (this.gauntlet) {
-            const p = this.pose;
-            const cy = Math.cos(p.yaw), sy = Math.sin(p.yaw), cl = Math.cos(p.lean), sl = Math.sin(p.lean);
-            // Columns of toWorld(): hand x → across, y → up the leaning arm, z → push.
-            const ex = new Vec3(sy, 0, -cy);
-            const ey = new Vec3(-sl * cy, cl, -sl * sy);
-            const ez = new Vec3(cl * cy, sl, cl * sy);
-            Quat.fromAxes(q, ex, ey, ez);
-            this.gauntlet.setPosition(p.x, p.y, p.z);
-            this.gauntlet.setRotation(q);
-        }
+        if (this.gauntlet) placeGauntlet(this.gauntlet, this.pose);
     }
 
     // ------------------------------------------------------------------ input

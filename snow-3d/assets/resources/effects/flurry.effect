@@ -1,0 +1,54 @@
+// Blowing snow and flung powder: soft additive point sprites sized in world units, alpha from the vertex colour.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: vs:vert
+      frag: fs:frag
+      primitive: point_list
+      priority: max - 10
+      depthStencilState:
+        depthTest: true
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one
+          blendSrcAlpha: zero
+          blendDstAlpha: one
+      properties:
+        pointParams: { value: [0.004, 0, 0, 0] }
+}%
+
+CCProgram vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/uniforms/cc-local>
+  in vec3 a_position;
+  in vec4 a_color;
+  out vec4 v_color;
+  uniform Points {
+    // x radius in metres
+    vec4 pointParams;
+  };
+  vec4 vert () {
+    vec4 clip = cc_matProj * cc_matView * cc_matWorld * vec4(a_position, 1.0);
+    float size = pointParams.x * cc_matProj[1][1] * cc_screenSize.y / clip.w;
+    // Below 1.5 px a flake fades instead of shrinking, so distant snow does not shimmer.
+    v_color = vec4(a_color.rgb, a_color.a * clamp(size / 1.5, 0.0, 1.0));
+    gl_PointSize = max(1.5, size);
+    return clip;
+  }
+}%
+
+CCProgram fs %{
+  precision highp float;
+  in vec4 v_color;
+  vec4 frag () {
+    vec2 d = gl_PointCoord * 2.0 - 1.0;
+    float r2 = dot(d, d);
+    if (r2 > 1.0) discard;
+    float soft = (1.0 - r2) * (1.0 - r2);
+    return vec4(v_color.rgb, v_color.a * soft);
+  }
+}%

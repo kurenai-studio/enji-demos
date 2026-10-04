@@ -4,6 +4,7 @@ import { BUDGET, settle, stepFrame } from '../assets/game/snow/Frame.ts';
 import { Hand, PARTS } from '../assets/game/snow/Hand.ts';
 import { BEDS, bedCapacity, bedHeight, fillBed } from '../assets/game/snow/Scenes.ts';
 import { SCENE, simSize } from '../assets/game/snow/Setup.ts';
+import { SHOT, shotPose, shotSize, TIMELINE, wristHeight } from '../assets/game/snow/Shot.ts';
 import { BORDER, SnowSim } from '../assets/game/snow/SnowSim.ts';
 import { svd3 } from '../assets/game/snow/Svd3.ts';
 
@@ -190,6 +191,46 @@ const before = tops(0.04);
         }
     }
     check('gauntlet.glb sits on the collision capsules', near / total > 0.9, `${((100 * near) / total).toFixed(0)}% of ${total} vertices within 3.5 cm`);
+}
+
+{
+    // Lich King shot: one wipe across a thin layer on the ice.
+    const lean = SHOT.lean, k = SHOT.handScale;
+    const pose = { x: 0, y: wristHeight(lean, k, 0.01), z: 0, yaw: SHOT.yaw, lean };
+    const hand = new Hand();
+    hand.scale = k;
+    hand.place(pose);
+    hand.at(1);
+    let low = Infinity;
+    for (const c of hand.capsules) low = Math.min(low, c.ay - c.r, c.by - c.r);
+    check('wristHeight puts the lowest capsule at the clearance', Math.abs(low - 0.01) < 1e-9, `lowest ${(low * 1000).toFixed(2)} mm`);
+
+    const size = shotSize();
+    const shot = new SnowSim(size.nx, size.ny, size.nz, SHOT.dx, bedCapacity({ dx: SHOT.dx, nx: size.nx, nz: size.nz }, SHOT.bed, SHOT.perCell, BORDER));
+    Object.assign(shot.params, SHOT.params);
+    const n = fillBed(shot, SHOT.bed, SHOT.perCell);
+    shot.sleepAll();
+    shot.colliders.push(...hand.capsules);
+    const y0 = Float32Array.from(shot.y.subarray(0, shot.count));
+    const z0 = Float32Array.from(shot.z.subarray(0, shot.count));
+    const cx = (shot.lo + shot.hiX) / 2, cz = (shot.lo + shot.hiZ) / 2;
+    hand.place(shotPose(0, cx, cz, shot.lo));
+    for (let f = 0; f / 60 < TIMELINE.exit + 0.3; f++) stepFrame(shot, hand, shotPose(f / 60, cx, cz, shot.lo), 1 / 60);
+    check('the wipe stays stable', !shot.blewUp && shot.count === n, `${n} particles`);
+
+    const c = 0.01, bx = Math.round(SHOT.text.w / c), bz = Math.round(SHOT.text.h / c);
+    const top = new Float64Array(bx * bz);
+    let moved = 0;
+    for (let p = 0; p < shot.count; p++) {
+        const i = Math.floor((shot.x[p] - (cx - SHOT.text.w / 2)) / c), kk = Math.floor((shot.z[p] - (cz - SHOT.text.h / 2)) / c);
+        if (i >= 0 && i < bx && kk >= 0 && kk < bz) top[i + kk * bx] = Math.max(top[i + kk * bx], shot.y[p] - shot.lo);
+        if (Math.abs(z0[p] - cz) > 0.3) moved = Math.max(moved, Math.abs(shot.y[p] - y0[p]));
+    }
+    let bare = 0;
+    for (const h of top) if (h < SHOT.dusting) bare++;
+    check('one wipe uncovers the text band (≥ 85% bare ice under the dusting height)', bare / top.length >= 0.85,
+        `${((100 * bare) / top.length).toFixed(0)}% bare`);
+    check('snow 30 cm from the wipe line is untouched', moved < 1e-6);
 }
 
 console.log(failures ? `\n${failures} failed` : '\nall passed');

@@ -111,7 +111,14 @@ export class SurfaceMesher {
         }
     }
 
+    /**
+     * Particles below this height are left out of the field. Sleeping particles do not
+     * move, so their add and remove in the base always agree.
+     */
+    minY = -Infinity;
+
     private splatPoint(target: Float32Array, x: number, y: number, z: number, sign: number): void {
+        if (y < this.minY) return;
         const { cell, ox, oy, oz } = this;
         const r = this.radius;
         const r2 = r * r;
