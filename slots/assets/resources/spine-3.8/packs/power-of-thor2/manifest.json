@@ -1,0 +1,264 @@
+{
+  "id": "power-of-thor2",
+  "name": "Power of Thor 2",
+  "zone": "spine-3.8",
+  "designW": 116,
+  "designH": 96,
+  "symbols": [
+    {
+      "id": 1,
+      "name": "B1",
+      "textureFile": "symbols/01-B1.png",
+      "spineDir": "oriSymbols/symbolB1",
+      "spineId": "spine_thor2_symbolB1",
+      "textureId": "tex_thor2_01_B1",
+      "winAnim": "play",
+      "idleAnim": "",
+      "spineSkin": ""
+    },
+    {
+      "id": 2,
+      "name": "B2",
+      "textureFile": "symbols/02-B2.png",
+      "spineDir": "oriSymbols/symbolB2",
+      "spineId": "spine_thor2_symbolB2",
+      "textureId": "tex_thor2_02_B2",
+      "winAnim": "play",
+      "idleAnim": "",
+      "spineSkin": ""
+    },
+    {
+      "id": 3,
+      "name": "F1",
+      "textureFile": "symbols/03-F1.png",
+      "spineDir": "oriSymbols/symbolF12345",
+      "spineId": "spine_thor2_symbolF12345",
+      "textureId": "tex_thor2_03_F1",
+      "winAnim": "play",
+      "idleAnim": "",
+      "spineSkin": "F1",
+      "kind": "multi"
+    },
+    {
+      "id": 4,
+      "name": "F2",
+      "textureFile": "symbols/04-F2.png",
+      "spineDir": "oriSymbols/symbolF12345",
+      "spineId": "spine_thor2_symbolF12345",
+      "textureId": "tex_thor2_04_F2",
+      "winAnim": "play",
+      "idleAnim": "",
+      "spineSkin": "F2",
+      "kind": "multi"
+    },
+    {
+      "id": 5,
+      "name": "F3",
+      "textureFile": "symbols/05-F3.png",
+      "spineDir": "oriSymbols/symbolF12345",
+      "spineId": "spine_thor2_symbolF12345",
+      "textureId": "tex_thor2_05_F3",
+      "winAnim": "play",
+      "idleAnim": "",
+      "spineSkin": "F3",
+      "kind": "multi"
+    },
+    {
+      "id": 6,
+      "name": "F4",
+      "textureFile": "symbols/06-F4.png",
+      "spineDir": "oriSymbols/symbolF12345",
+      "spineId": "spine_thor2_symbolF12345",
+      "textureId": "tex_thor2_06_F4",
+      "winAnim": "play",
+      "idleAnim": "",
+      "spineSkin": "F4",
+      "kind": "multi"
+    },
+    {
+      "id": 7,
+      "name": "F5",
+      "textureFile": "symbols/07-F5.png",
+      "spineDir": "oriSymbols/symbolF12345",
+      "spineId": "spine_thor2_symbolF12345",
+      "textureId": "tex_thor2_07_F5",
+      "winAnim": "play",
+      "idleAnim": "",
+      "spineSkin": "F5",
+      "kind": "multi"
+    },
+    {
+      "id": 8,
+      "name": "M1",
+      "textureFile": "symbols/08-M1.png",
+      "spineDir": "oriSymbols/symbolM1",
+      "spineId": "spine_thor2_symbolM1",
+      "textureId": "tex_thor2_08_M1",
+      "winAnim": "play",
+      "idleAnim": "",
+      "spineSkin": ""
+    },
+    {
+      "id": 9,
+      "name": "M2",
+      "textureFile": "symbols/09-M2.png",
+      "spineDir": "oriSymbols/symbolM2",
+      "spineId": "spine_thor2_symbolM2",
+      "textureId": "tex_thor2_09_M2",
+      "winAnim": "play",
+      "idleAnim": "",
+      "spineSkin": ""
+    },
+    {
+      "id": 10,
+      "name": "M3",
+      "textureFile": "symbols/10-M3.png",
+      "spineDir": "oriSymbols/symbolM3",
+      "spineId": "spine_thor2_symbolM3",
+      "textureId": "tex_thor2_10_M3",
+      "winAnim": "play",
+      "idleAnim": "",
+      "spineSkin": ""
+    },
+    {
+      "id": 11,
+      "name": "M4",
+      "textureFile": "symbols/11-M4.png",
+      "spineDir": "oriSymbols/symbolM4",
+      "spineId": "spine_thor2_symbolM4",
+      "textureId": "tex_thor2_11_M4",
+      "winAnim": "play",
+      "idleAnim": "",
+      "spineSkin": ""
+    },
+    {
+      "id": 12,
+      "name": "A",
+      "textureFile": "symbols/12-A.png",
+      "spineDir": "oriSymbols/symbolAKQJTE",
+      "spineId": "spine_thor2_symbolAKQJTE",
+      "textureId": "tex_thor2_12_A",
+      "winAnim": "play_A",
+      "idleAnim": "",
+      "spineSkin": ""
+    },
+    {
+      "id": 13,
+      "name": "K",
+      "textureFile": "symbols/13-K.png",
+      "spineDir": "oriSymbols/symbolAKQJTE",
+      "spineId": "spine_thor2_symbolAKQJTE",
+      "textureId": "tex_thor2_13_K",
+      "winAnim": "play_K",
+      "idleAnim": "",
+      "spineSkin": ""
+    },
+    {
+      "id": 14,
+      "name": "Q",
+      "textureFile": "symbols/14-Q.png",
+      "spineDir": "oriSymbols/symbolAKQJTE",
+      "spineId": "spine_thor2_symbolAKQJTE",
+      "textureId": "tex_thor2_14_Q",
+      "winAnim": "play_Q",
+      "idleAnim": "",
+      "spineSkin": ""
+    },
+    {
+      "id": 15,
+      "name": "J",
+      "textureFile": "symbols/15-J.png",
+      "spineDir": "oriSymbols/symbolAKQJTE",
+      "spineId": "spine_thor2_symbolAKQJTE",
+      "textureId": "tex_thor2_15_J",
+      "winAnim": "play_J",
+      "idleAnim": "",
+      "spineSkin": ""
+    },
+    {
+      "id": 16,
+      "name": "TE",
+      "textureFile": "symbols/16-TE.png",
+      "spineDir": "oriSymbols/symbolAKQJTE",
+      "spineId": "spine_thor2_symbolAKQJTE",
+      "textureId": "tex_thor2_16_TE",
+      "winAnim": "play_TE",
+      "idleAnim": "",
+      "spineSkin": ""
+    }
+  ],
+  "spines": [
+    {
+      "id": "spine_thor2_symbolB1",
+      "dir": "oriSymbols/symbolB1",
+      "file": "symbolB1.json"
+    },
+    {
+      "id": "spine_thor2_symbolB2",
+      "dir": "oriSymbols/symbolB2",
+      "file": "symbolB2.json"
+    },
+    {
+      "id": "spine_thor2_symbolF12345",
+      "dir": "oriSymbols/symbolF12345",
+      "file": "symbolF12345.json"
+    },
+    {
+      "id": "spine_thor2_symbolM1",
+      "dir": "oriSymbols/symbolM1",
+      "file": "symbolM1.json"
+    },
+    {
+      "id": "spine_thor2_symbolM2",
+      "dir": "oriSymbols/symbolM2",
+      "file": "symbolM2.json"
+    },
+    {
+      "id": "spine_thor2_symbolM3",
+      "dir": "oriSymbols/symbolM3",
+      "file": "symbolM3.json"
+    },
+    {
+      "id": "spine_thor2_symbolM4",
+      "dir": "oriSymbols/symbolM4",
+      "file": "symbolM4.json"
+    },
+    {
+      "id": "spine_thor2_symbolAKQJTE",
+      "dir": "oriSymbols/symbolAKQJTE",
+      "file": "symbolAKQJTE.json"
+    }
+  ],
+  "fonts": [
+    {
+      "id": "font_thor2_font_symbolF",
+      "name": "font_symbolF",
+      "dir": "font/font_symbolF",
+      "file": "font_symbolF.fnt"
+    }
+  ],
+  "multiDigitFontId": "font_thor2_font_symbolF",
+  "effects": [
+    {
+      "id": "fx_thor2_symbol_win",
+      "name": "symbol_win",
+      "dir": "effects/symbol_win",
+      "file": "symbol_win.json",
+      "defaultAnim": "play",
+      "front": false,
+      "role": "win"
+    },
+    {
+      "id": "fx_thor2_symbol_eliminate",
+      "name": "symbol_eliminate",
+      "dir": "effects/symbol_eliminate",
+      "file": "symbol_eliminate.json",
+      "defaultAnim": "play",
+      "front": true,
+      "role": "vanish"
+    }
+  ],
+  "boardColGap": 0,
+  "boardRowGap": 0,
+  "cellFxScale": 0.75
+}

@@ -13,8 +13,10 @@ Creator 3.8.8 IDE (or a separate build MCP).
 - Prefabs go under `assets/resources/prefabs/`, materials under
   `assets/resources/materials/`, other files (images, audio) under `assets/resources/`.
 - Do not edit `assets/enji/Boot.ts` or `*.scene`.
-- Never write or edit `.meta` files by hand. `enji import` creates them and
-  **keeps importer `ver` on Creator 3.8.8 gold**.
+- Never create a `.meta` file or change its `uuid`, `ver`, `importer` or
+  `subMetas` keys. `enji import` creates them and **keeps importer `ver` on
+  Creator 3.8.8 gold**. Importer settings under `userData` are yours to edit, as
+  in Creator's inspector (see "Importer settings" below).
 - `assets/enji/helpers.ts` holds small helpers (`loadPrefab`, canvas, labels).
 
 ## `@ccclass` reserved names
@@ -33,6 +35,27 @@ Prefer unique names like `MainView`, `EnemyView`.
 - A prefab must not reference another prefab. Compose in code.
 - Prefer handwritten minimal prefabs; the importer may reformat them.
 
+### Writing prefabs
+
+Write whole prefabs (a HUD screen, a dialog, a 3D stage with its lights) as
+`.prefab` JSON; code loads, instantiates and binds them instead of building
+nodes with `new Node` / `addComponent`. For more than a few nodes, write a small
+generator script outside `assets/` that emits the JSON and assigns the
+`__id__`s. Reference an image as `{"__uuid__": "<uuid>@f9941", "__expectedType__": "cc.SpriteFrame"}`.
+
+`enji import` and `enji check` do not validate field names: a misspelled or
+outdated field silently keeps the engine default. Known cases:
+
+- Light intensity is read from the legacy names. Write both `_illuminance` and
+  `_illuminanceHDR` (DirectionalLight), both `_luminance` and `_luminanceHDR`
+  (SphereLight, SpotLight).
+- A Label with `Overflow.NONE` resets its node width to the text size when it
+  enters the scene; use `SHRINK` or `CLAMP` for fixed boxes.
+
+So check each new prefab at runtime: instantiate it in the preview and log the
+component values you set. See `docs/experiments/llm-writes-prefabs` in the
+Enji repository for the measurement behind this section.
+
 ## Importing files and getting uuids
 
 After you create or change files under `assets/`, import them. This writes the
@@ -46,6 +69,16 @@ enji import assets/resources/images                   # a whole folder
 Returns `{ ok, imported, failed, assets: [{ ok, path, uuid, type, importer, subAssets }] }`.
 Sub-assets carry their own uuid (e.g. an image's `spriteFrame` is `<uuid>@f9941`).
 A non-zero `failed` means the file content was rejected; fix the file and import again.
+
+### Importer settings
+
+Settings Creator shows in the asset inspector live in the `.meta` `userData`.
+Edit the value in place, then `enji import` the asset (not the `.meta`) so the
+host re-imports it. For example, 9-slice borders of an image are
+`subMetas.f9941.userData.borderLeft / borderTop / borderRight / borderBottom`,
+in texture pixels; a `cc.Sprite` with type SLICED uses them. Borders and sprite
+sizes are texture pixels, so art exported at 2x density draws borders twice as
+thick unless the UI is scaled by 0.5 or the art is exported at 1x.
 
 To look up a file that is already imported, without importing:
 

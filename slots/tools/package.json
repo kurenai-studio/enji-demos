@@ -1,0 +1,9 @@
+{
+  "name": "slots-tools",
+  "private": true,
+  "type": "module",
+  "description": "Headless verification and recording scripts (outside assets/).",
+  "dependencies": {
+    "playwright-core": "1.49.1"
+  }
+}

@@ -1,0 +1,2475 @@
+symbolB1.png
+size: 512,1044
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+symbolAKQJTE/base_symbolA
+  rotate: true
+  xy: 318, 319
+  size: 95, 77
+  orig: 103, 77
+  offset: 4, 0
+  index: -1
+symbolAKQJTE/base_symbolJ
+  rotate: true
+  xy: 318, 234
+  size: 83, 77
+  orig: 103, 77
+  offset: 10, 0
+  index: -1
+symbolAKQJTE/base_symbolK
+  rotate: true
+  xy: 315, 416
+  size: 93, 77
+  orig: 103, 77
+  offset: 5, 0
+  index: -1
+symbolAKQJTE/base_symbolQ
+  rotate: false
+  xy: 413, 90
+  size: 70, 70
+  orig: 103, 77
+  offset: 16, 5
+  index: -1
+symbolAKQJTE/base_symbolTE
+  rotate: false
+  xy: 413, 19
+  size: 69, 69
+  orig: 103, 77
+  offset: 17, 4
+  index: -1
+symbolB1/bg
+  rotate: true
+  xy: 229, 209
+  size: 100, 84
+  orig: 131, 120
+  offset: 16, 25
+  index: -1
+symbolB1/body
+  rotate: false
+  xy: 225, 610
+  size: 110, 68
+  orig: 131, 120
+  offset: 12, 13
+  index: -1
+symbolB1/box
+  rotate: true
+  xy: 115, 526
+  size: 114, 98
+  orig: 131, 120
+  offset: 9, 11
+  index: -1
+symbolB1/face1
+  rotate: false
+  xy: 349, 68
+  size: 62, 79
+  orig: 131, 120
+  offset: 34, 34
+  index: -1
+symbolB1/face2
+  rotate: false
+  xy: 445, 598
+  size: 63, 83
+  orig: 131, 120
+  offset: 34, 28
+  index: -1
+symbolB1/hair
+  rotate: true
+  xy: 445, 683
+  size: 91, 65
+  orig: 131, 120
+  offset: 17, 15
+  index: -1
+symbolB1/helmet
+  rotate: true
+  xy: 394, 417
+  size: 79, 82
+  orig: 131, 122
+  offset: 26, 39
+  index: -1
+symbolB1/text
+  rotate: true
+  xy: 311, 7
+  size: 108, 36
+  orig: 131, 120
+  offset: 12, 7
+  index: -1
+symbolB2/box
+  rotate: false
+  xy: 2, 642
+  size: 125, 123
+  orig: 147, 147
+  offset: 10, 13
+  index: -1
+symbolB2/centerbg
+  rotate: true
+  xy: 229, 117
+  size: 90, 89
+  orig: 147, 147
+  offset: 28, 29
+  index: -1
+symbolB2/cloud
+  rotate: false
+  xy: 281, 949
+  size: 133, 91
+  orig: 147, 147
+  offset: 7, 4
+  index: -1
+symbolB2/fog
+  rotate: false
+  xy: 2, 897
+  size: 146, 143
+  orig: 147, 147
+  offset: 1, 0
+  index: -1
+symbolB2/lightning
+  rotate: true
+  xy: 2, 2
+  size: 79, 113
+  orig: 147, 147
+  offset: 34, 18
+  index: -1
+symbolB2/txt
+  rotate: false
+  xy: 281, 887
+  size: 125, 60
+  orig: 129, 62
+  offset: 2, 0
+  index: -1
+symbolF/F1_box_00
+  rotate: false
+  xy: 2, 83
+  size: 109, 109
+  orig: 109, 110
+  offset: 0, 1
+  index: -1
+symbolF/F2_box_00
+  rotate: false
+  xy: 235, 776
+  size: 109, 109
+  orig: 109, 110
+  offset: 0, 1
+  index: -1
+symbolF/F3_box_00
+  rotate: false
+  xy: 346, 776
+  size: 109, 109
+  orig: 109, 110
+  offset: 0, 1
+  index: -1
+symbolF/F4_box_00
+  rotate: false
+  xy: 115, 303
+  size: 109, 109
+  orig: 109, 110
+  offset: 0, 1
+  index: -1
+symbolF/F5_box_00
+  rotate: false
+  xy: 2, 767
+  size: 129, 128
+  orig: 129, 128
+  offset: 0, 0
+  index: -1
+symbolF/ball_F1
+  rotate: false
+  xy: 397, 332
+  size: 83, 83
+  orig: 111, 111
+  offset: 14, 14
+  index: -1
+symbolF/ball_F2
+  rotate: false
+  xy: 397, 247
+  size: 83, 83
+  orig: 111, 111
+  offset: 14, 14
+  index: -1
+symbolF/ball_F3
+  rotate: false
+  xy: 320, 149
+  size: 83, 83
+  orig: 111, 111
+  offset: 14, 14
+  index: -1
+symbolF/ball_F4
+  rotate: false
+  xy: 405, 162
+  size: 83, 83
+  orig: 111, 111
+  offset: 14, 14
+  index: -1
+symbolF/ball_F5
+  rotate: false
+  xy: 215, 510
+  size: 97, 98
+  orig: 129, 129
+  offset: 16, 15
+  index: -1
+symbolF/frame_F1
+  rotate: false
+  xy: 2, 530
+  size: 111, 110
+  orig: 111, 111
+  offset: 0, 0
+  index: -1
+symbolF/frame_F2
+  rotate: false
+  xy: 2, 418
+  size: 111, 110
+  orig: 111, 111
+  offset: 0, 0
+  index: -1
+symbolF/frame_F3
+  rotate: false
+  xy: 2, 306
+  size: 111, 110
+  orig: 111, 111
+  offset: 0, 0
+  index: -1
+symbolF/frame_F4
+  rotate: false
+  xy: 2, 194
+  size: 111, 110
+  orig: 111, 111
+  offset: 0, 0
+  index: -1
+symbolF/frame_F5
+  rotate: false
+  xy: 150, 912
+  size: 129, 128
+  orig: 129, 129
+  offset: 0, 0
+  index: -1
+symbolM/M1/M
+  rotate: true
+  xy: 314, 511
+  size: 85, 88
+  orig: 103, 103
+  offset: 11, 15
+  index: -1
+symbolM/M1/M1_light1_10
+  rotate: false
+  xy: 117, 14
+  size: 111, 94
+  orig: 129, 110
+  offset: 9, 8
+  index: -1
+symbolM/M1/bg
+  rotate: true
+  xy: 133, 778
+  size: 117, 100
+  orig: 129, 110
+  offset: 3, 2
+  index: -1
+symbolM/M1/light
+  rotate: true
+  xy: 226, 311
+  size: 103, 90
+  orig: 129, 110
+  offset: 14, 9
+  index: -1
+symbolM/M2/M
+  rotate: true
+  xy: 215, 416
+  size: 92, 98
+  orig: 92, 98
+  offset: 0, 0
+  index: -1
+symbolM/M2/M2_light1_10
+  rotate: false
+  xy: 115, 206
+  size: 112, 95
+  orig: 112, 96
+  offset: 0, 1
+  index: -1
+symbolM/M2/bg
+  rotate: false
+  xy: 115, 110
+  size: 112, 94
+  orig: 112, 96
+  offset: 0, 1
+  index: -1
+symbolM/M2/light
+  rotate: true
+  xy: 339, 675
+  size: 99, 104
+  orig: 101, 107
+  offset: 1, 2
+  index: -1
+symbolM/M3/base_symbolM3
+  rotate: false
+  xy: 115, 414
+  size: 98, 110
+  orig: 98, 110
+  offset: 0, 0
+  index: -1
+symbolM/M3/m3bg
+  rotate: false
+  xy: 225, 680
+  size: 112, 94
+  orig: 112, 96
+  offset: 0, 1
+  index: -1
+symbolM/M3/m3bg_light
+  rotate: true
+  xy: 230, 12
+  size: 103, 79
+  orig: 107, 84
+  offset: 2, 0
+  index: -1
+symbolM/M4/M
+  rotate: true
+  xy: 404, 498
+  size: 98, 67
+  orig: 98, 67
+  offset: 0, 0
+  index: -1
+symbolM/M4/M4_light1_10
+  rotate: true
+  xy: 416, 928
+  size: 112, 94
+  orig: 112, 96
+  offset: 0, 1
+  index: -1
+symbolM/M4/bg
+  rotate: true
+  xy: 129, 653
+  size: 112, 94
+  orig: 112, 96
+  offset: 0, 1
+  index: -1
+symbolM/M4/light
+  rotate: false
+  xy: 337, 598
+  size: 105, 75
+  orig: 108, 77
+  offset: 2, 1
+  index: -1
+
+symbol.jpg
+size: 1940,1032
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+jpg/symbolAKQJTE/light1/light1_29
+  rotate: false
+  xy: 1143, 351
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+jpg/symbolAKQJTE/light1/light1_30
+  rotate: false
+  xy: 1441, 353
+  size: 78, 78
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+jpg/symbolAKQJTE/light1/light1_31
+  rotate: false
+  xy: 1142, 269
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+jpg/symbolAKQJTE/light1/light1_33
+  rotate: false
+  xy: 1061, 352
+  size: 80, 79
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+jpg/symbolAKQJTE/light1/light1_35
+  rotate: true
+  xy: 1094, 93
+  size: 80, 79
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+jpg/symbolAKQJTE/light1/light1_36
+  rotate: false
+  xy: 1235, 198
+  size: 78, 79
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+jpg/symbolAKQJTE/light1/light1_37
+  rotate: false
+  xy: 1305, 357
+  size: 79, 79
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+jpg/symbolAKQJTE/light1/light1_39
+  rotate: false
+  xy: 1154, 187
+  size: 79, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+jpg/symbolAKQJTE/light1/light1_40
+  rotate: false
+  xy: 1186, 15
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+jpg/symbolAKQJTE/light1/light1_42
+  rotate: false
+  xy: 1285, 438
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+jpg/symbolAKQJTE/lightA2/lightA2_07
+  rotate: false
+  xy: 1917, 104
+  size: 21, 30
+  orig: 60, 60
+  offset: 2, 15
+  index: -1
+jpg/symbolAKQJTE/lightA2/lightA2_09
+  rotate: false
+  xy: 1826, 433
+  size: 27, 43
+  orig: 60, 60
+  offset: 1, 9
+  index: -1
+jpg/symbolAKQJTE/lightA2/lightA2_11
+  rotate: false
+  xy: 1500, 2
+  size: 30, 46
+  orig: 60, 60
+  offset: 0, 8
+  index: -1
+jpg/symbolAKQJTE/lightA2/lightA2_13
+  rotate: true
+  xy: 1823, 236
+  size: 39, 58
+  orig: 60, 60
+  offset: 0, 1
+  index: -1
+jpg/symbolAKQJTE/lightA2/lightA2_15
+  rotate: true
+  xy: 1708, 399
+  size: 53, 60
+  orig: 60, 60
+  offset: 3, 0
+  index: -1
+jpg/symbolAKQJTE/lightA2/lightA2_17
+  rotate: false
+  xy: 1770, 392
+  size: 54, 60
+  orig: 60, 60
+  offset: 6, 0
+  index: -1
+jpg/symbolAKQJTE/lightA2/lightA2_19
+  rotate: true
+  xy: 1761, 238
+  size: 48, 60
+  orig: 60, 60
+  offset: 12, 0
+  index: -1
+jpg/symbolAKQJTE/lightA2/lightA2_21
+  rotate: false
+  xy: 1897, 970
+  size: 41, 60
+  orig: 60, 60
+  offset: 19, 0
+  index: -1
+jpg/symbolAKQJTE/lightA2/lightA2_23
+  rotate: true
+  xy: 1870, 136
+  size: 33, 54
+  orig: 60, 60
+  offset: 26, 0
+  index: -1
+jpg/symbolAKQJTE/lightA2/lightA2_25
+  rotate: false
+  xy: 1845, 109
+  size: 23, 36
+  orig: 60, 60
+  offset: 34, 4
+  index: -1
+jpg/symbolAKQJTE/lightA_00
+  rotate: false
+  xy: 690, 260
+  size: 86, 87
+  orig: 95, 95
+  offset: 5, 4
+  index: -1
+jpg/symbolAKQJTE/lightJ2/lightJ2_07
+  rotate: true
+  xy: 1588, 39
+  size: 21, 30
+  orig: 60, 60
+  offset: 2, 15
+  index: -1
+jpg/symbolAKQJTE/lightJ2/lightJ2_09
+  rotate: false
+  xy: 1826, 388
+  size: 27, 43
+  orig: 60, 60
+  offset: 1, 9
+  index: -1
+jpg/symbolAKQJTE/lightJ2/lightJ2_11
+  rotate: false
+  xy: 1588, 62
+  size: 30, 47
+  orig: 60, 60
+  offset: 0, 7
+  index: -1
+jpg/symbolAKQJTE/lightJ2/lightJ2_13
+  rotate: false
+  xy: 1318, 144
+  size: 39, 58
+  orig: 60, 60
+  offset: 0, 1
+  index: -1
+jpg/symbolAKQJTE/lightJ2/lightJ2_15
+  rotate: true
+  xy: 1761, 288
+  size: 53, 60
+  orig: 60, 60
+  offset: 3, 0
+  index: -1
+jpg/symbolAKQJTE/lightJ2/lightJ2_17
+  rotate: false
+  xy: 1705, 285
+  size: 54, 60
+  orig: 60, 60
+  offset: 6, 0
+  index: -1
+jpg/symbolAKQJTE/lightJ2/lightJ2_19
+  rotate: true
+  xy: 1697, 192
+  size: 48, 60
+  orig: 60, 60
+  offset: 12, 0
+  index: -1
+jpg/symbolAKQJTE/lightJ2/lightJ2_21
+  rotate: false
+  xy: 1897, 908
+  size: 41, 60
+  orig: 60, 60
+  offset: 19, 0
+  index: -1
+jpg/symbolAKQJTE/lightJ2/lightJ2_23
+  rotate: false
+  xy: 1465, 104
+  size: 33, 54
+  orig: 60, 60
+  offset: 26, 0
+  index: -1
+jpg/symbolAKQJTE/lightJ2/lightJ2_25
+  rotate: true
+  xy: 1719, 85
+  size: 23, 36
+  orig: 60, 60
+  offset: 34, 4
+  index: -1
+jpg/symbolAKQJTE/lightJ_00
+  rotate: false
+  xy: 601, 260
+  size: 87, 87
+  orig: 95, 95
+  offset: 4, 4
+  index: -1
+jpg/symbolAKQJTE/lightK2/lightK2_08
+  rotate: false
+  xy: 1418, 2
+  size: 20, 31
+  orig: 60, 60
+  offset: 4, 15
+  index: -1
+jpg/symbolAKQJTE/lightK2/lightK2_10
+  rotate: false
+  xy: 1724, 110
+  size: 26, 41
+  orig: 60, 60
+  offset: 4, 10
+  index: -1
+jpg/symbolAKQJTE/lightK2/lightK2_12
+  rotate: true
+  xy: 1675, 122
+  size: 29, 47
+  orig: 60, 60
+  offset: 3, 6
+  index: -1
+jpg/symbolAKQJTE/lightK2/lightK2_14
+  rotate: false
+  xy: 1314, 38
+  size: 41, 58
+  orig: 60, 60
+  offset: 4, 1
+  index: -1
+jpg/symbolAKQJTE/lightK2/lightK2_16
+  rotate: true
+  xy: 1704, 347
+  size: 50, 60
+  orig: 60, 60
+  offset: 5, 0
+  index: -1
+jpg/symbolAKQJTE/lightK2/lightK2_18
+  rotate: true
+  xy: 1759, 188
+  size: 48, 60
+  orig: 60, 60
+  offset: 10, 0
+  index: -1
+jpg/symbolAKQJTE/lightK2/lightK2_20
+  rotate: false
+  xy: 1365, 90
+  size: 38, 57
+  orig: 60, 60
+  offset: 20, 1
+  index: -1
+jpg/symbolAKQJTE/lightK2/lightK2_22
+  rotate: true
+  xy: 1268, 2
+  size: 31, 53
+  orig: 60, 60
+  offset: 26, 2
+  index: -1
+jpg/symbolAKQJTE/lightK2/lightK2_24
+  rotate: true
+  xy: 1675, 91
+  size: 29, 42
+  orig: 60, 60
+  offset: 28, 3
+  index: -1
+jpg/symbolAKQJTE/lightK_00
+  rotate: true
+  xy: 2, 2
+  size: 81, 91
+  orig: 88, 92
+  offset: 3, 0
+  index: -1
+jpg/symbolAKQJTE/lightQ2/lightQ2_07
+  rotate: true
+  xy: 1839, 29
+  size: 19, 29
+  orig: 60, 60
+  offset: 4, 15
+  index: -1
+jpg/symbolAKQJTE/lightQ2/lightQ2_09
+  rotate: true
+  xy: 1798, 90
+  size: 25, 42
+  orig: 60, 60
+  offset: 3, 9
+  index: -1
+jpg/symbolAKQJTE/lightQ2/lightQ2_11
+  rotate: true
+  xy: 1798, 117
+  size: 28, 45
+  orig: 60, 60
+  offset: 2, 8
+  index: -1
+jpg/symbolAKQJTE/lightQ2/lightQ2_13
+  rotate: true
+  xy: 1693, 153
+  size: 37, 57
+  orig: 60, 60
+  offset: 2, 1
+  index: -1
+jpg/symbolAKQJTE/lightQ2/lightQ2_15
+  rotate: false
+  xy: 1823, 277
+  size: 52, 60
+  orig: 60, 60
+  offset: 4, 0
+  index: -1
+jpg/symbolAKQJTE/lightQ2/lightQ2_17
+  rotate: true
+  xy: 1876, 344
+  size: 53, 60
+  orig: 60, 60
+  offset: 7, 0
+  index: -1
+jpg/symbolAKQJTE/lightQ2/lightQ2_19
+  rotate: true
+  xy: 1821, 187
+  size: 47, 60
+  orig: 60, 60
+  offset: 13, 0
+  index: -1
+jpg/symbolAKQJTE/lightQ2/lightQ2_21
+  rotate: false
+  xy: 1405, 35
+  size: 40, 58
+  orig: 60, 60
+  offset: 19, 0
+  index: -1
+jpg/symbolAKQJTE/lightQ2/lightQ2_23
+  rotate: false
+  xy: 1478, 50
+  size: 32, 52
+  orig: 60, 60
+  offset: 26, 0
+  index: -1
+jpg/symbolAKQJTE/lightQ2/lightQ2_25
+  rotate: false
+  xy: 1584, 2
+  size: 23, 35
+  orig: 60, 60
+  offset: 34, 4
+  index: -1
+jpg/symbolAKQJTE/lightQ_00
+  rotate: false
+  xy: 526, 170
+  size: 86, 88
+  orig: 94, 96
+  offset: 4, 4
+  index: -1
+jpg/symbolAKQJTE/lightTE2/lightTE2_07
+  rotate: false
+  xy: 1367, 494
+  size: 22, 24
+  orig: 60, 60
+  offset: 2, 18
+  index: -1
+jpg/symbolAKQJTE/lightTE2/lightTE2_09
+  rotate: true
+  xy: 1718, 55
+  size: 28, 37
+  orig: 60, 60
+  offset: 1, 12
+  index: -1
+jpg/symbolAKQJTE/lightTE2/lightTE2_11
+  rotate: true
+  xy: 1798, 58
+  size: 30, 41
+  orig: 60, 60
+  offset: 1, 11
+  index: -1
+jpg/symbolAKQJTE/lightTE2/lightTE2_13
+  rotate: true
+  xy: 1752, 147
+  size: 39, 57
+  orig: 60, 60
+  offset: 1, 2
+  index: -1
+jpg/symbolAKQJTE/lightTE2/lightTE2_15
+  rotate: false
+  xy: 1877, 282
+  size: 50, 60
+  orig: 60, 60
+  offset: 5, 0
+  index: -1
+jpg/symbolAKQJTE/lightTE2/lightTE2_17
+  rotate: true
+  xy: 1235, 146
+  size: 50, 60
+  orig: 60, 60
+  offset: 10, 0
+  index: -1
+jpg/symbolAKQJTE/lightTE2/lightTE2_19
+  rotate: false
+  xy: 1268, 35
+  size: 44, 60
+  orig: 60, 60
+  offset: 16, 0
+  index: -1
+jpg/symbolAKQJTE/lightTE2/lightTE2_21
+  rotate: true
+  xy: 1633, 177
+  size: 38, 58
+  orig: 60, 60
+  offset: 22, 0
+  index: -1
+jpg/symbolAKQJTE/lightTE2/lightTE2_23
+  rotate: true
+  xy: 1752, 113
+  size: 32, 44
+  orig: 60, 60
+  offset: 27, 3
+  index: -1
+jpg/symbolAKQJTE/lightTE_00
+  rotate: false
+  xy: 558, 6
+  size: 87, 87
+  orig: 96, 97
+  offset: 4, 5
+  index: -1
+jpg/symbolB1/bg_light_00
+  rotate: false
+  xy: 1438, 291
+  size: 72, 60
+  orig: 74, 62
+  offset: 1, 1
+  index: -1
+jpg/symbolB1/box_light_00
+  rotate: true
+  xy: 1380, 289
+  size: 65, 56
+  orig: 66, 56
+  offset: 1, 0
+  index: -1
+jpg/symbolB1/eye_light1_00
+  rotate: true
+  xy: 350, 335
+  size: 17, 5
+  orig: 17, 5
+  offset: 0, 0
+  index: -1
+jpg/symbolB1/eye_light2_00
+  rotate: true
+  xy: 350, 316
+  size: 17, 5
+  orig: 17, 5
+  offset: 0, 0
+  index: -1
+jpg/symbolB1/people_light/people_light_06
+  rotate: true
+  xy: 1297, 146
+  size: 50, 19
+  orig: 50, 53
+  offset: 0, 0
+  index: -1
+jpg/symbolB1/people_light/people_light_07
+  rotate: true
+  xy: 1826, 478
+  size: 50, 27
+  orig: 50, 53
+  offset: 0, 1
+  index: -1
+jpg/symbolB1/people_light/people_light_08
+  rotate: true
+  xy: 1500, 104
+  size: 50, 35
+  orig: 50, 53
+  offset: 0, 1
+  index: -1
+jpg/symbolB1/people_light/people_light_09
+  rotate: true
+  xy: 1582, 111
+  size: 49, 40
+  orig: 50, 53
+  offset: 1, 3
+  index: -1
+jpg/symbolB1/people_light/people_light_10
+  rotate: false
+  xy: 1624, 114
+  size: 49, 40
+  orig: 50, 53
+  offset: 1, 11
+  index: -1
+jpg/symbolB1/people_light/people_light_11
+  rotate: true
+  xy: 1620, 68
+  size: 41, 32
+  orig: 50, 53
+  offset: 4, 20
+  index: -1
+jpg/symbolB1/people_light/people_light_12
+  rotate: true
+  xy: 1841, 50
+  size: 36, 27
+  orig: 50, 53
+  offset: 7, 26
+  index: -1
+jpg/symbolB1/people_light/people_light_13
+  rotate: true
+  xy: 1654, 77
+  size: 35, 19
+  orig: 50, 53
+  offset: 8, 34
+  index: -1
+jpg/symbolB1/people_light2_00
+  rotate: false
+  xy: 1085, 175
+  size: 67, 74
+  orig: 70, 76
+  offset: 1, 1
+  index: -1
+jpg/symbolB1/text_light_00
+  rotate: true
+  xy: 1582, 276
+  size: 65, 22
+  orig: 67, 23
+  offset: 1, 1
+  index: -1
+jpg/symbolB1/thunder1/thunder1_00
+  rotate: true
+  xy: 1926, 156
+  size: 13, 12
+  orig: 25, 30
+  offset: 12, 0
+  index: -1
+jpg/symbolB1/thunder1/thunder1_01
+  rotate: false
+  xy: 211, 528
+  size: 16, 19
+  orig: 25, 30
+  offset: 9, 0
+  index: -1
+jpg/symbolB1/thunder1/thunder1_02
+  rotate: false
+  xy: 1609, 14
+  size: 18, 23
+  orig: 25, 30
+  offset: 7, 0
+  index: -1
+jpg/symbolB1/thunder1/thunder1_03
+  rotate: true
+  xy: 1842, 88
+  size: 19, 26
+  orig: 25, 30
+  offset: 6, 0
+  index: -1
+jpg/symbolB1/thunder1/thunder1_04
+  rotate: false
+  xy: 1508, 535
+  size: 25, 29
+  orig: 25, 30
+  offset: 0, 0
+  index: -1
+jpg/symbolB1/thunder1/thunder1_05
+  rotate: false
+  xy: 1913, 72
+  size: 25, 30
+  orig: 25, 30
+  offset: 0, 0
+  index: -1
+jpg/symbolB1/thunder1/thunder1_06
+  rotate: true
+  xy: 1909, 45
+  size: 25, 29
+  orig: 25, 30
+  offset: 0, 0
+  index: -1
+jpg/symbolB1/thunder1/thunder1_07
+  rotate: false
+  xy: 1908, 2
+  size: 25, 30
+  orig: 25, 30
+  offset: 0, 0
+  index: -1
+jpg/symbolB1/thunder1/thunder1_08
+  rotate: true
+  xy: 1620, 41
+  size: 25, 30
+  orig: 25, 30
+  offset: 0, 0
+  index: -1
+jpg/symbolB1/thunder2/thunder2_10
+  rotate: false
+  xy: 1020, 265
+  size: 73, 85
+  orig: 95, 85
+  offset: 6, 0
+  index: -1
+jpg/symbolB1/thunder2/thunder2_13
+  rotate: true
+  xy: 883, 11
+  size: 75, 85
+  orig: 95, 85
+  offset: 1, 0
+  index: -1
+jpg/symbolB1/thunder2/thunder2_15
+  rotate: true
+  xy: 1855, 493
+  size: 95, 83
+  orig: 95, 85
+  offset: 0, 0
+  index: -1
+jpg/symbolB1/thunder2/thunder2_17
+  rotate: true
+  xy: 1462, 2
+  size: 41, 36
+  orig: 95, 85
+  offset: 54, 23
+  index: -1
+jpg/symbolB1/thunder2/thunder2_18
+  rotate: true
+  xy: 614, 163
+  size: 95, 79
+  orig: 95, 85
+  offset: 0, 0
+  index: -1
+jpg/symbolB1/thunder2/thunder2_20
+  rotate: true
+  xy: 356, 2
+  size: 91, 73
+  orig: 95, 85
+  offset: 4, 1
+  index: -1
+jpg/symbolB1/thunder2/thunder2_22
+  rotate: false
+  xy: 1757, 47
+  size: 37, 35
+  orig: 95, 85
+  offset: 9, 20
+  index: -1
+jpg/symbolB1/thunder2/thunder2_23
+  rotate: true
+  xy: 776, 165
+  size: 90, 80
+  orig: 95, 85
+  offset: 4, 5
+  index: -1
+jpg/symbolB1/thunder2/thunder2_25
+  rotate: true
+  xy: 1870, 34
+  size: 36, 37
+  orig: 95, 85
+  offset: 10, 19
+  index: -1
+jpg/symbolB1/thunder2/thunder2_27
+  rotate: true
+  xy: 271, 2
+  size: 91, 83
+  orig: 95, 85
+  offset: 0, 1
+  index: -1
+jpg/symbolB1/thunder2/thunder2_28
+  rotate: false
+  xy: 1323, 2
+  size: 39, 34
+  orig: 95, 85
+  offset: 6, 21
+  index: -1
+jpg/symbolB1/thunder2/thunder2_29
+  rotate: true
+  xy: 95, 2
+  size: 81, 83
+  orig: 95, 85
+  offset: 4, 0
+  index: -1
+jpg/symbolB1/thunder2/thunder2_30
+  rotate: true
+  xy: 1870, 106
+  size: 28, 45
+  orig: 95, 85
+  offset: 57, 34
+  index: -1
+jpg/symbolB1/thunder2/thunder2_32
+  rotate: false
+  xy: 973, 352
+  size: 86, 85
+  orig: 95, 85
+  offset: 6, 0
+  index: -1
+jpg/symbolB1/thunder2/thunder2_34
+  rotate: true
+  xy: 858, 168
+  size: 89, 85
+  orig: 95, 85
+  offset: 1, 0
+  index: -1
+jpg/symbolB1/thunder2/thunder2_36
+  rotate: true
+  xy: 1796, 28
+  size: 28, 41
+  orig: 95, 85
+  offset: 14, 34
+  index: -1
+jpg/symbolB1/thunder2/thunder2_37
+  rotate: true
+  xy: 1855, 399
+  size: 92, 83
+  orig: 95, 85
+  offset: 0, 0
+  index: -1
+jpg/symbolB1/thunder2/thunder2_39
+  rotate: true
+  xy: 695, 165
+  size: 93, 79
+  orig: 95, 85
+  offset: 0, 0
+  index: -1
+jpg/symbolB1/thunder2/thunder2_40
+  rotate: true
+  xy: 852, 259
+  size: 93, 79
+  orig: 95, 85
+  offset: 0, 0
+  index: -1
+jpg/symbolB1/thunder2/thunder2_41
+  rotate: true
+  xy: 1870, 72
+  size: 32, 41
+  orig: 95, 85
+  offset: 9, 35
+  index: -1
+jpg/symbolB1/thunder2/thunder2_42
+  rotate: true
+  xy: 945, 174
+  size: 89, 75
+  orig: 95, 85
+  offset: 4, 1
+  index: -1
+jpg/symbolB1/thunder2/thunder2_44
+  rotate: true
+  xy: 831, 354
+  size: 90, 80
+  orig: 95, 85
+  offset: 4, 5
+  index: -1
+jpg/symbolB1/thunder4/thunder4_05
+  rotate: false
+  xy: 1625, 156
+  size: 55, 19
+  orig: 55, 23
+  offset: 0, 4
+  index: -1
+jpg/symbolB1/thunder4/thunder4_16
+  rotate: false
+  xy: 1625, 156
+  size: 55, 19
+  orig: 55, 23
+  offset: 0, 4
+  index: -1
+jpg/symbolB1/thunder4/thunder4_08
+  rotate: false
+  xy: 1883, 216
+  size: 55, 22
+  orig: 55, 23
+  offset: 0, 0
+  index: -1
+jpg/symbolB1/thunder4/thunder4_18
+  rotate: false
+  xy: 1883, 216
+  size: 55, 22
+  orig: 55, 23
+  offset: 0, 0
+  index: -1
+jpg/symbolB1/thunder4/thunder4_10
+  rotate: false
+  xy: 1883, 171
+  size: 55, 20
+  orig: 55, 23
+  offset: 0, 2
+  index: -1
+jpg/symbolB1/thunder4/thunder4_12
+  rotate: false
+  xy: 1883, 193
+  size: 55, 21
+  orig: 55, 23
+  offset: 0, 2
+  index: -1
+jpg/symbolB1/thunder4/thunder4_14
+  rotate: false
+  xy: 916, 439
+  size: 55, 17
+  orig: 55, 23
+  offset: 0, 6
+  index: -1
+jpg/symbolB1/thunder4/thunder4_15
+  rotate: true
+  xy: 1446, 100
+  size: 55, 17
+  orig: 55, 23
+  offset: 0, 6
+  index: -1
+jpg/symbolB2/box_light_00
+  rotate: true
+  xy: 1575, 210
+  size: 64, 56
+  orig: 66, 65
+  offset: 1, 9
+  index: -1
+jpg/symbolB2/centerbg_light_00
+  rotate: false
+  xy: 1826, 339
+  size: 48, 47
+  orig: 48, 47
+  offset: 0, 0
+  index: -1
+jpg/symbolB2/cloud_light_00
+  rotate: true
+  xy: 1397, 219
+  size: 68, 45
+  orig: 68, 46
+  offset: 0, 1
+  index: -1
+jpg/symbolB2/light/light_00
+  rotate: false
+  xy: 144, 300
+  size: 83, 83
+  orig: 100, 100
+  offset: 8, 9
+  index: -1
+jpg/symbolB2/light/light_01
+  rotate: false
+  xy: 363, 167
+  size: 88, 89
+  orig: 100, 100
+  offset: 5, 5
+  index: -1
+jpg/symbolB2/light/light_02
+  rotate: false
+  xy: 357, 258
+  size: 95, 94
+  orig: 100, 100
+  offset: 2, 3
+  index: -1
+jpg/symbolB2/light/light_03
+  rotate: false
+  xy: 1104, 521
+  size: 98, 98
+  orig: 100, 100
+  offset: 0, 1
+  index: -1
+jpg/symbolB2/light/light_04
+  rotate: false
+  xy: 1002, 519
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+jpg/symbolB2/light/light_05
+  rotate: true
+  xy: 793, 680
+  size: 92, 97
+  orig: 100, 100
+  offset: 8, 0
+  index: -1
+jpg/symbolB2/light/light_06
+  rotate: true
+  xy: 1303, 520
+  size: 92, 97
+  orig: 100, 100
+  offset: 8, 0
+  index: -1
+jpg/symbolB2/light/light_07
+  rotate: false
+  xy: 509, 342
+  size: 81, 79
+  orig: 100, 100
+  offset: 8, 13
+  index: -1
+jpg/symbolB2/light/light_08
+  rotate: true
+  xy: 1861, 623
+  size: 80, 77
+  orig: 100, 100
+  offset: 8, 14
+  index: -1
+jpg/symbolB2/lightning_light_00
+  rotate: true
+  xy: 1883, 240
+  size: 40, 55
+  orig: 41, 56
+  offset: 0, 1
+  index: -1
+jpg/symbolB2/thunder1
+  rotate: false
+  xy: 933, 265
+  size: 85, 85
+  orig: 88, 88
+  offset: 2, 2
+  index: -1
+jpg/symbolB2/thunder1/thunder1_00
+  rotate: true
+  xy: 442, 95
+  size: 70, 65
+  orig: 70, 65
+  offset: 0, 0
+  index: -1
+jpg/symbolB2/thunder1/thunder1_03
+  rotate: false
+  xy: 1280, 97
+  size: 31, 47
+  orig: 70, 65
+  offset: 5, 3
+  index: -1
+jpg/symbolB2/thunder1/thunder1_05
+  rotate: false
+  xy: 1602, 349
+  size: 68, 65
+  orig: 70, 65
+  offset: 2, 0
+  index: -1
+jpg/symbolB2/thunder1/thunder1_08
+  rotate: true
+  xy: 1757, 84
+  size: 27, 39
+  orig: 70, 65
+  offset: 3, 6
+  index: -1
+jpg/symbolB2/thunder1/thunder1_10
+  rotate: false
+  xy: 1508, 214
+  size: 65, 60
+  orig: 70, 65
+  offset: 4, 0
+  index: -1
+jpg/symbolB2/thunder1/thunder1_13
+  rotate: false
+  xy: 973, 439
+  size: 17, 17
+  orig: 70, 65
+  offset: 3, 17
+  index: -1
+jpg/symbolB2/thunder1/thunder1_15
+  rotate: true
+  xy: 1633, 217
+  size: 63, 62
+  orig: 70, 65
+  offset: 6, 0
+  index: -1
+jpg/symbolB2/thunder1/thunder1_18
+  rotate: false
+  xy: 1402, 583
+  size: 24, 29
+  orig: 70, 65
+  offset: 40, 29
+  index: -1
+jpg/symbolB2/thunder1/thunder1_20
+  rotate: true
+  xy: 1606, 282
+  size: 65, 64
+  orig: 70, 65
+  offset: 3, 0
+  index: -1
+jpg/symbolB2/thunder1/thunder1_23
+  rotate: false
+  xy: 1556, 53
+  size: 30, 49
+  orig: 70, 65
+  offset: 32, 15
+  index: -1
+jpg/symbolB2/thunder1/thunder1_25
+  rotate: false
+  xy: 1512, 276
+  size: 68, 65
+  orig: 70, 65
+  offset: 0, 0
+  index: -1
+jpg/symbolB2/thunder1/thunder1_28
+  rotate: true
+  xy: 509, 95
+  size: 70, 65
+  orig: 70, 65
+  offset: 0, 0
+  index: -1
+jpg/symbolB2/thunder1/thunder1_30
+  rotate: true
+  xy: 1705, 242
+  size: 41, 54
+  orig: 70, 65
+  offset: 15, 8
+  index: -1
+jpg/symbolB2/thunder1/thunder1_33
+  rotate: false
+  xy: 1224, 279
+  size: 70, 65
+  orig: 70, 65
+  offset: 0, 0
+  index: -1
+jpg/symbolB2/thunder1/thunder1_35
+  rotate: false
+  xy: 1359, 149
+  size: 40, 60
+  orig: 70, 65
+  offset: 12, 0
+  index: -1
+jpg/symbolB2/thunder1/thunder1_38
+  rotate: false
+  xy: 1521, 392
+  size: 70, 65
+  orig: 70, 65
+  offset: 0, 0
+  index: -1
+jpg/symbolB2/thunder1/thunder1_40
+  rotate: true
+  xy: 1811, 147
+  size: 38, 57
+  orig: 70, 65
+  offset: 7, 0
+  index: -1
+jpg/symbolB2/thunder2/thunder2_07
+  rotate: true
+  xy: 1447, 45
+  size: 53, 29
+  orig: 105, 35
+  offset: 13, 1
+  index: -1
+jpg/symbolB2/thunder2/thunder2_09
+  rotate: true
+  xy: 1672, 284
+  size: 61, 31
+  orig: 105, 35
+  offset: 6, 1
+  index: -1
+jpg/symbolB2/thunder2/thunder2_10
+  rotate: true
+  xy: 1672, 347
+  size: 67, 30
+  orig: 105, 35
+  offset: 3, 2
+  index: -1
+jpg/symbolB2/thunder2/thunder2_11
+  rotate: true
+  xy: 1201, 433
+  size: 85, 31
+  orig: 105, 35
+  offset: 16, 2
+  index: -1
+jpg/symbolB2/thunder2/thunder2_12
+  rotate: false
+  xy: 1364, 2
+  size: 52, 31
+  orig: 105, 35
+  offset: 49, 2
+  index: -1
+jpg/symbolB2/thunder2/thunder2_14
+  rotate: false
+  xy: 1675, 61
+  size: 41, 28
+  orig: 105, 35
+  offset: 59, 3
+  index: -1
+jpg/symbolB2/thunder2/thunder2_15
+  rotate: true
+  xy: 1689, 416
+  size: 38, 17
+  orig: 105, 35
+  offset: 64, 8
+  index: -1
+jpg/symbolB2/thunder3/thunder3_04
+  rotate: false
+  xy: 1401, 157
+  size: 48, 60
+  orig: 50, 60
+  offset: 0, 0
+  index: -1
+jpg/symbolB2/thunder3/thunder3_06
+  rotate: false
+  xy: 1451, 160
+  size: 49, 59
+  orig: 50, 60
+  offset: 0, 1
+  index: -1
+jpg/symbolB2/thunder3/thunder3_07
+  rotate: true
+  xy: 1512, 52
+  size: 50, 42
+  orig: 50, 60
+  offset: 0, 2
+  index: -1
+jpg/symbolB2/thunder3/thunder3_08
+  rotate: true
+  xy: 1357, 38
+  size: 50, 46
+  orig: 50, 60
+  offset: 0, 2
+  index: -1
+jpg/symbolB2/thunder3/thunder3_09
+  rotate: false
+  xy: 1532, 2
+  size: 50, 48
+  orig: 50, 60
+  offset: 0, 5
+  index: -1
+jpg/symbolB2/thunder3/thunder3_11
+  rotate: true
+  xy: 1537, 104
+  size: 50, 43
+  orig: 50, 60
+  offset: 0, 10
+  index: -1
+jpg/symbolB2/thunder3/thunder3_12
+  rotate: false
+  xy: 1313, 98
+  size: 50, 44
+  orig: 50, 60
+  offset: 0, 13
+  index: -1
+jpg/symbolB2/thunder3/thunder3_13
+  rotate: true
+  xy: 1766, 343
+  size: 47, 58
+  orig: 50, 60
+  offset: 3, 0
+  index: -1
+jpg/symbolB2/thunder3/thunder3_14
+  rotate: true
+  xy: 1502, 163
+  size: 49, 59
+  orig: 50, 60
+  offset: 0, 0
+  index: -1
+jpg/symbolB2/thunder3/thunder3_16
+  rotate: true
+  xy: 1563, 162
+  size: 46, 60
+  orig: 50, 60
+  offset: 0, 0
+  index: -1
+jpg/symbolB2/thunder3/thunder3_17
+  rotate: false
+  xy: 1405, 95
+  size: 39, 60
+  orig: 50, 60
+  offset: 4, 0
+  index: -1
+jpg/symbolB2/txt_light_00
+  rotate: true
+  xy: 1315, 204
+  size: 73, 35
+  orig: 77, 37
+  offset: 2, 1
+  index: -1
+jpg/symbolF/F1_light_00
+  rotate: false
+  xy: 887, 88
+  size: 78, 78
+  orig: 79, 78
+  offset: 1, 0
+  index: -1
+jpg/symbolF/F2_light_00
+  rotate: false
+  xy: 970, 11
+  size: 78, 78
+  orig: 79, 78
+  offset: 1, 0
+  index: -1
+jpg/symbolF/F3_light_00
+  rotate: false
+  xy: 1050, 11
+  size: 78, 78
+  orig: 79, 78
+  offset: 1, 0
+  index: -1
+jpg/symbolF/F4_light_00
+  rotate: false
+  xy: 1225, 346
+  size: 78, 78
+  orig: 79, 78
+  offset: 1, 0
+  index: -1
+jpg/symbolF/F5_light2_00
+  rotate: false
+  xy: 2, 801
+  size: 234, 229
+  orig: 248, 246
+  offset: 14, 0
+  index: -1
+jpg/symbolF/F5_light3_00
+  rotate: false
+  xy: 2, 652
+  size: 147, 147
+  orig: 149, 149
+  offset: 1, 1
+  index: -1
+jpg/symbolF/thunder1/thunder1_01
+  rotate: false
+  xy: 238, 890
+  size: 140, 140
+  orig: 140, 140
+  offset: 0, 0
+  index: -1
+jpg/symbolF/thunder1/thunder1_03
+  rotate: false
+  xy: 592, 425
+  size: 121, 125
+  orig: 140, 140
+  offset: 12, 10
+  index: -1
+jpg/symbolF/thunder1/thunder1_04
+  rotate: false
+  xy: 522, 890
+  size: 139, 140
+  orig: 140, 140
+  offset: 0, 0
+  index: -1
+jpg/symbolF/thunder1/thunder1_05
+  rotate: true
+  xy: 229, 420
+  size: 127, 120
+  orig: 140, 140
+  offset: 9, 11
+  index: -1
+jpg/symbolF/thunder1/thunder1_06
+  rotate: false
+  xy: 1362, 898
+  size: 134, 132
+  orig: 140, 140
+  offset: 0, 0
+  index: -1
+jpg/symbolF/thunder1/thunder1_08
+  rotate: false
+  xy: 1766, 902
+  size: 129, 128
+  orig: 140, 140
+  offset: 6, 8
+  index: -1
+jpg/symbolF/thunder1/thunder1_09
+  rotate: false
+  xy: 1225, 898
+  size: 135, 132
+  orig: 140, 140
+  offset: 0, 0
+  index: -1
+jpg/symbolF/thunder1/thunder1_10
+  rotate: false
+  xy: 511, 777
+  size: 131, 111
+  orig: 140, 140
+  offset: 5, 13
+  index: -1
+jpg/symbolF/thunder1/thunder1_11
+  rotate: false
+  xy: 947, 894
+  size: 136, 136
+  orig: 140, 140
+  offset: 1, 0
+  index: -1
+jpg/symbolF/thunder1/thunder1_13
+  rotate: true
+  xy: 467, 423
+  size: 126, 123
+  orig: 140, 140
+  offset: 11, 12
+  index: -1
+jpg/symbolF/thunder1/thunder1_14
+  rotate: false
+  xy: 2, 85
+  size: 138, 139
+  orig: 140, 140
+  offset: 2, 1
+  index: -1
+jpg/symbolF/thunder1/thunder1_15
+  rotate: false
+  xy: 663, 892
+  size: 140, 138
+  orig: 140, 140
+  offset: 0, 2
+  index: -1
+jpg/symbolF/thunder1/thunder1_16
+  rotate: true
+  xy: 1437, 643
+  size: 84, 112
+  orig: 140, 140
+  offset: 27, 20
+  index: -1
+jpg/symbolF/thunder1/thunder1_18
+  rotate: false
+  xy: 2, 510
+  size: 140, 140
+  orig: 140, 140
+  offset: 0, 0
+  index: -1
+jpg/symbolF/thunder1/thunder1_19
+  rotate: false
+  xy: 144, 385
+  size: 83, 128
+  orig: 140, 140
+  offset: 35, 0
+  index: -1
+jpg/symbolF/thunder1/thunder1_20
+  rotate: false
+  xy: 380, 890
+  size: 140, 140
+  orig: 140, 140
+  offset: 0, 0
+  index: -1
+jpg/symbolF/thunder1/thunder1_21
+  rotate: false
+  xy: 1036, 775
+  size: 79, 117
+  orig: 140, 140
+  offset: 50, 4
+  index: -1
+jpg/symbolF/thunder1/thunder1_22
+  rotate: false
+  xy: 2, 368
+  size: 140, 140
+  orig: 140, 140
+  offset: 0, 0
+  index: -1
+jpg/symbolF/thunder1/thunder1_23
+  rotate: false
+  xy: 650, 554
+  size: 116, 124
+  orig: 140, 140
+  offset: 17, 10
+  index: -1
+jpg/symbolF/thunder1/thunder1_24
+  rotate: false
+  xy: 2, 226
+  size: 139, 140
+  orig: 140, 140
+  offset: 0, 0
+  index: -1
+jpg/symbolF/thunder1/thunder1_25
+  rotate: false
+  xy: 1386, 356
+  size: 53, 80
+  orig: 140, 140
+  offset: 83, 16
+  index: -1
+jpg/symbolF/thunder1/thunder1_27
+  rotate: false
+  xy: 1630, 903
+  size: 134, 127
+  orig: 140, 140
+  offset: 0, 0
+  index: -1
+jpg/symbolF/thunder1/thunder1_28
+  rotate: true
+  xy: 1870, 2
+  size: 30, 36
+  orig: 140, 140
+  offset: 105, 39
+  index: -1
+jpg/symbolF/thunder1/thunder1_29
+  rotate: false
+  xy: 1498, 898
+  size: 130, 132
+  orig: 140, 140
+  offset: 0, 0
+  index: -1
+jpg/symbolF/thunder2/thunder2_01
+  rotate: true
+  xy: 1440, 2
+  size: 31, 20
+  orig: 140, 140
+  offset: 33, 20
+  index: -1
+jpg/symbolF/thunder2/thunder2_02
+  rotate: false
+  xy: 151, 653
+  size: 58, 33
+  orig: 140, 140
+  offset: 27, 19
+  index: -1
+jpg/symbolF/thunder2/thunder2_03
+  rotate: true
+  xy: 1437, 807
+  size: 89, 114
+  orig: 140, 140
+  offset: 31, 16
+  index: -1
+jpg/symbolF/thunder2/thunder2_04
+  rotate: true
+  xy: 229, 313
+  size: 105, 119
+  orig: 140, 140
+  offset: 16, 17
+  index: -1
+jpg/symbolF/thunder2/thunder2_05
+  rotate: false
+  xy: 342, 551
+  size: 114, 127
+  orig: 140, 140
+  offset: 10, 12
+  index: -1
+jpg/symbolF/thunder2/thunder2_07
+  rotate: false
+  xy: 351, 422
+  size: 114, 127
+  orig: 140, 140
+  offset: 20, 13
+  index: -1
+jpg/symbolF/thunder2/thunder2_08
+  rotate: true
+  xy: 238, 775
+  size: 113, 136
+  orig: 140, 140
+  offset: 11, 0
+  index: -1
+jpg/symbolF/thunder2/thunder2_09
+  rotate: true
+  xy: 376, 776
+  size: 112, 133
+  orig: 140, 140
+  offset: 13, 0
+  index: -1
+jpg/symbolF/thunder2/thunder2_10
+  rotate: false
+  xy: 1651, 706
+  size: 104, 98
+  orig: 140, 140
+  offset: 13, 16
+  index: -1
+jpg/symbolF/thunder2/thunder2_12
+  rotate: false
+  xy: 556, 552
+  size: 92, 126
+  orig: 140, 140
+  offset: 23, 9
+  index: -1
+jpg/symbolF/thunder2/thunder2_13
+  rotate: true
+  xy: 237, 214
+  size: 97, 118
+  orig: 140, 140
+  offset: 24, 5
+  index: -1
+jpg/symbolF/thunder2/thunder2_14
+  rotate: false
+  xy: 768, 562
+  size: 60, 116
+  orig: 140, 140
+  offset: 61, 4
+  index: -1
+jpg/symbolF/thunder2/thunder2_15
+  rotate: false
+  xy: 248, 95
+  size: 113, 117
+  orig: 140, 140
+  offset: 14, 4
+  index: -1
+jpg/symbolF/thunder2/thunder2_17
+  rotate: true
+  xy: 458, 551
+  size: 127, 96
+  orig: 140, 140
+  offset: 4, 11
+  index: -1
+jpg/symbolF/thunder2/thunder2_18
+  rotate: false
+  xy: 238, 680
+  size: 135, 93
+  orig: 140, 140
+  offset: 4, 12
+  index: -1
+jpg/symbolF/thunder2/thunder2_19
+  rotate: true
+  xy: 144, 515
+  size: 135, 65
+  orig: 140, 140
+  offset: 5, 13
+  index: -1
+jpg/symbolF/thunder2/thunder2_20
+  rotate: false
+  xy: 805, 894
+  size: 140, 136
+  orig: 140, 140
+  offset: 0, 2
+  index: -1
+jpg/symbolF/thunder2/thunder2_22
+  rotate: false
+  xy: 1085, 896
+  size: 138, 134
+  orig: 140, 140
+  offset: 0, 2
+  index: -1
+jpg/symbolF/thunder2/thunder2_23
+  rotate: true
+  xy: 1117, 784
+  size: 110, 109
+  orig: 140, 140
+  offset: 3, 3
+  index: -1
+jpg/symbolF/thunder2/thunder2_24
+  rotate: false
+  xy: 211, 549
+  size: 129, 129
+  orig: 140, 140
+  offset: 4, 4
+  index: -1
+jpg/symbolF/thunder2/thunder2_25
+  rotate: false
+  xy: 715, 430
+  size: 114, 122
+  orig: 140, 140
+  offset: 16, 10
+  index: -1
+jpg/symbolM/M1/M1_light2/M1_light2_02
+  rotate: true
+  xy: 1296, 279
+  size: 65, 35
+  orig: 100, 110
+  offset: 2, 7
+  index: -1
+jpg/symbolM/M1/M1_light2/M1_light2_03
+  rotate: false
+  xy: 1521, 343
+  size: 79, 47
+  orig: 100, 110
+  offset: 0, 6
+  index: -1
+jpg/symbolM/M1/M1_light2/M1_light2_04
+  rotate: true
+  xy: 498, 3
+  size: 90, 58
+  orig: 100, 110
+  offset: 0, 6
+  index: -1
+jpg/symbolM/M1/M1_light2/M1_light2_05
+  rotate: true
+  xy: 453, 167
+  size: 89, 71
+  orig: 100, 110
+  offset: 4, 6
+  index: -1
+jpg/symbolM/M1/M1_light2/M1_light2_06
+  rotate: false
+  xy: 143, 214
+  size: 92, 84
+  orig: 100, 110
+  offset: 4, 6
+  index: -1
+jpg/symbolM/M1/M1_light2/M1_light2_07
+  rotate: false
+  xy: 1553, 800
+  size: 93, 96
+  orig: 100, 110
+  offset: 4, 6
+  index: -1
+jpg/symbolM/M1/M1_light2/M1_light2_08
+  rotate: true
+  xy: 892, 680
+  size: 93, 98
+  orig: 100, 110
+  offset: 4, 6
+  index: -1
+jpg/symbolM/M1/M1_light2/M1_light2_09
+  rotate: true
+  xy: 1551, 705
+  size: 93, 98
+  orig: 100, 110
+  offset: 4, 6
+  index: -1
+jpg/symbolM/M1/M1_light2/M1_light2_10
+  rotate: true
+  xy: 1551, 610
+  size: 93, 99
+  orig: 100, 110
+  offset: 4, 6
+  index: -1
+jpg/symbolM/M1/M1_light2/M1_light2_21
+  rotate: true
+  xy: 1754, 608
+  size: 93, 100
+  orig: 100, 110
+  offset: 4, 5
+  index: -1
+jpg/symbolM/M1/M1_light2/M1_light2_22
+  rotate: true
+  xy: 693, 680
+  size: 92, 98
+  orig: 100, 110
+  offset: 5, 7
+  index: -1
+jpg/symbolM/M1/M1_light2/M1_light2_23
+  rotate: true
+  xy: 180, 2
+  size: 90, 89
+  orig: 100, 110
+  offset: 6, 15
+  index: -1
+jpg/symbolM/M1/M1_light2/M1_light2_24
+  rotate: true
+  xy: 1861, 705
+  size: 88, 77
+  orig: 100, 110
+  offset: 7, 25
+  index: -1
+jpg/symbolM/M1/M1_light2/M1_light2_25
+  rotate: true
+  xy: 967, 91
+  size: 81, 64
+  orig: 100, 110
+  offset: 13, 37
+  index: -1
+jpg/symbolM/M1/M1_light2/M1_light2_26
+  rotate: false
+  xy: 1367, 438
+  size: 76, 54
+  orig: 100, 110
+  offset: 17, 46
+  index: -1
+jpg/symbolM/M1/M1_light2/M1_light2_27
+  rotate: true
+  xy: 1352, 211
+  size: 71, 43
+  orig: 100, 110
+  offset: 21, 56
+  index: -1
+jpg/symbolM/M2/M2_light2/M2_light2_02
+  rotate: false
+  xy: 1839, 2
+  size: 28, 25
+  orig: 129, 129
+  offset: 83, 14
+  index: -1
+jpg/symbolM/M2/M2_light2/M2_light2_03
+  rotate: true
+  xy: 1445, 433
+  size: 59, 61
+  orig: 129, 129
+  offset: 52, 11
+  index: -1
+jpg/symbolM/M2/M2_light2/M2_light2_04
+  rotate: true
+  xy: 363, 95
+  size: 70, 77
+  orig: 129, 129
+  offset: 41, 12
+  index: -1
+jpg/symbolM/M2/M2_light2/M2_light2_05
+  rotate: true
+  xy: 510, 260
+  size: 80, 89
+  orig: 129, 129
+  offset: 31, 13
+  index: -1
+jpg/symbolM/M2/M2_light2/M2_light2_06
+  rotate: true
+  xy: 1204, 522
+  size: 93, 97
+  orig: 129, 129
+  offset: 18, 13
+  index: -1
+jpg/symbolM/M2/M2_light2/M2_light2_07
+  rotate: true
+  xy: 483, 680
+  size: 94, 102
+  orig: 129, 129
+  offset: 17, 14
+  index: -1
+jpg/symbolM/M2/M2_light2/M2_light2_08
+  rotate: true
+  xy: 587, 680
+  size: 95, 104
+  orig: 129, 129
+  offset: 17, 14
+  index: -1
+jpg/symbolM/M2/M2_light2/M2_light2_09
+  rotate: true
+  xy: 1757, 805
+  size: 95, 105
+  orig: 129, 129
+  offset: 17, 14
+  index: -1
+jpg/symbolM/M2/M2_light2/M2_light2_10
+  rotate: false
+  xy: 894, 573
+  size: 95, 105
+  orig: 129, 129
+  offset: 17, 14
+  index: -1
+jpg/symbolM/M2/M2_light2/M2_light2_21
+  rotate: true
+  xy: 1648, 806
+  size: 95, 107
+  orig: 129, 129
+  offset: 17, 14
+  index: -1
+jpg/symbolM/M2/M2_light2/M2_light2_22
+  rotate: true
+  xy: 376, 680
+  size: 94, 105
+  orig: 129, 129
+  offset: 17, 15
+  index: -1
+jpg/symbolM/M2/M2_light2/M2_light2_23
+  rotate: true
+  xy: 1216, 617
+  size: 84, 104
+  orig: 129, 129
+  offset: 17, 14
+  index: -1
+jpg/symbolM/M2/M2_light2/M2_light2_24
+  rotate: true
+  xy: 1228, 703
+  size: 82, 103
+  orig: 129, 129
+  offset: 17, 13
+  index: -1
+jpg/symbolM/M2/M2_light2/M2_light2_25
+  rotate: true
+  xy: 1002, 439
+  size: 78, 100
+  orig: 129, 129
+  offset: 17, 14
+  index: -1
+jpg/symbolM/M2/M2_light2/M2_light2_26
+  rotate: false
+  xy: 778, 257
+  size: 72, 95
+  orig: 129, 129
+  offset: 17, 17
+  index: -1
+jpg/symbolM/M2/M2_light2/M2_light2_27
+  rotate: false
+  xy: 431, 2
+  size: 65, 91
+  orig: 129, 129
+  offset: 17, 19
+  index: -1
+jpg/symbolM/M2/M2_light2/M2_light2_28
+  rotate: false
+  xy: 1130, 5
+  size: 54, 86
+  orig: 129, 129
+  offset: 18, 22
+  index: -1
+jpg/symbolM/M3/M3_light2/M3_light2_02
+  rotate: true
+  xy: 1333, 284
+  size: 71, 45
+  orig: 138, 162
+  offset: 28, 23
+  index: -1
+jpg/symbolM/M3/M3_light2/M3_light2_03
+  rotate: true
+  xy: 1033, 91
+  size: 81, 59
+  orig: 138, 162
+  offset: 24, 23
+  index: -1
+jpg/symbolM/M3/M3_light2/M3_light2_04
+  rotate: true
+  xy: 647, 4
+  size: 89, 73
+  orig: 138, 162
+  offset: 21, 23
+  index: -1
+jpg/symbolM/M3/M3_light2/M3_light2_05
+  rotate: false
+  xy: 1104, 433
+  size: 95, 86
+  orig: 138, 162
+  offset: 19, 23
+  index: -1
+jpg/symbolM/M3/M3_light2/M3_light2_06
+  rotate: false
+  xy: 1652, 609
+  size: 100, 95
+  orig: 138, 162
+  offset: 17, 23
+  index: -1
+jpg/symbolM/M3/M3_light2/M3_light2_07
+  rotate: false
+  xy: 1333, 789
+  size: 102, 107
+  orig: 138, 162
+  offset: 17, 22
+  index: -1
+jpg/symbolM/M3/M3_light2/M3_light2_08
+  rotate: false
+  xy: 718, 774
+  size: 104, 116
+  orig: 138, 162
+  offset: 16, 22
+  index: -1
+jpg/symbolM/M3/M3_light2/M3_light2_09
+  rotate: false
+  xy: 824, 775
+  size: 104, 117
+  orig: 138, 162
+  offset: 16, 22
+  index: -1
+jpg/symbolM/M3/M3_light2/M3_light2_10
+  rotate: false
+  xy: 142, 94
+  size: 104, 118
+  orig: 138, 162
+  offset: 16, 22
+  index: -1
+jpg/symbolM/M3/M3_light2/M3_light2_21
+  rotate: false
+  xy: 930, 776
+  size: 104, 116
+  orig: 138, 162
+  offset: 17, 23
+  index: -1
+jpg/symbolM/M3/M3_light2/M3_light2_22
+  rotate: false
+  xy: 1228, 787
+  size: 103, 109
+  orig: 138, 162
+  offset: 17, 29
+  index: -1
+jpg/symbolM/M3/M3_light2/M3_light2_23
+  rotate: false
+  xy: 1757, 703
+  size: 102, 100
+  orig: 138, 162
+  offset: 18, 38
+  index: -1
+jpg/symbolM/M3/M3_light2/M3_light2_24
+  rotate: false
+  xy: 1333, 699
+  size: 102, 88
+  orig: 138, 162
+  offset: 18, 49
+  index: -1
+jpg/symbolM/M3/M3_light2/M3_light2_25
+  rotate: false
+  xy: 1752, 530
+  size: 101, 76
+  orig: 138, 162
+  offset: 18, 60
+  index: -1
+jpg/symbolM/M3/M3_light2/M3_light2_26
+  rotate: false
+  xy: 576, 95
+  size: 100, 66
+  orig: 138, 162
+  offset: 19, 70
+  index: -1
+jpg/symbolM/M3/M3_light2/M3_light2_27
+  rotate: true
+  xy: 775, 4
+  size: 100, 53
+  orig: 138, 162
+  offset: 19, 82
+  index: -1
+jpg/symbolM/M4/M4_light2/M4_light2_02
+  rotate: false
+  xy: 1593, 416
+  size: 94, 38
+  orig: 130, 98
+  offset: 18, 13
+  index: -1
+jpg/symbolM/M4/M4_light2/M4_light2_03
+  rotate: true
+  xy: 722, 2
+  size: 102, 51
+  orig: 130, 98
+  offset: 14, 12
+  index: -1
+jpg/symbolM/M4/M4_light2/M4_light2_04
+  rotate: false
+  xy: 1002, 621
+  size: 102, 63
+  orig: 130, 98
+  offset: 14, 11
+  index: -1
+jpg/symbolM/M4/M4_light2/M4_light2_05
+  rotate: false
+  xy: 1402, 494
+  size: 104, 70
+  orig: 130, 98
+  offset: 13, 11
+  index: -1
+jpg/symbolM/M4/M4_light2/M4_light2_06
+  rotate: false
+  xy: 1508, 459
+  size: 104, 74
+  orig: 130, 98
+  offset: 13, 10
+  index: -1
+jpg/symbolM/M4/M4_light2/M4_light2_07
+  rotate: false
+  xy: 1614, 456
+  size: 104, 74
+  orig: 130, 98
+  offset: 13, 10
+  index: -1
+jpg/symbolM/M4/M4_light2/M4_light2_08
+  rotate: false
+  xy: 1720, 454
+  size: 104, 74
+  orig: 130, 98
+  offset: 13, 10
+  index: -1
+jpg/symbolM/M4/M4_light2/M4_light2_09
+  rotate: false
+  xy: 715, 354
+  size: 104, 74
+  orig: 130, 98
+  offset: 13, 10
+  index: -1
+jpg/symbolM/M4/M4_light2/M4_light2_10
+  rotate: false
+  xy: 592, 349
+  size: 104, 74
+  orig: 130, 98
+  offset: 13, 10
+  index: -1
+jpg/symbolM/M4/M4_light2/M4_light2_21
+  rotate: false
+  xy: 1428, 566
+  size: 106, 75
+  orig: 130, 98
+  offset: 12, 9
+  index: -1
+jpg/symbolM/M4/M4_light2/M4_light2_22
+  rotate: true
+  xy: 1864, 795
+  size: 105, 74
+  orig: 130, 98
+  offset: 13, 10
+  index: -1
+jpg/symbolM/M4/M4_light2/M4_light2_23
+  rotate: false
+  xy: 351, 354
+  size: 104, 66
+  orig: 130, 98
+  offset: 13, 18
+  index: -1
+jpg/symbolM/M4/M4_light2/M4_light2_24
+  rotate: false
+  xy: 695, 106
+  size: 103, 57
+  orig: 130, 98
+  offset: 14, 27
+  index: -1
+jpg/symbolM/M4/M4_light2/M4_light2_25
+  rotate: true
+  xy: 1095, 251
+  size: 99, 45
+  orig: 130, 98
+  offset: 16, 39
+  index: -1
+jpg/symbolM/M4/M4_light2/M4_light2_26
+  rotate: false
+  xy: 1856, 590
+  size: 82, 31
+  orig: 130, 98
+  offset: 26, 53
+  index: -1
+jpg/symbolM/thunder1/thunder1_07
+  rotate: false
+  xy: 1322, 614
+  size: 104, 83
+  orig: 120, 90
+  offset: 11, 4
+  index: -1
+jpg/symbolM/thunder1/thunder1_09
+  rotate: false
+  xy: 992, 686
+  size: 112, 87
+  orig: 120, 90
+  offset: 4, 3
+  index: -1
+jpg/symbolM/thunder1/thunder1_10
+  rotate: true
+  xy: 916, 458
+  size: 113, 84
+  orig: 120, 90
+  offset: 4, 4
+  index: -1
+jpg/symbolM/thunder1/thunder1_11
+  rotate: true
+  xy: 831, 446
+  size: 114, 83
+  orig: 120, 90
+  offset: 3, 4
+  index: -1
+jpg/symbolM/thunder1/thunder1_12
+  rotate: false
+  xy: 1106, 621
+  size: 108, 83
+  orig: 120, 90
+  offset: 7, 4
+  index: -1
+jpg/symbolM/thunder1/thunder1_14
+  rotate: true
+  xy: 151, 688
+  size: 111, 85
+  orig: 120, 90
+  offset: 4, 4
+  index: -1
+jpg/symbolM/thunder1/thunder1_15
+  rotate: false
+  xy: 1437, 729
+  size: 112, 76
+  orig: 120, 90
+  offset: 4, 6
+  index: -1
+jpg/symbolM/thunder1/thunder1_16
+  rotate: true
+  xy: 644, 778
+  size: 110, 72
+  orig: 120, 90
+  offset: 5, 8
+  index: -1
+jpg/symbolM/thunder1/thunder1_17
+  rotate: false
+  xy: 1117, 706
+  size: 109, 76
+  orig: 120, 90
+  offset: 6, 7
+  index: -1
+jpg/symbolM/thunder1/thunder1_19
+  rotate: false
+  xy: 1536, 535
+  size: 106, 73
+  orig: 120, 90
+  offset: 10, 7
+  index: -1
+jpg/symbolM/thunder1/thunder1_20
+  rotate: false
+  xy: 1644, 532
+  size: 106, 75
+  orig: 120, 90
+  offset: 8, 7
+  index: -1
+jpg/symbolM/thunder2/thunder2_10
+  rotate: true
+  xy: 454, 258
+  size: 69, 54
+  orig: 130, 80
+  offset: 15, 7
+  index: -1
+jpg/symbolM/thunder2/thunder2_12
+  rotate: false
+  xy: 800, 106
+  size: 85, 57
+  orig: 130, 80
+  offset: 0, 8
+  index: -1
+jpg/symbolM/thunder2/thunder2_13
+  rotate: true
+  xy: 1175, 97
+  size: 88, 56
+  orig: 130, 80
+  offset: 0, 10
+  index: -1
+jpg/symbolM/thunder2/thunder2_14
+  rotate: true
+  xy: 830, 562
+  size: 116, 62
+  orig: 130, 80
+  offset: 14, 18
+  index: -1
+jpg/symbolM/thunder2/thunder2_15
+  rotate: true
+  xy: 1444, 221
+  size: 68, 62
+  orig: 130, 80
+  offset: 62, 18
+  index: -1
+jpg/symbolM/thunder2/thunder2_17
+  rotate: true
+  xy: 1022, 174
+  size: 89, 61
+  orig: 130, 80
+  offset: 41, 18
+  index: -1
+jpg/symbolM/thunder2/thunder2_18
+  rotate: true
+  xy: 830, 10
+  size: 94, 51
+  orig: 130, 80
+  offset: 35, 17
+  index: -1
+jpg/symbolM/thunder2/thunder2_19
+  rotate: false
+  xy: 1233, 97
+  size: 45, 47
+  orig: 130, 80
+  offset: 42, 1
+  index: -1
+jpg/symbolM/thunder2/thunder2_20
+  rotate: true
+  xy: 913, 354
+  size: 83, 58
+  orig: 130, 80
+  offset: 26, 0
+  index: -1
+jpg/symbolM/thunder2/thunder2_22
+  rotate: true
+  xy: 1234, 426
+  size: 94, 49
+  orig: 130, 80
+  offset: 18, 14
+  index: -1
+jpg/symbolM/thunder2/thunder2_24
+  rotate: true
+  xy: 457, 329
+  size: 91, 50
+  orig: 130, 80
+  offset: 20, 13
+  index: -1
