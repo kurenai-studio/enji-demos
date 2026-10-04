@@ -1,0 +1,141 @@
+{
+  "ver": "2.3.14",
+  "importer": "gltf",
+  "imported": true,
+  "uuid": "06c9a52e-6335-4cb5-8c0d-f9d0c2a64e86",
+  "files": [],
+  "subMetas": {
+    "285e9": {
+      "importer": "gltf-mesh",
+      "uuid": "06c9a52e-6335-4cb5-8c0d-f9d0c2a64e86@285e9",
+      "displayName": "",
+      "id": "285e9",
+      "name": "Gauntlet.mesh",
+      "userData": {
+        "gltfIndex": 0,
+        "triangleCount": 830
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "edc24": {
+      "importer": "gltf-material",
+      "uuid": "06c9a52e-6335-4cb5-8c0d-f9d0c2a64e86@edc24",
+      "displayName": "",
+      "id": "edc24",
+      "name": "GauntletSteel.material",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "74fe3": {
+      "importer": "gltf-material",
+      "uuid": "06c9a52e-6335-4cb5-8c0d-f9d0c2a64e86@74fe3",
+      "displayName": "",
+      "id": "74fe3",
+      "name": "GauntletTrim.material",
+      "userData": {
+        "gltfIndex": 1
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "7e55f": {
+      "importer": "gltf-material",
+      "uuid": "06c9a52e-6335-4cb5-8c0d-f9d0c2a64e86@7e55f",
+      "displayName": "",
+      "id": "7e55f",
+      "name": "GauntletRune.material",
+      "userData": {
+        "gltfIndex": 2
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "3dba8": {
+      "importer": "gltf-scene",
+      "uuid": "06c9a52e-6335-4cb5-8c0d-f9d0c2a64e86@3dba8",
+      "displayName": "",
+      "id": "3dba8",
+      "name": "gauntlet.prefab",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "imageMetas": [],
+    "legacyFbxImporter": false,
+    "allowMeshDataAccess": true,
+    "addVertexColor": false,
+    "generateLightmapUVNode": false,
+    "meshOptimizer": {
+      "enable": false,
+      "algorithm": "simplify",
+      "simplifyOptions": {
+        "targetRatio": 1,
+        "enableSmartLink": true,
+        "agressiveness": 7,
+        "maxIterationCount": 100
+      }
+    },
+    "lods": {
+      "enable": false,
+      "hasBuiltinLOD": false,
+      "options": [
+        {
+          "screenRatio": 0.25,
+          "faceCount": 1
+        },
+        {
+          "screenRatio": 0.125,
+          "faceCount": 0.25
+        },
+        {
+          "screenRatio": 0.01,
+          "faceCount": 0.1
+        }
+      ]
+    },
+    "assetFinder": {
+      "meshes": [
+        "06c9a52e-6335-4cb5-8c0d-f9d0c2a64e86@285e9"
+      ],
+      "skeletons": [],
+      "textures": [],
+      "materials": [
+        "06c9a52e-6335-4cb5-8c0d-f9d0c2a64e86@edc24",
+        "06c9a52e-6335-4cb5-8c0d-f9d0c2a64e86@74fe3",
+        "06c9a52e-6335-4cb5-8c0d-f9d0c2a64e86@7e55f"
+      ],
+      "scenes": [
+        "06c9a52e-6335-4cb5-8c0d-f9d0c2a64e86@3dba8"
+      ]
+    }
+  }
+}

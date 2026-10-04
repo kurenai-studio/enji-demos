@@ -1,0 +1,10 @@
+{
+    "name": "snow-3d",
+    "type": "3d",
+    "version": "3.8.8",
+    "uuid": "0f08c6a6-c596-43c6-be60-5f648c00962d",
+    "creator": {
+        "version": "3.8.8",
+        "dependencies": {}
+    }
+}
