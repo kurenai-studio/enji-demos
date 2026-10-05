@@ -14,22 +14,26 @@ button) opens a deep tray to dig in freely.
 ## The Lich King shot
 
 This is the close-up from the *Wrath of the Lich King* opening cinematic
-(2008), the one the memes replace the text in. The gauntlet comes down onto
-fresh snow over a sheet of ice and wipes once across it. Words frozen in the
-ice light up underneath. Here they read **cocos 牛B**.
+(2008), the one the memes replace the text in. The gauntlet's palm comes down
+onto fresh snow over a sheet of ice, rests a moment, then brushes the snow
+aside. Words frozen in the ice light up underneath. Here they read **cocos 牛B**.
 
-| The wipe | The words |
-|---|---|
-| ![Mid-wipe](shots/lichking-wipe.jpg) | ![Revealed](shots/lichking-reveal.jpg) |
+| The palm comes down | The brush | The words |
+|---|---|---|
+| ![Landing](shots/lichking-land.jpg) | ![Mid-brush](shots/lichking-wipe.jpg) | ![Revealed](shots/lichking-reveal.jpg) |
 
 - **Snow:** a 7 cm layer over a 1.8 × 1.0 m patch, 26 000 particles on a 2.5 cm grid.
   At this depth its own weight compresses it by at most ρgh/E ≈ 2 % (about
   0.6 mm), so it goes to sleep as filled, with no settling pass.
-  A wipe keeps about 5 000 particles awake.
-- **The hand** comes in from the upper left. Its fingers trail the wrist
-  (lean −0.55 rad) and the lowest claw sits right on the ice. It wipes 1.1 m in
-  2.1 s, then lifts out to the right. `tools/shot-tune.mts` compares hand poses
-  by how much of the text band they leave bare.
+  A brush keeps up to about 6 500 particles awake.
+- **The hand** reaches in from across the ice, palm down, fingers toward the
+  camera and tipped 0.2 rad toward the ice, so the forearm rises away from the
+  camera. The beat follows the cinematic: down onto the snow left of the words
+  (0.6–1.6 s, slowing into the touch), a 0.7 s rest while the weight settles,
+  then a slow 2.6 s brush to the right with the little-finger edge leading,
+  and a lift. Only the fingers reach the ice; the palm and cuff skim the top of
+  the layer and the trailing thumb leaves a shallow groove behind the stroke.
+  `tools/shot-tune.mts` compares hand poses by how much of the text band they leave bare.
 - **The ice** (`tools/ice_text.py`, PIL) is deep blue with cracks and trapped
   bubbles. The text is set in Songti SC Black, frosted with a carved bevel, plus
   a separate glow map. It uses `builtin-standard` with an albedo map and an
@@ -37,15 +41,19 @@ ice light up underneath. Here they read **cocos 牛B**.
   Change the words with `python3 tools/ice_text.py "…"`.
 - **Snow surface:** a wipe leaves one or two particle layers on the ice. The
   surface leaves out snow within 1.2 cm of the ice, so that dusting reads as
-  translucent, and its iso sits at half of full density, so the line reads as bare ice.
-  Thin snow at the edges of the line is tinted with the blue of the ice.
-- **Framing:** an untouched snowfield, flush with the settled surface, hides the
-  patch's edges. Linear night fog, about 2 500 blowing flakes, and loose powder
+  translucent. Its iso sits at 42 % of full density: high enough that the
+  dusting reads as bare ice, low enough that snow loosened along the stroke
+  doesn't break up into holes. Thin snow at the edges of the line is tinted with the blue of the ice.
+- **Framing:** an untouched snowfield, flush with the settled surface and
+  reaching 3 cm over the patch's sagging edges, hides the patch. Per-pixel
+  linear night fog that starts just behind the shot (so it also works when a
+  portrait screen pulls the camera back), about 2 500 blowing flakes, and loose powder
   (awake particles faster than 0.25 m/s) as soft additive points. A vignette and
-  2.2:1 bars appear on landscape screens. The camera pushes in from 55° to 42°.
+  2.2:1 bars appear on landscape screens. The camera opens on the landing spot,
+  follows the brush, and pushes in from 55° to 42°.
 
-In the preview, a whole frame of the wipe (simulation, surface and render)
-averages 12.9 ms, with a worst case of 20 ms.
+In the preview, a whole frame of the shot (simulation, surface and render)
+averages 10 ms, with a worst case of 24 ms during the brush.
 
 ## The sandbox
 
@@ -143,8 +151,8 @@ directional light casts shadows.
 | Gauntlet model on the capsules | 97 % of vertices within 3.5 cm |
 | Shot: hand pose at the start of the wipe | lowest claw 10.00 mm above the ice centre |
 | Shot: the wipe | stable, 25 923 particles |
-| Shot: text band left bare by one wipe | 92 % (needs ≥ 85 %) |
-| Shot: snow 30 cm from the line | unchanged |
+| Shot: text band left bare by one brush | 94 % (needs ≥ 85 %) |
+| Shot: snow 30 cm on the near side of the line (the arm comes from the far side) | unchanged |
 
 In the browser preview, simulating a sweep costs 15–30 ms per frame and the
 surface 3–4 ms. Settling a fresh bed costs about 55 ms per frame for its 40
@@ -182,8 +190,9 @@ node --no-warnings --import ./tools/ts-resolve.mjs tools/bench.mts
 
 ## Not in this demo yet
 
-- The shot next to the CG: the gauntlet is procedural, the edge of the wipe is
-  ragged rather than one clean stroke, and the glow is emissive only, with no bloom pass.
+- The shot next to the CG: the gauntlet is procedural with fixed, curled fingers
+  (so the palm can't lie fully flat), the edge of the stroke is ragged rather
+  than one clean line, and the glow is emissive only, with no bloom pass.
 
 - Loose powder that spills sideways (lower cohesion near the surface, or a second, weaker snow layer).
 - Snow sparkle / subsurface shading in a custom effect; screen-space surface smoothing.

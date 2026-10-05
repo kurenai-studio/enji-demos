@@ -25,6 +25,7 @@ const SPRAY = 4000;
 /** Awake snow faster than this is also drawn as loose powder. */
 const SPRAY_SPEED = 0.25;
 const SURROUND = 3;
+const EDGE_COVER = 0.03;
 
 function load<T>(path: string, type: new () => T): Promise<T> {
     return new Promise((resolve, reject) =>
@@ -117,9 +118,10 @@ export class ShotView extends Component implements IView {
         this.mesher = new SurfaceMesher([s.lo, s.lo, s.lo], [s.hiX, s.lo + MESH_TOP, s.hiZ], MESH_CELL, MESH_RADIUS, 90000);
         this.mesher.setClip(s.lo, s.lo, s.lo, s.hiX, s.lo + MESH_TOP, s.hiZ);
         const spacing = SHOT.dx / SHOT.perCell;
-        // Surface at half of full density. A single leftover layer of particles on the ice only reaches
-        // (105/128)·spacing/R ≈ 33% of it, so a wiped line reads as bare ice.
-        this.mesher.iso = 0.5 * ((32 * Math.PI) / 105) * MESH_RADIUS ** 3 / spacing ** 3;
+        // Surface at 42% of full density. A single leftover layer of particles on the ice only reaches
+        // (105/128)·spacing/R ≈ 33% of it, so a wiped line reads as bare ice; at 50% the loosened snow
+        // along the stroke breaks up into holes, at 38% it creeps back over the letters.
+        this.mesher.iso = 0.42 * ((32 * Math.PI) / 105) * MESH_RADIUS ** 3 / spacing ** 3;
         this.mesher.minY = s.lo + SHOT.dusting;
         s.onSleep = (p, asleep) => this.mesher.addToBase(s.x[p], s.y[p], s.z[p], asleep ? 1 : -1);
         this.replay();
@@ -219,12 +221,13 @@ export class ShotView extends Component implements IView {
         this.box(root, 'Slab', [cx, s.lo - 0.051, cz], [w, 0.1, l], mats.stone, false);
 
         // Untouched snowfield around the tray, flush with the settled snow, so the simulated patch has no edges.
-        const big = SURROUND;
+        // It reaches EDGE_COVER in over the tray, where the simulated surface sags against the walls.
+        const big = SURROUND + EDGE_COVER;
         const parts: [number, number, number, number][] = [
-            [cx, s.lo - big / 2, w + 2 * big, big], // back (−z)
-            [cx, s.hiZ + big / 2, w + 2 * big, big], // front (+z)
-            [s.lo - big / 2, cz, big, l], // left
-            [s.hiX + big / 2, cz, big, l], // right
+            [cx, s.lo - SURROUND / 2 + EDGE_COVER / 2, w + 2 * SURROUND, big], // back (−z)
+            [cx, s.hiZ + SURROUND / 2 - EDGE_COVER / 2, w + 2 * SURROUND, big], // front (+z)
+            [s.lo - SURROUND / 2 + EDGE_COVER / 2, cz, big, l], // left
+            [s.hiX + SURROUND / 2 - EDGE_COVER / 2, cz, big, l], // right
         ];
         for (const [x, z, sw, sl] of parts) {
             const node = this.box(root, 'Snowfield', [x, 0, z], [sw, 1, sl], mats.flat, true);
@@ -312,7 +315,7 @@ export class ShotView extends Component implements IView {
         const size = view.getVisibleSize();
         const aspect = size.width / size.height;
         const halfV = Math.tan((this.camera.fov * Math.PI) / 360);
-        this.framing = Math.max(1.0, (SHOT.text.w / 2 + 0.14) / (halfV * aspect));
+        this.framing = Math.max(1.25, (SHOT.text.w / 2 + 0.14) / (halfV * aspect));
     }
 
     private seedFlurries(): void {
@@ -378,7 +381,7 @@ export class ShotView extends Component implements IView {
         }
         let sum = 0, n = 0;
         for (let i = 1; i < bx - 1; i++) for (let k = 1; k < bz - 1; k++) { sum += top[i + k * bx]; n++; }
-        // The surface sits a little under the top particle centres (iso at 40% of full density).
+        // The surface sits a little under the top particle centres.
         this.snowTop = sum / n - 0.004;
         this.placeSurround();
     }
@@ -450,14 +453,18 @@ export class ShotView extends Component implements IView {
         return col.subarray(0, m.vertexCount * 4);
     }
 
-    /** High and wide while the hand comes in, then a slow push in and down onto the words. */
+    /**
+     * High and wide on the landing spot left of the words, following the brush across,
+     * then a slow push in and down onto the words.
+     */
     private applyCamera(): void {
         const T = TIMELINE;
-        const u = ease((this.t - T.down) / (T.end - 1 - T.down));
+        const u = ease((this.t - T.land) / (T.end - 1 - T.land));
+        const follow = ease((this.t - T.brush) / (T.wipeEnd + 0.6 - T.brush));
         const pitch = (55 - 13 * u) * (Math.PI / 180);
         const dist = this.framing * (1.1 - 0.22 * u);
-        const yaw = (-6 + 6 * u) * (Math.PI / 180);
-        const target = new Vec3(0.02 * (1 - u), 0, -0.03 * u);
+        const yaw = (-5 + 5 * u) * (Math.PI / 180);
+        const target = new Vec3(-0.14 * (1 - follow), 0, -0.03 * u);
         this.cameraNode.setPosition(
             target.x + dist * Math.cos(pitch) * Math.sin(yaw),
             target.y + dist * Math.sin(pitch),
@@ -473,7 +480,7 @@ export class ShotView extends Component implements IView {
     /** The words are lit faintly under the snow, brighten as they are uncovered and then breathe. */
     private applyGlow(): void {
         const T = TIMELINE;
-        const reveal = ease((this.t - T.down) / (T.wipeEnd + 1 - T.down));
+        const reveal = ease((this.t - T.brush) / (T.wipeEnd + 1 - T.brush));
         const breathe = this.t > T.exit ? 0.15 * Math.sin((this.t - T.exit) * 2.2) : 0;
         const g = 0.35 + 1.25 * reveal + breathe * reveal;
         this.iceMaterial.setProperty('emissiveScale', new Vec3(g, g, g));
