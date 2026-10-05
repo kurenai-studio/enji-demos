@@ -191,10 +191,9 @@ export class ShotView extends Component implements IView {
         // Night fog: the snowfield fades into the dark beyond the shot.
         globals.fog.enabled = true;
         globals.fog.type = FogInfo.FogType.LINEAR;
+        // Per-pixel: the snowfield blocks are metres across with only corner vertices.
+        globals.fog.accurate = true;
         globals.fog.fogColor = new Color(10, 16, 30, 255);
-        globals.fog.fogStart = 1.6;
-        globals.fog.fogEnd = 4.5;
-
         const s = this.sim;
         const root = new Node('ShotRoot');
         world.addChild(root);
@@ -307,13 +306,13 @@ export class ShotView extends Component implements IView {
         }
     }
 
-    /** Distance that fits the text line (plus margin) across the screen, whatever the aspect. */
+    /** Distance that fits the text line and the hand's start (plus margin) across the screen, whatever the aspect. */
     private fitFraming(): void {
         if (!this.camera) return;
         const size = view.getVisibleSize();
         const aspect = size.width / size.height;
         const halfV = Math.tan((this.camera.fov * Math.PI) / 360);
-        this.framing = Math.max(1.0, (SHOT.text.w / 2 + 0.06) / (halfV * aspect));
+        this.framing = Math.max(1.0, (SHOT.text.w / 2 + 0.14) / (halfV * aspect));
     }
 
     private seedFlurries(): void {
@@ -465,6 +464,10 @@ export class ShotView extends Component implements IView {
             target.z + dist * Math.cos(pitch) * Math.cos(yaw),
         );
         this.cameraNode.lookAt(target);
+        // Fog measured from the shot, not the camera: a narrow screen pulls the camera back about 3×.
+        const fog = director.getScene()!.globals.fog;
+        fog.fogStart = dist + 0.6;
+        fog.fogEnd = dist + 3.4;
     }
 
     /** The words are lit faintly under the snow, brighten as they are uncovered and then breathe. */
