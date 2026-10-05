@@ -1,0 +1,9 @@
+{
+  "name": "snow-3d-tools",
+  "private": true,
+  "type": "module",
+  "description": "Recording script (outside assets/).",
+  "dependencies": {
+    "playwright-core": "1.49.1"
+  }
+}

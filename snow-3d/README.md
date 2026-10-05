@@ -11,6 +11,8 @@ from the physics. None of it is an animation.
 The demo opens on **the Lich King shot**. `?view=sandbox` (or the Sandbox
 button) opens a deep tray to dig in freely.
 
+Demo video (17 s, 1280×720, recorded by `tools/record.mjs`): [video/snow-3d.mp4](video/snow-3d.mp4).
+
 ## The Lich King shot
 
 This is the close-up from the *Wrath of the Lich King* opening cinematic
@@ -179,7 +181,13 @@ The sandbox (`?view=sandbox`):
 enji host start            # preview at http://localhost:7463
 node --no-warnings --import ./tools/ts-resolve.mjs tools/test.mts
 node --no-warnings --import ./tools/ts-resolve.mjs tools/bench.mts
+cd tools && npm install && cd ..   # playwright-core, for the recorder only
+node tools/record.mjs      # the shot, then a sandbox sweep -> video/snow-3d.mp4
 ```
+
+The recorder pauses the engine's own loop and advances it two fixed 1/60 s
+ticks per video frame before grabbing the canvas, so the video is a steady
+30 fps at real speed even when a frame takes longer than that to render.
 
 ## Engine notes
 
