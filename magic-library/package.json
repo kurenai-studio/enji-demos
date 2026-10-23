@@ -1,0 +1,10 @@
+{
+    "name": "magic-library-enji",
+    "type": "3d",
+    "version": "3.8.8",
+    "uuid": "2dde8294-3b6a-45e8-a428-67aeb4911b20",
+    "creator": {
+        "version": "3.8.8",
+        "dependencies": {}
+    }
+}
