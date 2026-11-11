@@ -1,0 +1,45 @@
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: rain-vs:vert
+      frag: rain-fs:frag
+      depthStencilState:
+        depthTest: true
+        depthWrite: false
+      rasterizerState:
+        cullMode: none
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendSrcAlpha: src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      properties:
+        tint: { value: [0.78, 0.84, 0.88, 0.38], editor: { type: color } }
+}%
+
+CCProgram rain-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/uniforms/cc-local>
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  out vec2 v_uv;
+  vec4 vert () {
+    vec4 world = cc_matWorld * vec4(a_position, 1.0);
+    v_uv = a_texCoord;
+    return cc_matProj * cc_matView * world;
+  }
+}%
+
+CCProgram rain-fs %{
+  precision highp float;
+  in vec2 v_uv;
+  uniform RainTint { vec4 tint; };
+  vec4 frag () {
+    float along = smoothstep(0.0, 0.18, v_uv.y) * smoothstep(1.0, 0.42, v_uv.y);
+    float across = smoothstep(0.5, 0.05, abs(v_uv.x - 0.5));
+    return vec4(tint.rgb, tint.a * along * across);
+  }
+}%

@@ -1,0 +1,65 @@
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: decal-vs:vert
+      frag: decal-fs:frag
+      depthStencilState:
+        depthTest: true
+        depthWrite: false
+      rasterizerState:
+        cullMode: back
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendSrcAlpha: src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      properties:
+        mark: { value: [0.0, 0.0, 0.0, 0.0] }
+}%
+
+CCProgram decal-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/uniforms/cc-local>
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  out vec2 v_uv;
+  vec4 vert () {
+    v_uv = a_texCoord;
+    return cc_matProj * cc_matView * cc_matWorld * vec4(a_position, 1.0);
+  }
+}%
+
+CCProgram decal-fs %{
+  precision highp float;
+  #pragma extension([GL_OES_standard_derivatives, __VERSION__ < 300])
+  in vec2 v_uv;
+  uniform DecalParams {
+    vec4 mark;
+  };
+  vec4 frag () {
+    vec2 p = v_uv * 2.0 - 1.0;
+    float ang = atan(p.y, p.x);
+    float wobble = 0.82 + 0.14 * sin(ang * 5.0) + 0.06 * sin(ang * 13.0 + 1.4);
+    float r = length(p) / wobble;
+    float chip = smoothstep(0.92, 0.45, r);
+    float hole = smoothstep(0.34, 0.08, r);
+    float ring = smoothstep(0.16, 0.30, r) * smoothstep(0.62, 0.36, r);
+    float scratch = pow(abs(sin(ang * 8.0 + 0.6)), 18.0) * smoothstep(0.7, 0.18, r) * smoothstep(0.06, 0.14, r);
+    vec3 col;
+    float alpha;
+    if (mark.x > 0.5) {
+      col = mix(vec3(0.42, 0.40, 0.36), vec3(0.10, 0.09, 0.08), hole);
+      alpha = chip * 0.72;
+    } else {
+      col = mix(vec3(0.20, 0.10, 0.07), vec3(0.32, 0.32, 0.34), ring);
+      col = mix(col, vec3(0.015, 0.015, 0.02), hole);
+      col += vec3(0.34, 0.34, 0.36) * scratch * 0.25;
+      alpha = max(chip * 0.42, hole * 0.9);
+    }
+    if (alpha < 0.02) discard;
+    return vec4(col, alpha);
+  }
+}%

@@ -1,0 +1,244 @@
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: grade-vs:vert
+      frag: grade-fs:frag
+      pass: post-process
+      rasterizerState:
+        cullMode: none
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: one
+          blendDst: one_minus_src_alpha
+          blendSrcAlpha: one
+          blendDstAlpha: zero
+      properties:
+        sunScreen: { value: [0.5, 0.5, 0.0, 1.0] }
+        camEye: { value: [0.0, 1.6, 0.0, 1.0] }
+        camForward: { value: [0.0, 0.0, -1.0, 0.0] }
+        camRight: { value: [0.0, 0.0, -1.0, 0.0] }
+        camUp: { value: [0.0, 1.0, 0.0, 0.0] }
+        lightCol0: { value: [0.0, 0.0, 0.0, 0.0] }
+        lightCol1: { value: [0.0, 0.0, 0.0, 0.0] }
+        lightCol2: { value: [0.0, 0.0, 0.0, 0.0] }
+        lightCol3: { value: [0.0, 0.0, 0.0, 0.0] }
+}%
+
+CCProgram grade-vs %{
+  precision highp float;
+  #include <legacy/decode-standard>
+  #include <builtin/uniforms/cc-global>
+  #include <common/common-define>
+  out vec2 v_uv;
+  vec4 vert () {
+    StandardVertInput In;
+    CCDecode(In);
+    CC_HANDLE_GET_CLIP_FLIP(In.position.xy);
+    v_uv = a_texCoord;
+    return In.position;
+  }
+}%
+
+CCProgram grade-fs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  in vec2 v_uv;
+  #pragma rate inputTexture pass
+  uniform sampler2D inputTexture;
+  #pragma rate depthTex pass
+  uniform highp sampler2D depthTex;
+  #pragma rate sunShadow pass
+  uniform highp sampler2D sunShadow;
+  uniform GradeParams {
+    vec4 sunScreen;
+    vec4 camEye;
+    vec4 camForward;
+    vec4 camRight;
+    vec4 camUp;
+    vec4 lightCol0;
+    vec4 lightCol1;
+    vec4 lightCol2;
+    vec4 lightCol3;
+  };
+
+  const mat3 SL_SRGB_TO_REC2020 = mat3(
+    vec3(0.6274, 0.0691, 0.0164),
+    vec3(0.3293, 0.9195, 0.0880),
+    vec3(0.0433, 0.0113, 0.8956));
+  const mat3 SL_REC2020_TO_SRGB = mat3(
+    vec3(1.6605, -0.1246, -0.0182),
+    vec3(-0.5876, 1.1329, -0.1006),
+    vec3(-0.0728, -0.0083, 1.1187));
+  const float LOOK_POWER = 1.18;
+  const float LOOK_SAT = 1.22;
+
+  vec3 toLinear(vec3 c) {
+    vec3 lo = c / 12.92;
+    vec3 hi = pow((c + 0.055) / 1.055, vec3(2.4));
+    return mix(lo, hi, step(vec3(0.04045), c));
+  }
+
+  vec3 toSRGB(vec3 c) {
+    vec3 lo = c * 12.92;
+    vec3 hi = 1.055 * pow(max(c, vec3(0.0)), vec3(1.0 / 2.4)) - 0.055;
+    return mix(lo, hi, step(vec3(0.0031308), c));
+  }
+
+  vec3 slAgxContrast(vec3 x) {
+    vec3 x2 = x * x;
+    vec3 x4 = x2 * x2;
+    return 15.5 * x4 * x2 - 40.14 * x4 * x + 31.96 * x4 - 6.868 * x2 * x + 0.4298 * x2 + 0.1191 * x - 0.00232;
+  }
+
+  vec3 slAces(vec3 c) {
+    mat3 inM = mat3(
+      vec3(0.59719, 0.07600, 0.02840),
+      vec3(0.35458, 0.90834, 0.13383),
+      vec3(0.04823, 0.01566, 0.83777));
+    mat3 outM = mat3(
+      vec3(1.60475, -0.10208, -0.00327),
+      vec3(-0.53108, 1.10813, -0.07276),
+      vec3(-0.07367, -0.00605, 1.07602));
+    vec3 v = inM * (c * 1.3);
+    vec3 a = v * (v + 0.0245786) - 0.000090537;
+    vec3 b = v * (0.983729 * v + 0.4329510) + 0.238081;
+    return clamp(outM * (a / b), 0.0, 1.0);
+  }
+
+  vec3 slAgx(vec3 color) {
+    mat3 inset = mat3(
+      vec3(0.856627153315983, 0.137318972929847, 0.11189821299995),
+      vec3(0.0951212405381588, 0.761241990602591, 0.0767994186031903),
+      vec3(0.0482516061458583, 0.101439036467562, 0.811302368396859));
+    mat3 outset = mat3(
+      vec3(1.1271005818144368, -0.1413297634984383, -0.14132976349843826),
+      vec3(-0.11060664309660323, 1.157823702216272, -0.11060664309660294),
+      vec3(-0.016493938717834573, -0.016493938717834257, 1.2519364065950405));
+    color = inset * (SL_SRGB_TO_REC2020 * color);
+    color = clamp((log2(max(color, vec3(1e-10))) - (-12.47393)) / (4.026069 - (-12.47393)), 0.0, 1.0);
+    color = slAgxContrast(color);
+    float l = dot(color, vec3(0.2126, 0.7152, 0.0722));
+    color = pow(max(color, vec3(0.0)), vec3(LOOK_POWER));
+    color = l + (color - l) * LOOK_SAT;
+    color = outset * color;
+    color = pow(max(color, vec3(0.0)), vec3(2.2));
+    return clamp(SL_REC2020_TO_SRGB * color, 0.0, 1.0);
+  }
+
+  float hg(float mu, float g) {
+    float g2 = g * g;
+    return (1.0 - g2) / (12.566371 * pow(max(1.0 + g2 - 2.0 * g * mu, 1e-4), 1.5));
+  }
+
+  float slShadowZ(vec2 uv) {
+    vec4 texel = texture(sunShadow, uv);
+    return dot(texel, vec4(1.0, 1.0 / 255.0, 1.0 / 65025.0, 1.0 / 16581375.0));
+  }
+
+  // Sun visibility of one air sample. The map is read in the light's clip
+  // space. Sampling it with the screen uv draws the shadow camera's picture
+  // over the harbor, which is the failure this avoids.
+  float slSunLit(vec3 worldPos) {
+    vec4 clip = mat4(lightCol0, lightCol1, lightCol2, lightCol3) * vec4(worldPos, 1.0);
+    if (clip.w < 1e-4) return 1.0;
+    vec3 ndc = clip.xyz / clip.w * 0.5 + 0.5;
+    if (ndc.x < 0.002 || ndc.x > 0.998 || ndc.y < 0.002 || ndc.y > 0.998 || ndc.z < 0.0 || ndc.z > 1.0) return 1.0;
+    if (cc_cameraPos.w > 0.5 && cc_cameraPos.w < 1.5) ndc.y = 1.0 - ndc.y;
+    float z = ndc.z + 0.0006;
+    vec2 o = vec2(1.5 / 2048.0, 0.0);
+    float lit = step(z, slShadowZ(ndc.xy));
+    lit += step(z, slShadowZ(ndc.xy + o));
+    lit += step(z, slShadowZ(ndc.xy - o));
+    lit += step(z, slShadowZ(ndc.xy + o.yx));
+    lit += step(z, slShadowZ(ndc.xy - o.yx));
+    return lit * 0.2;
+  }
+
+  vec3 volume(vec2 uv, vec3 base) {
+    float depthRaw = texture(depthTex, uv).r;
+    // Window depth of the main camera. 0 is the near plane, 1 is the far plane.
+    float zndc = depthRaw * 2.0 - 1.0;
+    float dist = (2.0 * 0.08 * 500.0) / max(500.08 - zndc * 499.92, 1e-3);
+    if (dist < 0.05 || dist > 4000.0) return base;
+    // The blit pass does not keep the gameplay camera's view matrix, so the ray
+    // is rebuilt from the axes written every frame by the walker camera.
+    vec2 ndc = uv * 2.0 - 1.0;
+    // combinedSignY is 3 on GL: v_uv.y = 1 is already the top of the view, so
+    // camera up is +ndc.y. Sign 1 (WebGPU) stores that row at the bottom.
+    // Flipping sign 3 mirrors the shaft through the horizon, and it climbs
+    // as the camera pitches up.
+    if (cc_cameraPos.w > 0.5 && cc_cameraPos.w < 1.5) ndc.y = -ndc.y;
+    float aspect = cc_screenSize.x / max(cc_screenSize.y, 1.0);
+    float ty = camUp.w > 0.01 ? camUp.w : 0.7536;
+    float tx = camRight.w > 0.01 ? camRight.w : ty * aspect;
+    vec3 rd = normalize(camForward.xyz + camRight.xyz * ndc.x * tx + camUp.xyz * ndc.y * ty);
+    vec3 cam = camEye.xyz;
+    bool sky = depthRaw > 0.997 || dist > 350.0;
+    float maxD = min(dist, sky ? 93.0 : 170.0);
+    vec3 sunDir = normalize(vec3(0.916, 0.225, 0.331));
+    float mu = dot(rd, sunDir);
+    // Original lobe, held to the sun's cone so a bright mass does not stay
+    // high in the frame after the sun itself has dropped.
+    float ph = min(hg(mu, 0.82) * 0.70 + hg(mu, 0.48) * 0.30, 1.15);
+    float gate = sunScreen.z < 0.5 ? 0.0 : smoothstep(0.75, 0.94, mu);
+    if (gate < 0.001) return base;
+    // Original sun radiance is color * intensity(9) * 0.85.
+    vec3 sunRad = vec3(1.0, 0.72, 0.42) * 6.4 * gate;
+    vec3 acc = vec3(0.0);
+    float transmit = 1.0;
+    float tPrev = 0.0;
+    vec3 boxMin = vec3(-16.0, 0.0, -28.0);
+    vec3 boxMax = vec3(12.0, 9.5, -11.0);
+    for (int i = 0; i < 16; i++) {
+      float f = (float(i) + 1.0) / 16.0;
+      float t1 = maxD * f * (0.35 + 0.65 * f);
+      float ds = t1 - tPrev;
+      float t = tPrev + ds * 0.5;
+      vec3 p = cam + rd * t;
+      float height = p.y;
+      float shape = 0.30 + 0.70 * exp(-max(height, 0.0) / 5.5);
+      vec3 inside = step(boxMin, p) * step(p, boxMax);
+      float inb = inside.x * inside.y * inside.z;
+      float ext = 0.0034 * shape * (1.0 + 6.0 * inb);
+      float stepT = exp(-ext * ds);
+      // A container between this sample and the sun must stop the shaft.
+      // The compare uses light clip space, not the screen uv.
+      float lit = slSunLit(p);
+      float nearW = mix(2.6, 0.7, smoothstep(4.0, 70.0, t));
+      float beam = mix(nearW, 1.6, inb);
+      // The last half-metre is the surface itself. Leaving it lit paints a disc on the container.
+      float room = smoothstep(0.0, 0.55, dist - t);
+      vec3 src = sunRad * (ph * lit * beam * room);
+      acc += transmit * src * (1.0 - stepT);
+      transmit *= stepT;
+      tPrev = t1;
+    }
+    if (!sky && dist > maxD) {
+      float tau = 0.0034 * 0.42 * (dist - maxD) * 0.45;
+      float farT = exp(-tau);
+      vec3 hc = mix(vec3(0.16, 0.22, 0.30), vec3(0.95, 0.55, 0.28), clamp(mu, 0.0, 1.0));
+      acc += transmit * hc * 0.35 * (1.0 - farT) * gate;
+      transmit *= farT;
+    }
+    return mix(base, base * transmit + acc, gate);
+  }
+
+  vec4 frag () {
+    vec3 lin = toLinear(max(texture(inputTexture, v_uv).rgb, vec3(0.0)));
+    lin = volume(v_uv, lin);
+    vec3 col = mix(slAces(lin), slAgx(lin), 0.25);
+    float l = dot(col, vec3(0.2126, 0.7152, 0.0722));
+    col *= mix(vec3(0.80, 1.01, 1.13), vec3(1.07, 1.0, 0.90), smoothstep(0.03, 0.55, l));
+    col = mix(col, col * col * (3.0 - 2.0 * col), 0.10);
+    col = col * 0.988 + vec3(0.006, 0.0085, 0.011);
+    vec2 c = v_uv - 0.5;
+    float r2 = dot(c, c) / 0.5;
+    float vr = smoothstep(0.15, 1.05, r2);
+    col *= 1.0 - 0.3 * vr * vr * (3.0 - 2.0 * vr);
+    return vec4(toSRGB(clamp(col, 0.0, 1.0)), 1.0);
+  }
+}%

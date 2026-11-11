@@ -1,0 +1,46 @@
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: soft-vs:vert
+      frag: soft-fs:frag
+      depthStencilState:
+        depthTest: true
+        depthWrite: false
+      rasterizerState:
+        cullMode: none
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendSrcAlpha: src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      properties:
+        tint: { value: [0.5, 0.48, 0.45, 0.22], editor: { type: color } }
+}%
+
+CCProgram soft-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/uniforms/cc-local>
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  out vec2 v_uv;
+  vec4 vert () {
+    vec4 world = cc_matWorld * vec4(a_position, 1.0);
+    v_uv = a_texCoord;
+    return cc_matProj * cc_matView * world;
+  }
+}%
+
+CCProgram soft-fs %{
+  precision highp float;
+  in vec2 v_uv;
+  uniform SoftParams {
+    vec4 tint;
+  };
+  vec4 frag () {
+    float a = smoothstep(1.0, 0.2, length(v_uv * 2.0 - 1.0)) * tint.a;
+    return vec4(tint.rgb, a);
+  }
+}%

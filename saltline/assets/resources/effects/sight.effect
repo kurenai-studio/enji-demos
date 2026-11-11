@@ -1,0 +1,104 @@
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: sight-vs:vert
+      frag: sight-fs:frag
+      depthStencilState:
+        depthTest: true
+        depthWrite: false
+      rasterizerState:
+        cullMode: none
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendSrcAlpha: src_alpha
+          blendDstAlpha: one_minus_src_alpha
+}%
+
+CCProgram sight-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/uniforms/cc-local>
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  out vec2 v_uv;
+  out vec3 v_view;
+  out vec3 v_fwd;
+  out vec3 v_right;
+  out vec3 v_up;
+  out vec3 v_wpos;
+  out vec3 v_wn;
+  vec4 vert () {
+    vec4 world = cc_matWorld * vec4(a_position, 1.0);
+    vec4 view = cc_matView * world;
+    v_uv = a_texCoord;
+    v_view = view.xyz;
+    v_wpos = world.xyz;
+    mat3 viewR = mat3(cc_matView);
+    v_fwd = viewR * (-cc_matWorld[2].xyz);
+    v_right = viewR * cc_matWorld[0].xyz;
+    v_up = viewR * cc_matWorld[1].xyz;
+    v_wn = normalize(mat3(cc_matWorld) * normalize(vec3(0.0, -0.1, 1.0)));
+    return cc_matProj * view;
+  }
+}%
+
+CCProgram sight-fs %{
+  precision highp float;
+  #pragma extension([GL_OES_standard_derivatives, __VERSION__ < 300])
+  #include <builtin/uniforms/cc-global>
+  in vec2 v_uv;
+  in vec3 v_view;
+  in vec3 v_fwd;
+  in vec3 v_right;
+  in vec3 v_up;
+  in vec3 v_wpos;
+  in vec3 v_wn;
+  vec4 frag () {
+    float ax = abs(v_uv.x - 0.5) * 2.0;
+    float ay = abs(v_uv.y - 0.5) * 2.0;
+    float limitX = mix(1.02, 0.78, smoothstep(0.82, 1.0, v_uv.y));
+    if (ax > limitX || ay > 1.02) discard;
+
+    vec3 d = normalize(v_view);
+    vec3 fw = normalize(v_fwd);
+    float k = max(dot(d, fw), 1e-3);
+    vec2 a = vec2(dot(d, normalize(v_right)), dot(d, normalize(v_up))) / k;
+    float r = length(a);
+    float px = max(fwidth(r), 1e-5);
+    float dotR = max(0.0011, px * 0.9);
+    float ringW = max(0.00045, px * 0.6);
+    float dotI = 1.0 - smoothstep(dotR - px, dotR + px, r);
+    float ring = 1.0 - smoothstep(ringW - px * 0.5, ringW + px, abs(r - 0.0128));
+    float tick = (1.0 - smoothstep(0.0, px * 1.2 + 0.0004, min(abs(a.x), abs(a.y))))
+      * step(0.0128, r) * (1.0 - smoothstep(0.0165, 0.0175, r));
+    float ret = clamp(dotI + ring * 0.8 + tick * 0.8, 0.0, 1.0);
+    vec3 retCol = vec3(1.0, 0.10, 0.04) * ret;
+    retCol += vec3(1.0, 0.25, 0.08) * exp(-r * r / 0.00002) * 0.22;
+
+    vec3 wv = normalize(v_wpos - cc_cameraPos.xyz);
+    vec3 n = normalize(v_wn);
+    if (dot(n, wv) > 0.0) n = -n;
+    vec3 rf = reflect(wv, n);
+    float fres = pow(1.0 - abs(dot(wv, n)), 3.0);
+    vec3 zen = vec3(0.22, 0.30, 0.40);
+    vec3 hor = vec3(0.55, 0.36, 0.22);
+    vec3 sky = mix(hor, zen, clamp(rf.y * 1.4 + 0.2, 0.0, 1.0));
+    vec3 sun = normalize(vec3(0.916, 0.225, 0.331));
+    float sd = max(dot(rf, sun), 0.0);
+    sky += vec3(1.0, 0.72, 0.42) * (pow(sd, 6.0) * 0.35 + pow(sd, 90.0) * 1.4);
+    float band = smoothstep(0.25, 0.5, v_uv.x * 0.6 + v_uv.y) * (1.0 - smoothstep(0.62, 0.95, v_uv.x * 0.6 + v_uv.y));
+    vec3 coat = mix(vec3(0.30, 0.50, 0.95), vec3(1.0, 0.62, 0.28), clamp(fres * 2.2 + v_uv.y * 0.75 - 0.15, 0.0, 1.0));
+    vec2 e = abs(v_uv - 0.5) * 2.0;
+    float edge = smoothstep(0.86, 1.0, max(e.x / max(limitX, 0.2), e.y));
+    float refl = 0.12 + 0.60 * fres + 0.07 * band;
+    vec2 eg = (v_uv - vec2(0.5, 0.16)) * vec2(1.0, 1.6);
+    float hip = exp(-dot(eg, eg) * 60.0) * (1.0 - smoothstep(0.985, 0.9995, k));
+    retCol += vec3(1.0, 0.10, 0.04) * 0.85 * hip;
+    vec3 col = (sky * 0.55 + vec3(0.03, 0.035, 0.045)) * coat * refl * (1.0 - edge) + retCol;
+    float alpha = clamp(0.18 + 0.34 * fres + 0.05 * band + 0.55 * edge + ret * 0.85 + hip * 0.65, 0.0, 0.92);
+    return vec4(col, alpha);
+  }
+}%

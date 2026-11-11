@@ -1,0 +1,86 @@
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: muzzle-vs:vert
+      frag: muzzle-fs:frag
+      depthStencilState:
+        depthTest: true
+        depthWrite: false
+      rasterizerState:
+        cullMode: none
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: one
+          blendDst: one
+          blendSrcAlpha: one
+          blendDstAlpha: one
+      properties:
+        flash: { value: [0.0, 0.0, 0.0, 1.0] }
+        seed: { value: [0.0, 0.0, 0.0, 0.0] }
+}%
+
+CCProgram muzzle-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/uniforms/cc-local>
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  out vec2 v_uv;
+  vec4 vert () {
+    vec4 world = cc_matWorld * vec4(a_position, 1.0);
+    v_uv = a_texCoord;
+    return cc_matProj * cc_matView * world;
+  }
+}%
+
+CCProgram muzzle-fs %{
+  precision highp float;
+  in vec2 v_uv;
+  uniform MuzzleParams {
+    vec4 flash;
+    vec4 seed;
+  };
+  float h1(float n) {
+    return fract(sin(n * 127.1 + seed.x * 311.7) * 43758.5453);
+  }
+  vec4 frag () {
+    vec2 p = v_uv * 2.0 - 1.0;
+    float r = length(p);
+    float a = atan(p.y, p.x);
+    float kind = flash.x;
+    float uInt = flash.y;
+    float uHeat = flash.z;
+    float uJet = flash.w;
+    if (kind > 3.5) {
+      vec3 heat = vec3(1.0, 0.28, 0.06) * exp(-r * r * 4.0) * smoothstep(1.0, 0.5, r) * uHeat;
+      return vec4(heat, 1.0);
+    }
+    float I = 0.0;
+    vec3 tintc = vec3(1.0, 0.50, 0.16);
+    if (kind < 0.5) {
+      float n1 = 3.0 + floor(h1(1.0) * 3.0);
+      float n2 = 5.0 + floor(h1(2.0) * 4.0);
+      float pet = pow(abs(cos(a * n1 * 0.5 + h1(3.0) * 6.283)), 5.0) * (0.55 + 0.45 * h1(4.0));
+      pet += pow(abs(cos(a * n2 * 0.5 + h1(5.0) * 6.283)), 14.0) * 0.55;
+      float reach = 0.35 + 0.65 * pet;
+      I = (0.25 + pet) * smoothstep(reach, reach * 0.15, r) * (0.75 + 0.25 * sin(r * 26.0 + h1(6.0) * 20.0));
+    } else if (kind < 1.5) {
+      float y = v_uv.y;
+      float x = p.x * (1.0 + 0.5 * sin(y * 17.0 + h1(7.0) * 30.0) * y);
+      float wdt = mix(0.20, 0.75, smoothstep(0.0, 0.35, y)) * (1.0 - y * 0.75);
+      I = exp(-x * x / (wdt * wdt * 0.35)) * pow(1.0 - y, 1.4) * (0.7 + 0.3 * sin(y * 31.0 + h1(8.0) * 9.0)) * 0.9 * uJet;
+    } else if (kind < 2.5) {
+      float u = abs(p.x);
+      float len = 0.55 + 0.45 * h1(9.0 + step(0.0, p.x));
+      float wv = p.y * (1.0 + u * 3.0) + 0.12 * sin(u * 14.0 + h1(10.0) * 20.0) * u;
+      I = exp(-wv * wv * 22.0) * smoothstep(len, 0.06, u) * smoothstep(0.02, 0.10, u) * 0.85 * uJet;
+    } else {
+      I = exp(-r * r * 5.0) * 2.4 * smoothstep(1.0, 0.6, r);
+      tintc = vec3(1.0, 0.82, 0.58);
+    }
+    vec3 col = mix(tintc, vec3(1.0, 0.90, 0.70), clamp(I * I * 0.7, 0.0, 1.0)) * I * uInt;
+    col = col / (vec3(1.0) + col * 0.18);
+    return vec4(col, 1.0);
+  }
+}%

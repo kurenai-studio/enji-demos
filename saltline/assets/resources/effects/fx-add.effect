@@ -1,0 +1,50 @@
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: add-vs:vert
+      frag: add-fs:frag
+      depthStencilState:
+        depthTest: true
+        depthWrite: false
+      rasterizerState:
+        cullMode: none
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: one
+          blendDst: one
+          blendSrcAlpha: one
+          blendDstAlpha: one
+      properties:
+        tint: { value: [1.0, 0.55, 0.18, 1.0], editor: { type: color } }
+        shape: { value: [1.0, 0.0, 0.0, 0.0] }
+}%
+
+CCProgram add-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/uniforms/cc-local>
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  out vec2 v_uv;
+  vec4 vert () {
+    vec4 world = cc_matWorld * vec4(a_position, 1.0);
+    v_uv = a_texCoord;
+    return cc_matProj * cc_matView * world;
+  }
+}%
+
+CCProgram add-fs %{
+  precision highp float;
+  in vec2 v_uv;
+  uniform FxParams {
+    vec4 tint;
+    vec4 shape;
+  };
+  vec4 frag () {
+    vec2 p = v_uv * 2.0 - 1.0;
+    float disk = smoothstep(1.0, 0.12, length(p));
+    float mask = mix(1.0, disk, shape.x);
+    return vec4(tint.rgb * mask * tint.a, 1.0);
+  }
+}%

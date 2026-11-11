@@ -1,0 +1,10 @@
+{
+    "name": "saltline-enji",
+    "type": "3d",
+    "version": "3.8.8",
+    "uuid": "141c1372-7653-407d-a739-f338c948940d",
+    "creator": {
+        "version": "3.8.8",
+        "dependencies": {}
+    }
+}

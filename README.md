@@ -30,6 +30,7 @@ Enji).
 | [phantom-pocket-3d](phantom-pocket-3d) | 怪谈口袋 3D — Persona 5–style catch-and-battle game: 3D arena (camera, three lights, Kenney Cube Pets), auto-ui-pipeline HUD and dialogs, moves / bag / catch / run loop. Every UI and stage node is an LLM-written prefab; demo video in `video/` | 0.3 |
 | [slots](slots) | Power of Thor — 6×5 pay-anywhere tumble slot on the Power of Thor 2 Spine 3.8 symbol pack (recovered from the live game with harExplorer), played as SPIR frames by CocosSlotsEditor's BoardView / BoardDirector / IAnim: win and eliminate effect spines, compacting refills, multiplier orbs collected into a badge, free spins with a running multiplier, super free spins, BIG/MEGA/EPIC banners, SlotPlayableAdFrame audio; simulated RTP about 95.5%; demo video in `video/` | 0.3 |
 | [magic-library](magic-library) | First-person library: two halls, 3024 loose books, pick up and shelve by subject and volume, curtain between the title and a loaded level, settings for music, look sensitivity and height. Candle lights exist but stay off by default | 0.3 |
+| [saltline](saltline) | Daytime harbor in first person: exported dock glTF (Git LFS), wet concrete, rain on the gun, volumetric sun, hound and gull | 0.3 |
 
 ## Run a demo
 

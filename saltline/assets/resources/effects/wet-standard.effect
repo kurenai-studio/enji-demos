@@ -1,0 +1,984 @@
+// Copyright (c) 2017-2022 Xiamen Yaji Software Co., Ltd.
+
+CCEffect %{
+  techniques:
+  - name: opaque
+    passes:
+    - vert: standard-vs
+      frag: standard-fs
+      properties: &props
+        tilingOffset:                     { value: [1.0, 1.0, 0.0, 0.0] }
+        mainColor:                        { value: [1.0, 1.0, 1.0, 1.0], target: albedo, linear: true, editor: { displayName: Albedo, type: color } }
+        albedoScale:                      { value: [1.0, 1.0, 1.0], target: albedoScaleAndCutoff.xyz }
+        alphaThreshold:                   { value: 0.5, target: albedoScaleAndCutoff.w, editor: { parent: USE_ALPHA_TEST, slide: true, range: [0, 1.0], step: 0.001 } }
+        occlusion:                        { value: 0.0, target: pbrParams.x, editor: { slide: true, range: [0, 1.0], step: 0.001 } }
+        roughness:                        { value: 0.5, target: pbrParams.y, editor: { slide: true, range: [0, 1.0], step: 0.001 } }
+        metallic:                         { value: 0.0, target: pbrParams.z, editor: { slide: true, range: [0, 1.0], step: 0.001 } }
+        specularIntensity:                { value: 0.5, target: pbrParams.w, editor: { slide: true, range: [0.0, 1.0], step: 0.001 } }
+        emissive:                         { value: [0.0, 0.0, 0.0, 1.0], linear: true, editor: { type: color } }
+        emissiveScale:                    { value: [1.0, 1.0, 1.0], target: emissiveScaleParam.xyz }
+        normalStrength:                   { value: 1.0, target: emissiveScaleParam.w, editor: { parent: USE_NORMAL_MAP, slide: true, range: [0, 5.0], step: 0.001 } }
+        anisotropyIntensity:              { value: 1.0, target: anisotropyParam.x, editor: { parent: IS_ANISOTROPY, slide : true, range : [0.0, 1.0] , step : 0.0001 } }
+        anisotropyRotation:               { value: 0.0, target: anisotropyParam.y, editor: { parent: IS_ANISOTROPY, slide : true, range : [0, 1.0] , step : 0.0001 } }
+        anisotropyMapResolutionHeight:    { value: 0.0, target: anisotropyParam.w, editor: { parent: FIX_ANISOTROPIC_ROTATION_MAP } }
+        addOnShadowBias:                  { value: 0.0, target: anisotropyParam.z }
+        mainTexture:                      { value: grey, target: albedoMap, editor: { displayName: AlbedoMap } }
+        normalMap:                        { value: normal }
+        pbrMap:                           { value: grey }
+        occlusionMap:                     { value: white }
+        emissiveMap:                      { value: grey }
+        anisotropyMap:                    { value: black, editor : { parent: IS_ANISOTROPY } }
+        anisotropyMapNearestFilter:       { value: black, editor : { parent: FIX_ANISOTROPIC_ROTATION_MAP } }
+        wetParams:                        { value: [0.52, 0.34, 0.55, 0.12] }
+        wetMacro:                         { value: [0.14, 0.12, 0.40, 0.28] }
+        surfaceKind:                      { value: [0.0, 0.0, 0.0, 0.0] }
+        reflectCol0:                      { value: [1.0, 0.0, 0.0, 0.0] }
+        reflectCol1:                      { value: [0.0, 1.0, 0.0, 0.0] }
+        reflectCol2:                      { value: [0.0, 0.0, 1.0, 0.0] }
+        reflectCol3:                      { value: [0.0, 0.0, 0.0, 1.0] }
+        gunCol0:                          { value: [1.0, 0.0, 0.0, 0.0] }
+        gunCol1:                          { value: [0.0, 1.0, 0.0, 0.0] }
+        gunCol2:                          { value: [0.0, 0.0, 1.0, 0.0] }
+        gunCol3:                          { value: [0.0, 0.0, 0.0, 1.0] }
+        reflectMap:                       { value: black }
+        apronMask:                        { value: white }
+        apronDetail:                      { value: white }
+        apronMarks:                       { value: black }
+        apronNormal:                      { value: normal }
+    - &forward-add
+      vert: standard-vs
+      frag: standard-fs
+      phase: forward-add
+      propertyIndex: 0
+      embeddedMacros: { CC_FORWARD_ADD: true }
+      depthStencilState:
+        depthFunc: equal
+        depthTest: true
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: one
+          blendDst: one
+          blendSrcAlpha: zero
+          blendDstAlpha: one
+    - &shadow-caster
+      vert: shadow-caster-vs
+      frag: shadow-caster-fs
+      phase: shadow-caster
+      propertyIndex: 0
+      rasterizerState:
+        cullMode: front
+      properties:
+        tilingOffset:   { value: [1.0, 1.0, 0.0, 0.0] }
+        mainColor:      { value: [1.0, 1.0, 1.0, 1.0], target: albedo, editor: { displayName: Albedo, type: color } }
+        albedoScale:    { value: [1.0, 1.0, 1.0], target: albedoScaleAndCutoff.xyz }
+        alphaThreshold: { value: 0.5, target: albedoScaleAndCutoff.w, editor: { parent: USE_ALPHA_TEST } }
+        mainTexture:    { value: grey, target: albedoMap, editor: { displayName: AlbedoMap } }
+    - &reflect-map
+      vert: standard-vs
+      frag: reflect-map-fs
+      phase: reflect-map
+      propertyIndex: 0
+    - &planar-shadow
+      vert: planar-shadow-vs
+      frag: planar-shadow-fs
+      phase: planar-shadow
+      propertyIndex: 0
+      depthStencilState:
+        depthTest: true
+        depthWrite: false
+        stencilTestFront: true
+        stencilFuncFront: not_equal
+        stencilPassOpFront: replace
+        stencilRef: 0x80 # only use the leftmost bit
+        stencilReadMask: 0x80
+        stencilWriteMask: 0x80
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+    - &deferred
+      vert: standard-vs
+      frag: standard-fs
+      pass: gbuffer
+      phase: gbuffer
+      embeddedMacros: { CC_PIPELINE_TYPE: 1 }
+      propertyIndex: 0
+  - name: transparent
+    passes:
+    - vert: standard-vs
+      frag: standard-fs
+      embeddedMacros: { CC_FORCE_FORWARD_SHADING: true }
+      depthStencilState: &d1
+        depthTest: true
+        depthWrite: false
+      blendState: &b1
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      properties: *props
+    - *forward-add
+    - *shadow-caster
+    - *planar-shadow
+    - &deferred-forward
+      vert: standard-vs
+      frag: standard-fs
+      phase: deferred-forward
+      embeddedMacros: { CC_PIPELINE_TYPE: 0 }
+      propertyIndex: 0
+      depthStencilState: *d1
+      blendState: *b1
+}%
+
+CCProgram shared-ubos %{
+  uniform Constants {
+    vec4 tilingOffset;
+    vec4 albedo;
+    vec4 albedoScaleAndCutoff;
+    vec4 pbrParams;
+    vec4 emissive;
+    vec4 emissiveScaleParam;
+    vec4 anisotropyParam;
+    vec4 wetParams;
+    vec4 wetMacro;
+    vec4 surfaceKind;
+    vec4 reflectCol0;
+    vec4 reflectCol1;
+    vec4 reflectCol2;
+    vec4 reflectCol3;
+    vec4 gunCol0;
+    vec4 gunCol1;
+    vec4 gunCol2;
+    vec4 gunCol3;
+  };
+}%
+
+CCProgram macro-remapping %{
+  // ui displayed macros
+  #pragma define-meta HAS_SECOND_UV
+  #pragma define-meta USE_TWOSIDE
+  #pragma define-meta IS_ANISOTROPY
+  #pragma define-meta USE_VERTEX_COLOR
+  #pragma define-meta FIX_ANISOTROPIC_ROTATION_MAP
+
+  #define CC_SURFACES_USE_SECOND_UV HAS_SECOND_UV
+  #define CC_SURFACES_USE_TWO_SIDED USE_TWOSIDE
+  #define CC_SURFACES_LIGHTING_ANISOTROPIC IS_ANISOTROPY
+  #define CC_SURFACES_USE_VERTEX_COLOR USE_VERTEX_COLOR
+
+  // depend on UI macros
+#if IS_ANISOTROPY || USE_NORMAL_MAP
+  #define CC_SURFACES_USE_TANGENT_SPACE 1
+#endif
+
+  // functionality for each effect
+  #define CC_SURFACES_LIGHTING_ANISOTROPIC_ENVCONVOLUTION_COUNT 31
+  // Gun drops read the mesh attribute position, which does not move when the viewmodel rotates.
+  #define CC_SURFACES_TRANSFER_LOCAL_POS 1
+}%
+
+CCProgram surface-vertex %{
+  #define CC_SURFACES_VERTEX_MODIFY_SHADOW_BIAS
+  vec2 SurfacesVertexModifyShadowBias(in SurfacesStandardVertexIntermediate In, vec2 originShadowBias)
+  {
+    return originShadowBias + vec2(anisotropyParam.z, 0.0);
+  }
+
+  /*#define CC_SURFACES_VERTEX_MODIFY_WORLD_POS
+  vec3 SurfacesVertexModifyWorldPos(in SurfacesStandardVertexIntermediate In)
+  {
+    vec3 worldPos = In.worldPos;
+    worldPos.x += sin(cc_time.x * worldPos.z);
+    worldPos.y += cos(cc_time.x * worldPos.z);
+    return worldPos;
+  }
+
+  #define CC_SURFACES_VERTEX_MODIFY_WORLD_NORMAL
+  vec3 SurfacesVertexModifyWorldNormal(in SurfacesStandardVertexIntermediate In)
+  {
+    vec3 worldNormal = In.worldNormal.xyz;
+    worldNormal.x += sin(cc_time.x * 3.0);
+    worldNormal.y += cos(cc_time.x * 3.0);
+  #if CC_SURFACES_USE_TWO_SIDED
+      worldNormal.xyz *= In.worldNormal.w;
+  #endif
+    return normalize(worldNormal);
+  }
+
+  // see <surfaces/default-functions/common-vs> for more overrided functions
+  #define CC_SURFACES_VERTEX_MODIFY_SHARED_DATA
+  void SurfacesVertexModifySharedData(inout SurfacesStandardVertexIntermediate In)
+  {
+  }
+*/
+
+  #define CC_SURFACES_VERTEX_MODIFY_SHARED_DATA
+  void SurfacesVertexModifySharedData(inout SurfacesStandardVertexIntermediate In)
+  {
+    // Mesh up, after the world position is already computed. Raising the gun
+    // does not change which faces count as the top.
+    In.position.w = In.normal.y;
+  }
+
+  #define CC_SURFACES_VERTEX_MODIFY_UV
+  void SurfacesVertexModifyUV(inout SurfacesStandardVertexIntermediate In)
+  {
+    In.texCoord = In.texCoord * tilingOffset.xy + tilingOffset.zw;
+  #if CC_SURFACES_USE_SECOND_UV
+    In.texCoord1 = In.texCoord1 * tilingOffset.xy + tilingOffset.zw;
+  #endif
+  }
+}%
+
+CCProgram surface-fragment %{
+  #pragma extension([GL_OES_standard_derivatives, __VERSION__ < 300])
+  uniform sampler2D reflectMap;
+  uniform sampler2D apronMask;
+  uniform sampler2D apronDetail;
+  uniform sampler2D apronMarks;
+  uniform sampler2D apronNormal;
+
+  float gWetReady = 0.0;
+  float gWetK = 0.0;
+  float gWetUp = 0.0;
+  float gWetMac = 0.5;
+  float gWetMac2 = 0.5;
+  float gWetBead = 0.0;
+  float gPuddle = 0.0;
+  float gSoak = 0.0;
+  float gDamp = 0.0;
+  float gFilm = 0.0;
+  float gRough = 0.72;
+  float gGunWet = 0.0;
+  float gGunDrop = 0.0;
+  float gGunH = 0.0;
+  float gGunGrain = 0.0;
+  vec2 gGunOff = vec2(0.0);
+  float gGunReady = 0.0;
+  float gGunShade = 0.5;
+  float gWearReady = 0.0;
+  float gWear = 0.0;
+  float gChip = 0.0;
+  float gScratch = 0.0;
+  vec2 gNxz = vec2(0.0);
+
+  float slH(vec3 p) {
+    p = fract(p * 0.3183099 + vec3(0.71, 0.113, 0.419));
+    p *= 17.0;
+    return fract(p.x * p.y * p.z * (p.x + p.y + p.z));
+  }
+
+  float slN3(vec3 x) {
+    vec3 i = floor(x);
+    vec3 f = fract(x);
+    f = f * f * (3.0 - 2.0 * f);
+    float n000 = slH(i);
+    float n100 = slH(i + vec3(1.0, 0.0, 0.0));
+    float n010 = slH(i + vec3(0.0, 1.0, 0.0));
+    float n110 = slH(i + vec3(1.0, 1.0, 0.0));
+    float n001 = slH(i + vec3(0.0, 0.0, 1.0));
+    float n101 = slH(i + vec3(1.0, 0.0, 1.0));
+    float n011 = slH(i + vec3(0.0, 1.0, 1.0));
+    float n111 = slH(i + vec3(1.0, 1.0, 1.0));
+    return mix(mix(mix(n000, n100, f.x), mix(n010, n110, f.x), f.y), mix(mix(n001, n101, f.x), mix(n011, n111, f.x), f.y), f.z);
+  }
+
+  vec2 slHash2(vec2 p);
+  vec2 slRipple(vec2 p, float t, float cell, float seed);
+
+  // Same maps as the original apron: puddle height, oil and wear in the mask,
+  // tiling aggregate in the detail, lane paint and tyre rubber in the marks.
+  vec3 slApron(vec3 worldPos) {
+    vec2 gxz = worldPos.xz;
+    vec2 muv = (gxz - vec2(-44.0, -40.0)) / 80.0;
+    vec4 mk = texture(apronMask, clamp(muv, vec2(0.001), vec2(0.999)));
+    vec4 d1 = texture(apronDetail, gxz * 0.21);
+    vec4 d2 = texture(apronDetail, gxz * 1.37 + vec2(0.37));
+    vec4 n1 = texture(apronNormal, gxz * 1.37 + vec2(0.37));
+    vec4 n0 = texture(apronNormal, gxz * 0.21);
+    float grain = d2.r;
+    vec2 cell = gxz / 6.0;
+    vec2 edge = (0.5 - abs(fract(cell) - 0.5)) * 6.0;
+    float jd = min(edge.x, edge.y) + (d1.a - 0.5) * 0.035;
+    float tarW = 0.022 + 0.03 * d1.g;
+    float tar = 1.0 - smoothstep(tarW - 0.004, tarW + 0.004, jd);
+    vec2 sid = floor(cell);
+    float sh = fract(sin(dot(sid, vec2(127.1, 311.7))) * 43758.5453);
+    float sh2 = fract(sh * 7.31 + 0.13);
+    float crack = smoothstep(0.955, 0.975, d1.b) * smoothstep(0.6, 0.76, mk.a * 0.7 + sh * 0.45);
+    float conc = smoothstep(15.6, 16.6, gxz.x + (d1.g - 0.5) * 0.6);
+    vec3 alb = mix(vec3(0.20, 0.20, 0.205), vec3(0.30, 0.295, 0.28), conc);
+    alb *= (0.72 + 0.56 * sh2) * (0.74 + 0.52 * d1.g) * (0.55 + 0.9 * grain);
+    alb += vec3(0.11, 0.105, 0.095) * smoothstep(0.58, 0.78, d2.a) * (1.0 - conc * 0.6);
+    alb *= mix(1.0, 0.78, smoothstep(0.38, 0.72, mk.a));
+    alb = mix(alb, vec3(0.02, 0.02, 0.022), max(tar * 0.94, crack * 0.9));
+    alb *= 1.0 - 0.62 * mk.b;
+    vec2 kuv = (gxz - vec2(-40.0, -30.0)) * vec2(1.0 / 70.0, 1.0 / 60.0);
+    vec3 mp = texture(apronMarks, clamp(kuv, vec2(0.001), vec2(0.999))).rgb;
+    float paintY = smoothstep(0.35, 0.65, mp.r);
+    float paintW = smoothstep(0.35, 0.65, mp.g);
+    alb *= 1.0 - 0.55 * mp.b * (1.0 - 0.5 * conc);
+    float fade = 0.72 + 0.28 * d1.g;
+    alb = mix(alb, vec3(0.52, 0.34, 0.035) * fade, paintY * 0.94);
+    alb = mix(alb, vec3(0.55, 0.55, 0.52) * fade, paintW * 0.94);
+    float sn = slN3(vec3(gxz * 2.5, 3.0));
+    float depth = 0.5 - mk.r + (sn - 0.5) * 0.11 + (d1.g - 0.5) * 0.03 + (grain - 0.5) * 0.012;
+    float puddle = smoothstep(0.0, 0.035, depth);
+    float deep = smoothstep(0.0, 0.22, depth);
+    float soak = smoothstep(-0.08, 0.0, depth);
+    float fringe = smoothstep(-0.55, -0.02, depth);
+    float dryP = 1.0 - smoothstep(0.2, 0.42, mk.g + fringe * 0.55 + (d1.g - 0.5) * 0.2);
+    float damp = 1.0 - dryP;
+    float film = clamp(soak * (1.0 - smoothstep(0.35, 0.95, grain)), 0.0, 1.0);
+    alb *= mix(1.0, 0.62, damp);
+    alb *= mix(1.0, 0.46, soak);
+    alb = mix(alb, alb * mix(0.7, 0.28, deep) + vec3(0.008, 0.01, 0.011) * deep, puddle);
+    // Dry concrete stays coarse. Standing water is the smooth dark basin.
+    float rough = mix(0.86, 0.5, damp) + (grain - 0.5) * 0.34 + (d1.g - 0.5) * 0.18;
+    rough = mix(rough, 0.3, soak * 0.85);
+    rough = mix(clamp(rough, 0.22, 1.0), 0.18, puddle);
+    vec2 nxz = (n1.rg - 0.5) * mix(2.2, 0.75, max(film, soak * 0.6)) + (n0.ba - 0.5) * 0.4;
+    nxz *= 1.0 - puddle;
+    float t = cc_time.x;
+    vec2 rip = slRipple(gxz, t, 0.83, 1.0);
+    rip += slRipple(gxz.yx, t * 1.13, 0.57, 3.0).yx * 0.55;
+    nxz += rip * (puddle + film * 0.3) * 0.45;
+    gNxz = nxz;
+    gPuddle = puddle;
+    gSoak = soak;
+    gDamp = damp;
+    gFilm = film;
+    gRough = rough;
+    return alb;
+  }
+
+  void slEnsureWet() {
+    if (gWetReady > 0.5) return;
+    gWetReady = 1.0;
+    vec3 nrm = normalize(FSInput_worldNormal);
+    vec3 pos = FSInput_worldPos.xyz;
+    vec3 mp = pos * wetMacro.z;
+    gWetMac = slN3(mp);
+    gWetMac2 = slN3(mp * 3.7 + vec3(11.3));
+    gWetUp = smoothstep(0.15, 0.85, nrm.y);
+    float expo = smoothstep(-0.4, -0.05, nrm.y);
+    float sc = pos.x + pos.z;
+    float streak = slN3(vec3(sc * 9.0, pos.y * 0.55, sc * 0.7 + 3.0));
+    streak *= slN3(vec3(sc * 29.0, pos.y * 1.1, 7.0));
+    streak = smoothstep(0.12, 0.42, streak) * smoothstep(0.3, 0.7, slN3(vec3(sc * 1.1, pos.y * 0.25, 1.7)));
+    float k = expo * mix(wetParams.z * (0.55 + 0.9 * streak), 0.75 + 0.5 * gWetMac, gWetUp);
+    float low = smoothstep(0.5, 0.0, pos.y) * (1.0 - gWetUp) * expo;
+    k += expo * low * 0.6;
+    gWetK = clamp(k, 0.0, 1.0);
+    gWetBead = 0.0;
+    float bf = clamp(1.0 - length(fwidth(pos)) * 120.0, 0.0, 1.0);
+    if (wetParams.w > 0.0 && bf > 0.0) {
+      float b = slN3(pos * 170.0) * 0.6 + slN3(pos * 410.0 + vec3(5.0)) * 0.4;
+      gWetBead = smoothstep(0.6, 0.68, b) * wetParams.w * expo * bf * (0.4 + 0.6 * gWetUp + 0.5 * streak);
+    }
+  }
+
+  vec2 slHash2(vec2 p) {
+    return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)))) * 43758.5453);
+  }
+
+  // Expanding rings on standing water. Returns an xz slope.
+  vec2 slRipple(vec2 p, float t, float cell, float seed) {
+    vec2 q = p / cell + seed * 17.3;
+    vec2 id = floor(q);
+    vec2 f = fract(q);
+    vec2 h0 = slHash2(id + vec2(seed));
+    float tt = t * (0.5 + 0.55 * h0.x) + h0.y * 9.0;
+    float cyc = floor(tt);
+    float life = fract(tt);
+    vec2 h = slHash2(id + vec2(seed + cyc * 7.31));
+    vec2 hc = slHash2(id.yx + vec2(cyc * 3.71 + seed * 5.0));
+    float on = step(h.x, 0.58);
+    float rmax = mix(0.12, 0.36, h.y * h.y);
+    vec2 c = mix(vec2(rmax + 0.05), vec2(0.95 - rmax), hc);
+    vec2 dv = (f - c) * cell;
+    float d = length(dv);
+    float r = life * rmax * cell;
+    float w = 0.006 + 0.022 * life;
+    float x = (d - r) / max(w, 1e-4);
+    float ring = x * exp(-x * x) * 2.2;
+    float amp = (1.0 - life);
+    amp = amp * amp * on * smoothstep(0.0, 0.06, life);
+    return (dv / max(d, 1e-4)) * ring * amp;
+  }
+
+  // Screen-space height field. A hemisphere becomes a bead instead of a flat spot.
+  vec3 slBump(vec3 N, float h) {
+    vec3 pos = FSInput_worldPos.xyz;
+    vec3 dpdx = dFdx(pos);
+    vec3 dpdy = dFdy(pos);
+    float dhx = dFdx(h);
+    float dhy = dFdy(h);
+    vec3 r1 = cross(dpdy, N);
+    vec3 r2 = cross(N, dpdx);
+    float det = dot(dpdx, r1);
+    vec3 grad = sign(det) * (dhx * r1 + dhy * r2);
+    return normalize(abs(det) * N - grad);
+  }
+
+  // Hemispherical rain beads. xy = height and mask, zw = offset from the crown, in metres.
+  vec4 slDrops(vec2 uv, float cell, float seed) {
+    vec2 g = uv / cell;
+    vec2 i = floor(g);
+    vec2 f = fract(g);
+    float best = 0.0;
+    vec2 bestOff = vec2(0.0);
+    for (int a = -1; a <= 1; a++) {
+      for (int b = -1; b <= 1; b++) {
+        vec2 o = vec2(float(a), float(b));
+        vec2 r = slHash2(i + o + vec2(seed));
+        float keep = step(0.55, fract(r.x * 7.31 + r.y * 3.17));
+        vec2 c = o + 0.18 + 0.64 * r;
+        float rad = (0.18 + 0.2 * fract(r.x * 13.7)) * keep;
+        vec2 delta = f - c;
+        float d = length(delta);
+        float hemis = sqrt(max(rad * rad - d * d, 0.0));
+        if (hemis > best) {
+          best = hemis;
+          bestOff = delta * cell;
+        }
+      }
+    }
+    return vec4(best * cell, step(1e-6, best), bestOff);
+  }
+
+  // Original bead field. keep 0.70, cells a few millimetres. Height is a
+  // parabola, high in the middle and falling to the rim, so the lit side of
+  // each drop is a solid cap. A smoothstep dome peaked its slope in a ring
+  // and read as a flat donut. The ground keeps slDrops.
+  vec2 slGunDrops(vec2 uv, float cell, float seed) {
+    vec2 g = uv / cell;
+    vec2 i = floor(g);
+    vec2 f = fract(g);
+    float best = 0.0;
+    for (int a = -1; a <= 1; a++) {
+      for (int b = -1; b <= 1; b++) {
+        vec2 o = vec2(float(a), float(b));
+        vec2 r = slHash2(i + o + vec2(seed));
+        float keep = step(0.70, fract(r.x * 7.31 + r.y * 3.17));
+        vec2 c = o + 0.2 + 0.6 * r;
+        float rad = (0.16 + 0.22 * fract(r.x * 13.7)) * keep;
+        float q = clamp(1.0 - dot(f - c, f - c) / max(rad * rad, 1e-8), 0.0, 1.0) * step(1e-4, rad);
+        best = max(best, q * rad);
+      }
+    }
+    return vec2(best * cell, step(1e-6, best));
+  }
+
+  void slGun() {
+    if (gGunReady > 0.5) return;
+    gGunReady = 1.0;
+    vec3 lp = FSInput_localPos.xyz;
+    // Attribute up, not world up, so pitching the gun does not wet new faces.
+    float up = smoothstep(0.30, 0.75, FSInput_localPos.w);
+    vec2 d1 = slGunDrops(lp.xz, 0.0046, 3.0);
+    vec2 d2 = slGunDrops(lp.xz + vec2(0.31), 0.0023, 9.0);
+    gGunDrop = max(d1.y, d2.y) * up;
+    // Parabola height in metres. 0.55 keeps the rim slope near 1, not a ridge.
+    gGunH = max(d1.x, d2.x) * up * 0.55;
+    float grain = slN3(lp * 36.0);
+    float mid = slN3(lp * 150.0 + vec3(7.0));
+    float fine = slN3(lp * 2400.0);
+    float dR;
+    if (surfaceKind.y < 0.5) {
+      float scuff = smoothstep(0.70, 0.9, slN3(lp * vec3(420.0, 420.0, 26.0) + vec3(3.0)));
+      float smudge = smoothstep(0.55, 0.8, slN3(lp * 55.0 + vec3(11.0)));
+      dR = (grain - 0.5) * 0.20 + (mid - 0.5) * 0.10 + (fine - 0.5) * 0.08 + scuff * 0.18 - smudge * 0.12;
+    } else if (surfaceKind.y < 1.5) {
+      float streak = slN3(vec3(lp.z * 950.0, 1.0, 2.0));
+      dR = (streak - 0.5) * 0.26 + (grain - 0.5) * 0.14 + (fine - 0.5) * 0.10;
+    } else {
+      float st = slN3(lp * 1500.0) * 0.6 + slN3(lp * 3100.0 + vec3(5.0)) * 0.4;
+      dR = (grain - 0.5) * 0.18 + (st - 0.5) * 0.14 - smoothstep(0.6, 0.85, mid) * 0.10;
+    }
+    gGunGrain = dR;
+    gGunWet = up * (0.5 + 0.5 * smoothstep(0.3, 0.7, grain));
+  }
+
+  void slWear() {
+    if (gWearReady > 0.5) return;
+    gWearReady = 1.0;
+    vec3 lp = FSInput_localPos.xyz + vec3(surfaceKind.y, surfaceKind.z, surfaceKind.y * 1.7) * 37.0;
+    vec3 n = normalize(FSInput_worldNormal);
+    float panel = fract(surfaceKind.y * 7.13 + surfaceKind.z * 3.71);
+    float broad = slN3(lp * 8.0);
+    float down = smoothstep(0.35, -0.8, n.y);
+    float streak = smoothstep(0.48, 0.82, slN3(lp * vec3(2.5, 22.0, 2.5)));
+    gWear = clamp(0.58 + panel * 0.35 + smoothstep(0.25, 0.7, broad) * 0.25 + down * 0.4 + streak * 0.3, 0.0, 1.0);
+    float ndv = max(dot(normalize(cc_cameraPos.xyz - FSInput_worldPos.xyz), n), 0.0);
+    gChip = pow(1.0 - ndv, 1.4) * smoothstep(0.32, 0.72, slN3(lp * 16.0));
+    gScratch = smoothstep(0.72, 0.9, slN3(lp * vec3(55.0, 5.0, 55.0)));
+  }
+
+  #if USE_ALBEDO_MAP
+    uniform sampler2D albedoMap;
+    #pragma define-meta ALBEDO_UV options([v_uv, v_uv1])
+  #endif
+  #if USE_NORMAL_MAP
+    uniform sampler2D normalMap;
+    #pragma define-meta NORMAL_UV options([v_uv, v_uv1])
+  #endif
+  #pragma define-meta DEFAULT_UV options([v_uv, v_uv1])
+  #if USE_PBR_MAP
+    uniform sampler2D pbrMap;
+  #endif
+  #if USE_OCCLUSION_MAP
+    uniform sampler2D occlusionMap;
+  #endif
+  #if USE_EMISSIVE_MAP
+    uniform sampler2D emissiveMap;
+    #pragma define-meta EMISSIVE_UV options([v_uv, v_uv1])
+  #endif
+  #if IS_ANISOTROPY && USE_ANISOTROPY_MAP
+    uniform sampler2D anisotropyMap;
+    uniform sampler2D anisotropyMapNearestFilter;
+  #endif
+
+  #pragma define OCCLUSION_CHANNEL          r
+  #pragma define ROUGHNESS_CHANNEL          g
+  #pragma define METALLIC_CHANNEL           b
+  #pragma define SPECULAR_INTENSITY_CHANNEL a
+
+  #if USE_ALPHA_TEST
+    #pragma define-meta ALPHA_TEST_CHANNEL options([a, r])
+  #endif
+
+
+  #define CC_SURFACES_FRAGMENT_MODIFY_BASECOLOR_AND_TRANSPARENCY
+  vec4 SurfacesFragmentModifyBaseColorAndTransparency()
+  {
+    vec4 baseColor = albedo;
+
+    #if USE_VERTEX_COLOR
+      baseColor.rgb *= SRGBToLinear(FSInput_vertexColor.rgb); // use linear
+      baseColor.a *= FSInput_vertexColor.a;
+    #endif
+
+    #if USE_ALBEDO_MAP
+      vec4 texColor = texture(albedoMap, ALBEDO_UV);
+      texColor.rgb = SRGBToLinear(texColor.rgb);
+      baseColor *= texColor;
+    #endif
+
+    #if USE_ALPHA_TEST
+      if (baseColor.ALPHA_TEST_CHANNEL < albedoScaleAndCutoff.w) discard;
+    #endif
+
+    baseColor.rgb *= albedoScaleAndCutoff.xyz;
+
+    // The reflection camera sits under the ground. Drop upward faces so the
+    // yard does not occlude the mirrored view of the cranes and sky.
+    if (cc_cameraPos.y < 0.0 && FSInput_worldNormal.y > 0.65) discard;
+
+    if (surfaceKind.x > 3.5) {
+      slWear();
+      vec3 dirt = vec3(0.17, 0.13, 0.09);
+      baseColor.rgb = mix(baseColor.rgb, baseColor.rgb * 0.08 + dirt, gWear);
+      baseColor.rgb = mix(baseColor.rgb, vec3(0.045, 0.04, 0.035), gChip * 0.85);
+      baseColor.rgb *= 1.0 - gScratch * 0.72;
+      return baseColor;
+    }
+    if (surfaceKind.x > 2.5) {
+      slGun();
+      baseColor.rgb *= 1.0 - 0.18 * gGunWet;
+      return baseColor;
+    }
+
+    if (surfaceKind.x > 0.5) {
+      baseColor.rgb = surfaceKind.x > 1.5 ? vec3(0.02, 0.035, 0.045) : slApron(FSInput_worldPos.xyz);
+      return baseColor;
+    }
+
+    slEnsureWet();
+    float slM = gWetMac * 0.65 + gWetMac2 * 0.35 - 0.5;
+    baseColor.rgb *= 1.0 + wetMacro.x * slM * 2.0;
+    float occ = 1.0;
+    #if USE_PBR_MAP
+      occ = texture(pbrMap, DEFAULT_UV).OCCLUSION_CHANNEL;
+    #endif
+    float slGr = smoothstep(0.5, 0.85, gWetMac * 0.6 + gWetMac2 * 0.4 + (1.0 - occ) * 0.3) * wetMacro.w;
+    baseColor.rgb *= 1.0 - slGr * 0.35;
+    float splash = smoothstep(0.5, 0.0, FSInput_worldPos.y) * (1.0 - gWetUp);
+    baseColor.rgb *= 1.0 - splash * min(wetMacro.w, 0.5) * 0.45;
+    float lum = dot(baseColor.rgb, vec3(0.299, 0.587, 0.114));
+    baseColor.rgb = mix(vec3(lum), baseColor.rgb, 1.0 + 0.5 * gWetK * wetParams.x);
+    baseColor.rgb *= 1.0 - wetParams.x * gWetK;
+    return baseColor;
+  }
+
+  #define CC_SURFACES_FRAGMENT_ALPHA_CLIP_ONLY
+  void SurfacesFragmentAlphaClipOnly()
+  {
+    #if USE_ALPHA_TEST
+      float alpha = albedo.ALPHA_TEST_CHANNEL;
+      #if USE_VERTEX_COLOR
+        alpha *= FSInput_vertexColor.a;
+      #endif
+      #if USE_ALBEDO_MAP
+        alpha = texture(albedoMap, ALBEDO_UV).ALPHA_TEST_CHANNEL;
+      #endif
+
+      if (alpha < albedoScaleAndCutoff.w) discard;
+    #endif
+  }
+
+  #define CC_SURFACES_FRAGMENT_MODIFY_WORLD_NORMAL
+  vec3 SurfacesFragmentModifyWorldNormal()
+  {
+    vec3 normal = normalize(FSInput_worldNormal);
+    if (surfaceKind.x > 3.5) return normal;
+    if (surfaceKind.x > 2.5) {
+      slGun();
+      // Same cotangent frame as the original bead normal, on the smooth dome.
+      vec3 dpdx = dFdx(FSInput_worldPos.xyz);
+      vec3 dpdy = dFdy(FSInput_worldPos.xyz);
+      float dhx = dFdx(gGunH);
+      float dhy = dFdy(gGunH);
+      vec3 r1 = cross(dpdy, normal);
+      vec3 r2 = cross(normal, dpdx);
+      float det = dot(dpdx, r1);
+      vec3 grad = sign(det) * (dhx * r1 + dhy * r2);
+      return normalize(abs(det) * normal - grad);
+    }
+    if (surfaceKind.x > 0.5 && surfaceKind.x < 1.5) {
+      slApron(FSInput_worldPos.xyz);
+      return normalize(vec3(-gNxz.x, 1.0, -gNxz.y));
+    }
+    slEnsureWet();
+    #if USE_NORMAL_MAP
+      vec3 nmmp = texture(normalMap, NORMAL_UV).xyz - vec3(0.5);
+      float wetFlat = emissiveScaleParam.w * (1.0 - 0.45 * gWetK * gWetUp);
+      normal = CalculateNormalFromTangentSpace(nmmp, wetFlat, normalize(normal.xyz), normalize(FSInput_worldTangent), FSInput_mirrorNormal);
+    #endif
+
+    return normalize(normal);
+  }
+
+  #define CC_SURFACES_FRAGMENT_MODIFY_ANISOTROPY_PARAMS
+  vec4 SurfacesFragmentModifyAnisotropyParams(out float isRotation)
+  {
+    float anisotropyRotation = anisotropyParam.y * PI;
+    float anisotropyShape = anisotropyParam.x;
+    #if IS_ANISOTROPY && USE_ANISOTROPY_MAP
+      // Rotation angle should disable trilinear filtering
+      vec4 tex = texture(anisotropyMap, DEFAULT_UV);
+      anisotropyRotation = fract(anisotropyRotation * 0.5 + tex.y) * PI2;
+      // less value is better for SP exported shape
+      anisotropyShape *= tex.x;
+    #endif
+
+    // fix rotation map seam line of black and white
+    #if FIX_ANISOTROPIC_ROTATION_MAP
+      #if IS_ANISOTROPY && USE_ANISOTROPY_MAP
+        vec4 reference = texture(anisotropyMapNearestFilter, DEFAULT_UV);
+        vec2 oneTap = vec2(0.0, 1.0 / anisotropyParam.w);
+        float threshold = 0.2;
+        // scan more taps for stable result
+        vec4 sample1 = texture(anisotropyMapNearestFilter, DEFAULT_UV + oneTap);
+        vec4 sample2 = texture(anisotropyMapNearestFilter, DEFAULT_UV - oneTap);
+        if (abs(sample1.y - reference.y) > threshold || abs(sample2.y - reference.y) > threshold) {
+            tex.y = reference.y;
+        }
+        anisotropyRotation = fract(anisotropyParam.y * PI * 0.5 + tex.y) * PI2;
+      #endif
+    #endif
+
+    isRotation = 1.0;
+    return vec4(anisotropyShape, anisotropyRotation, 0.0, 0.0);
+  }
+
+  // Direct sun on the water. The mirror sample is added as emissive, so it
+  // ignores the shadow map and a puddle under a container still shows the sun.
+  float slMainShadow(vec3 worldPos, vec3 N) {
+    #if CC_RECEIVE_SHADOW && CC_SHADOW_TYPE == CC_SHADOW_MAP && CC_DIR_LIGHT_SHADOW_TYPE == CC_DIR_LIGHT_SHADOW_UNIFORM
+      if (cc_mainLitDir.w > 0.0) {
+        vec4 shadowPos = cc_matLightViewProj * vec4(worldPos, 1.0);
+        vec4 biased = vec4(0.0);
+        float s = CCShadowFactorBase(biased, shadowPos, N, FSInput_shadowBias);
+        return smoothstep(0.45, 0.82, s);
+      }
+    #endif
+    #if CC_RECEIVE_SHADOW && CC_SHADOW_TYPE == CC_SHADOW_MAP && CC_DIR_LIGHT_SHADOW_TYPE == CC_DIR_LIGHT_SHADOW_CASCADED
+      if (cc_mainLitDir.w > 0.0) {
+        float s = CCCSMFactorBase(worldPos, N, FSInput_shadowBias);
+        return smoothstep(0.45, 0.82, s);
+      }
+    #endif
+    return 1.0;
+  }
+
+  #define CC_SURFACES_FRAGMENT_MODIFY_EMISSIVE
+  vec3 SurfacesFragmentModifyEmissive()
+  {
+    vec3 emissive = emissive.rgb;
+    #if USE_EMISSIVE_MAP
+      emissive = SRGBToLinear(texture(emissiveMap, EMISSIVE_UV).rgb);
+    #endif
+    emissive *= emissiveScaleParam.xyz;
+    if (surfaceKind.x > 3.5) {
+      if (cc_cameraPos.y > 0.0) {
+        vec3 reflected = vec3(FSInput_worldPos.x, 0.0, FSInput_worldPos.z);
+        vec4 clip = mat4(reflectCol0, reflectCol1, reflectCol2, reflectCol3) * vec4(reflected, 1.0);
+        if (clip.w > 0.0) {
+          vec2 uv = clip.xy / clip.w * 0.5 + vec2(0.5);
+          float edge = smoothstep(0.0, 0.12, uv.x) * smoothstep(1.0, 0.88, uv.x);
+          edge *= smoothstep(0.0, 0.12, uv.y) * smoothstep(1.0, 0.88, uv.y);
+          if (edge > 0.001) {
+            vec3 nrm = normalize(FSInput_worldNormal);
+            vec3 toEye = normalize(cc_cameraPos.xyz - FSInput_worldPos.xyz);
+            float ndv = max(dot(toEye, nrm), 0.0);
+            float fres = pow(1.0 - ndv, 3.0);
+            float up = smoothstep(0.05, 0.7, nrm.y);
+            vec2 lo = vec2(0.02);
+            vec2 hi = vec2(0.98);
+            vec2 s = vec2(0.012, 0.02);
+            vec3 blur = SRGBToLinear(texture(reflectMap, clamp(uv, lo, hi)).rgb) * 0.36;
+            blur += SRGBToLinear(texture(reflectMap, clamp(uv + vec2(s.x, s.y), lo, hi)).rgb) * 0.16;
+            blur += SRGBToLinear(texture(reflectMap, clamp(uv + vec2(-s.x, s.y), lo, hi)).rgb) * 0.16;
+            blur += SRGBToLinear(texture(reflectMap, clamp(uv + vec2(0.0, s.y * 1.6), lo, hi)).rgb) * 0.16;
+            blur += SRGBToLinear(texture(reflectMap, clamp(uv + vec2(0.0, -s.y), lo, hi)).rgb) * 0.16;
+            slWear();
+            float pw = mix(0.02, 0.1, fres) * mix(0.4, 1.0, up) * (1.0 - gWear * 0.65);
+            emissive += blur * pw * edge;
+          }
+        }
+      }
+      return emissive;
+    }
+    if (surfaceKind.x > 2.5) return emissive;
+    slEnsureWet();
+    // Only the ground and the sea. Roofs are upward too, and the ground-plane
+    // mirror projected onto them paints a second copy of the harbor.
+    if (cc_cameraPos.y > 0.0 && FSInput_worldPos.y < 1.2 && gWetUp > 0.45 && gWetK > 0.02) {
+      float planeY = surfaceKind.x > 1.5 ? -1.6 : 0.0;
+      vec3 reflected = vec3(FSInput_worldPos.x, planeY, FSInput_worldPos.z);
+      vec4 clip = mat4(reflectCol0, reflectCol1, reflectCol2, reflectCol3) * vec4(reflected, 1.0);
+      if (clip.w > 0.0) {
+        vec2 uv = clip.xy / clip.w * 0.5 + vec2(0.5);
+        float edge = smoothstep(0.0, 0.12, uv.x) * smoothstep(1.0, 0.88, uv.x);
+        edge *= smoothstep(0.0, 0.12, uv.y) * smoothstep(1.0, 0.88, uv.y);
+        if (edge > 0.001) {
+          vec3 nrm = normalize(FSInput_worldNormal);
+          vec3 toEye = normalize(cc_cameraPos.xyz - FSInput_worldPos.xyz);
+          float ndv = max(dot(toEye, nrm), 0.0);
+          if (surfaceKind.x > 1.5) {
+            vec3 sharp = SRGBToLinear(texture(reflectMap, uv).rgb);
+            float pw = mix(0.42, 0.88, pow(1.0 - ndv, 5.0));
+            emissive += sharp * pw * edge;
+          } else if (surfaceKind.x > 0.5) {
+            slApron(FSInput_worldPos.xyz);
+            // The mirror is the harbor and the sky, blurred by how wet the pixel is.
+            // Standing water stays sharper. Damp concrete stretches the sample
+            // vertically so the sheen reads as a lane, not a crisp photograph.
+            // Shadow does not remove this: a puddle in shade still reflects the
+            // containers. The direct sun glint is the shadowed specular term.
+            float wet = clamp(max(gPuddle, max(gSoak * 0.9, gDamp * 0.7)) + gFilm * 0.2, 0.0, 1.0);
+            uv += gNxz * vec2(0.03, 0.045) * wet;
+            float spread = mix(0.04, 0.01, wet);
+            vec2 lo = vec2(0.02);
+            vec2 hi = vec2(0.98);
+            vec2 s = vec2(spread * 0.28, spread);
+            vec3 pr = SRGBToLinear(texture(reflectMap, clamp(uv, lo, hi)).rgb) * 0.30;
+            pr += SRGBToLinear(texture(reflectMap, clamp(uv + vec2(s.x, s.y), lo, hi)).rgb) * 0.18;
+            pr += SRGBToLinear(texture(reflectMap, clamp(uv + vec2(-s.x, s.y), lo, hi)).rgb) * 0.18;
+            pr += SRGBToLinear(texture(reflectMap, clamp(uv + vec2(0.0, s.y * 1.7), lo, hi)).rgb) * 0.18;
+            pr += SRGBToLinear(texture(reflectMap, clamp(uv + vec2(0.0, -s.y * 0.5), lo, hi)).rgb) * 0.16;
+            float fres = pow(1.0 - clamp(ndv, 0.0, 1.0), 2.4);
+            float pw = mix(0.08, 0.24, 1.0 - smoothstep(0.42, 0.88, gRough));
+            pw = mix(pw, 0.72, wet);
+            pw *= mix(0.7, 1.0, fres);
+            emissive += pr * pw * edge;
+          } else {
+            vec3 blur = SRGBToLinear(texture(reflectMap, uv).rgb);
+            float pw = mix(0.02, 0.16, pow(1.0 - ndv, 5.0)) * gWetK;
+            emissive += blur * pw * edge * smoothstep(0.35, 0.85, gWetUp);
+          }
+        }
+      }
+    }
+    return emissive;
+  }
+
+  #define CC_SURFACES_FRAGMENT_MODIFY_PBRPARAMS
+  vec4 SurfacesFragmentModifyPBRParams()
+  {
+    vec4 pbr = pbrParams;
+    pbr.x = 1.0;
+    #if USE_PBR_MAP
+      vec4 res = texture(pbrMap, DEFAULT_UV);
+      pbr.x = mix(1.0, res.OCCLUSION_CHANNEL, pbrParams.x);
+      pbr.y *= res.ROUGHNESS_CHANNEL;
+      pbr.z *= res.METALLIC_CHANNEL;
+      pbr.w *= res.SPECULAR_INTENSITY_CHANNEL;
+    #endif
+    #if USE_OCCLUSION_MAP
+      pbr.x = mix(1.0, texture(occlusionMap, DEFAULT_UV).OCCLUSION_CHANNEL, pbrParams.x);
+    #endif
+
+    if (surfaceKind.x > 3.5) {
+      slWear();
+      pbr.y = mix(pbr.y, min(pbr.y + 0.4, 0.95), gWear);
+      pbr.y = mix(pbr.y, 0.7, gChip);
+      pbr.y = clamp(pbr.y, 0.16, 1.0);
+      return pbr;
+    }
+    if (surfaceKind.x > 2.5) {
+      slGun();
+      pbr.y = clamp(pbr.y + gGunGrain, 0.10, 1.0);
+      pbr.y = mix(pbr.y, pbr.y * 0.5, gGunWet);
+      pbr.y = mix(pbr.y, 0.10, gGunDrop);
+      return pbr;
+    }
+    slEnsureWet();
+    if (surfaceKind.x > 1.5) {
+      pbr.y = 0.07;
+      pbr.z = 0.02;
+      pbr.w *= slMainShadow(FSInput_worldPos.xyz, vec3(0.0, 1.0, 0.0));
+      return pbr;
+    }
+    if (surfaceKind.x > 0.5) {
+      slApron(FSInput_worldPos.xyz);
+      pbr.y = gRough;
+      pbr.z = 0.0;
+      pbr.w *= slMainShadow(FSInput_worldPos.xyz, vec3(0.0, 1.0, 0.0));
+      return pbr;
+    }
+    pbr.y += wetMacro.y * ((gWetMac2 - 0.5) * 1.4 + (gWetMac - 0.5) * 0.8);
+    pbr.y = mix(pbr.y, max(pbr.y * wetParams.y, 0.32), gWetK);
+    pbr.y = clamp(pbr.y, 0.04, 1.0);
+    return pbr;
+  }
+
+  /*
+  // definition of SurfacesMaterialData structure with corresponding shading-model
+  #include <surfaces/data-structures/standard>
+
+  //see <surfaces/default-functions/XXXX> for more overrided functions, XXXX is shading-model name
+  #define CC_SURFACES_FRAGMENT_MODIFY_SHARED_DATA
+  void SurfacesFragmentModifySharedData(inout SurfacesMaterialData surfaceData)
+  {
+  }
+
+  // see <lighting-models/default-functions/XXXX> for more overrided functions, XXXX is lighting-model name
+  #include <lighting-models/includes/common>
+  #define CC_SURFACES_LIGHTING_MODIFY_FINAL_RESULT
+  void SurfacesLightingModifyFinalResult(inout LightingResult result, in LightingIntermediateData lightingData, in SurfacesMaterialData surfaceData, in LightingMiscData miscData)
+  {
+  }*/
+}%
+
+CCProgram standard-vs %{
+  precision highp float;
+
+  // 1. surface internal macros, for technique usage or remapping some user (material) macros to surface internal macros
+  #include <macro-remapping>
+  #include <surfaces/effect-macros/common-macros>
+
+  // 2. common include with corresponding shader stage, include before surface functions
+  #include <surfaces/includes/common-vs>
+
+  // 3. user surface functions that can use user (effect) parameters (ubo Constants)
+  //    see surfaces/default-functions/xxx.chunk
+  #include <shared-ubos>
+  #include <surface-vertex>
+
+  // 4. surface include with corresponding shader stage and shading-model (optional)
+  #include <surfaces/includes/standard-vs>
+
+  // 5. shader entry with corresponding shader stage and technique usage/type
+  #include <shading-entries/main-functions/render-to-scene/vs>
+}%
+
+
+CCProgram shadow-caster-vs %{
+  precision highp float;
+  #include <macro-remapping>
+  #include <surfaces/effect-macros/render-to-shadowmap>
+  #include <surfaces/includes/common-vs>
+  #include <shared-ubos>
+  #include <surface-vertex>
+  #include <shading-entries/main-functions/render-to-shadowmap/vs>
+}%
+
+CCProgram planar-shadow-vs %{
+  precision highp float;
+  #include <macro-remapping>
+  #include <surfaces/effect-macros/render-planar-shadow>
+  #include <surfaces/includes/common-vs>
+  #include <shared-ubos>
+  #include <surface-vertex>
+  #include <shading-entries/main-functions/render-planar-shadow/vs>
+}%
+
+
+CCProgram standard-fs %{
+  // shading-model : standard
+  // lighting-model : standard (isotropy / anisotropy pbr)
+  // shader stage : fs
+  // technique usage/type : render-to-scene
+
+  precision highp float;
+  // 1. surface internal macros, for technique usage or remapping some user (material) macros to surface internal macros
+  #include <macro-remapping>
+  #include <surfaces/effect-macros/common-macros>
+
+  // 2. common include with corresponding shader stage, include before surface functions
+  #include <surfaces/includes/common-fs>
+
+  // 3. user surface functions that can use user (effect) parameters (ubo Constants)
+  //    see surfaces/default-functions/xxx.chunk
+  #include <shared-ubos>
+  #include <surface-fragment>
+
+  // 4. lighting-model (optional)
+  #include <lighting-models/includes/standard>
+
+  // 5. surface include with corresponding shader stage and shading-model (optional)
+  #include <surfaces/includes/standard-fs>
+
+  // 6. shader entry with corresponding shader stage and technique usage/type
+  #include <shading-entries/main-functions/render-to-scene/fs>
+}%
+
+CCProgram shadow-caster-fs %{
+  precision highp float;
+  #include <macro-remapping>
+  #include <surfaces/effect-macros/render-to-shadowmap>
+  #include <surfaces/includes/common-fs>
+  #include <shared-ubos>
+  #include <surface-fragment>
+  #include <shading-entries/main-functions/render-to-shadowmap/fs>
+}%
+
+CCProgram planar-shadow-fs %{
+  precision highp float;
+  #include <macro-remapping>
+  #include <surfaces/effect-macros/render-planar-shadow>
+  #include <surfaces/includes/common-fs>
+  #include <shared-ubos>
+  #include <surface-fragment>
+  #include <shading-entries/main-functions/render-planar-shadow/fs>
+}%
+
+CCProgram reflect-map-fs %{
+  precision highp float;
+  #include <macro-remapping>
+  #include <surfaces/effect-macros/common-macros>
+  #include <surfaces/includes/common-fs>
+  #include <shared-ubos>
+  #include <surface-fragment>
+  #include <lighting-models/includes/standard>
+  #include <surfaces/includes/standard-fs>
+  #include <shading-entries/main-functions/render-to-reflectmap/fs>
+}%
+

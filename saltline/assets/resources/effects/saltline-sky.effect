@@ -1,0 +1,180 @@
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: sky-vs:vert
+      frag: sky-fs:frag
+      priority: max - 10
+      rasterizerState:
+        cullMode: none
+      depthStencilState:
+        depthTest: true
+        depthWrite: false
+}%
+
+CCProgram sky-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <legacy/decode>
+
+  out mediump vec4 viewDir;
+
+  vec4 vert () {
+    CCDecode(viewDir);
+    mat4 matViewRotOnly = mat4(mat3(cc_matView));
+    vec4 pos = matViewRotOnly * viewDir;
+    if (cc_matProj[3].w > 0.0) {
+      mat4 matProj = cc_matProj;
+      matProj[0].x = 5.2;
+      matProj[1].y = 2.6;
+      matProj[2].zw = vec2(-1.0);
+      matProj[3].zw = vec2(0.0);
+      pos = matProj * pos;
+    } else {
+      pos = cc_matProj * pos;
+    }
+    pos.z = 0.99999 * pos.w;
+    return pos;
+  }
+}%
+
+CCProgram sky-fs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  in mediump vec4 viewDir;
+
+  const vec3 SUN = vec3(0.916, 0.225, 0.331);
+  const vec3 HOR = vec3(0.95, 0.55, 0.28);
+  const vec3 AWAY = vec3(0.16, 0.22, 0.3);
+  const vec3 SUN_COL = vec3(1.0, 0.72, 0.42);
+
+  float h2(vec2 p) {
+    vec3 q = fract(vec3(p.xyx) * 0.1031);
+    q += dot(q, q.yzx + 33.33);
+    return fract((q.x + q.y) * q.z);
+  }
+
+  float n2(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    f = f * f * (3.0 - 2.0 * f);
+    float a = h2(i);
+    float b = h2(i + vec2(1.0, 0.0));
+    float c = h2(i + vec2(0.0, 1.0));
+    float d = h2(i + vec2(1.0, 1.0));
+    return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+  }
+
+  vec2 rot(vec2 p) {
+    return vec2(1.6 * p.x - 1.2 * p.y, 1.2 * p.x + 1.6 * p.y) + 17.3;
+  }
+
+  float cloud4(vec2 p) {
+    float sum = n2(p) * 0.5;
+    p = rot(p);
+    sum += n2(p) * 0.25;
+    p = rot(p);
+    sum += n2(p) * 0.125;
+    p = rot(p);
+    sum += n2(p) * 0.0625;
+    return sum / 0.9375;
+  }
+
+  float cloud3(vec2 p) {
+    float sum = n2(p) * 0.5;
+    p = rot(p);
+    sum += n2(p) * 0.25;
+    p = rot(p);
+    sum += n2(p) * 0.125;
+    return sum / 0.875;
+  }
+
+  float skyToSun(vec3 d) {
+    vec2 s = normalize(SUN.xz + vec2(1e-5));
+    vec2 v = normalize(d.xz + vec2(1e-5));
+    return clamp(dot(v, s) * 0.5 + 0.5, 0.0, 1.0);
+  }
+
+  vec3 horizonColor(float ts) {
+    float lift = smoothstep(0.2, 0.75, ts);
+    vec3 c = mix(AWAY, AWAY * 1.25 + vec3(0.05, 0.03, 0.02), lift);
+    c = mix(c, HOR * vec3(1.9, 1.55, 1.2), pow(ts, 6.0));
+    c = mix(c, vec3(1.0, 0.60, 0.24) * 3.4, pow(ts, 34.0));
+    return c;
+  }
+
+  vec3 toSRGB(vec3 c) {
+    vec3 lo = c * 12.92;
+    vec3 hi = 1.055 * pow(max(c, vec3(0.0)), vec3(1.0 / 2.4)) - 0.055;
+    return mix(lo, hi, step(vec3(0.0031308), c));
+  }
+
+  vec4 frag () {
+    vec3 d = normalize(viewDir.xyz);
+    float h = max(d.y, 0.0);
+    float mu = dot(d, SUN);
+    float s = max(mu, 0.0);
+    float ts = skyToSun(d);
+    vec3 hc = horizonColor(ts);
+    float midT = pow(ts, 3.0);
+    vec3 midC = mix(vec3(0.15, 0.24, 0.36), vec3(0.72, 0.50, 0.34), midT);
+    float band = smoothstep(0.0, 0.17, h);
+    vec3 col = mix(hc, midC, band);
+    col = mix(col, vec3(0.085, 0.145, 0.24), smoothstep(0.10, 0.5, h));
+    // Same mie halo as the original sky. The wide term is what keeps the sun
+    // one bright body instead of a disc with a dark cloud sitting on it.
+    float glow = pow(s, 8.0) * 0.14 + pow(s, 64.0) * 0.55 + pow(s, 600.0) * 2.2 + pow(s, 6000.0) * 14.0;
+    col += SUN_COL * vec3(1.0, 0.86, 0.68) * glow;
+
+    float denom = h + 0.10;
+    vec2 q = d.xz / denom * vec2(0.62, 0.95);
+    q += vec2(-0.012, 0.004) * cc_time.x;
+    float warp = cloud3(q * 0.45 + 7.1);
+    vec2 qq = q + (warp - 0.5) * vec2(1.3, 0.4);
+    float dens = cloud4(qq);
+    float big = n2(q * 0.19 + 3.7);
+    float body = dens * 0.74 + big * 0.36;
+    float cov = smoothstep(0.31, 0.50, body);
+    float edge = mix(0.030, 0.285, pow(ts, 1.7));
+    float rag = (n2(q * 0.9 + 11.0) - 0.5) * 0.16 + (dens - 0.5) * 0.10;
+    float deck = smoothstep(edge - 0.035, edge + 0.11, h + rag * (0.35 + ts));
+    cov *= deck;
+    float hole = smoothstep(0.972, 0.9985, mu + (dens - 0.5) * 0.012);
+    cov *= 1.0 - 0.93 * hole;
+
+    vec2 sd = normalize(SUN.xz);
+    float densS = cloud3(qq + sd * 0.22);
+    float relief = clamp((dens - densS) * 4.5 + 0.5, 0.0, 1.0);
+    float thick = smoothstep(0.40, 0.72, body);
+    vec3 cool = mix(vec3(0.155, 0.195, 0.255), vec3(0.030, 0.042, 0.064), thick);
+    cool *= 0.55 + 0.9 * relief * relief;
+    cool += vec3(0.07, 0.10, 0.15) * pow(1.0 - thick, 3.0);
+    float nearSun = pow(ts, 5.0) * exp(-max(h - edge, 0.0) * 4.5) * 0.9 + pow(s, 7.0) * 0.9;
+    vec3 warm = (HOR * vec3(1.30, 0.66, 0.40)) * nearSun * (0.05 + 2.2 * relief * relief * relief) * 1.15;
+    float rim = cov * (1.0 - cov) * 4.0 * pow(ts, 4.0) * (0.5 + 1.6 * pow(s, 6.0)) * (1.0 - 0.85 * hole);
+    warm += SUN_COL * rim;
+    vec3 cloudC = cool + warm;
+    float fade = exp(-h * 11.0);
+    cloudC = mix(cloudC, hc * 0.55 + cloudC * 0.45, fade);
+    col = mix(col, cloudC, cov * 0.985);
+    // Thin cloud in the gap, lit by the sun, so the glow is not cut in half.
+    float scud = smoothstep(0.55, 0.85, cloud3(q * vec2(0.55, 1.9) + 31.0));
+    scud *= (1.0 - deck) * smoothstep(0.02, 0.10, h) * 0.55 * (1.0 - 0.8 * hole);
+    vec3 scudC = mix(vec3(0.10, 0.11, 0.14), HOR * 1.5, pow(ts, 3.0)) + SUN_COL * pow(s, 24.0) * 2.0;
+    col = mix(col, scudC, scud);
+
+    float veil = (1.0 - cov * 0.92) * (1.0 - scud * 0.7);
+    float disk = smoothstep(0.999905, 0.999955, mu) * veil;
+    col += vec3(1.0, 0.80, 0.52) * disk * 110.0;
+
+    if (d.y < 0.0) {
+      float t = clamp(-d.y * 5.0, 0.0, 1.0);
+      vec3 low = AWAY * 0.42;
+      vec3 below = hc + SUN_COL * pow(s, 48.0) * 1.5;
+      col = mix(below, low, t);
+    }
+
+    // Only the tiny disk needs a shoulder. Crushing from 1.0 dimmed the whole halo.
+    col = col / (vec3(1.0) + max(col - vec3(3.0), vec3(0.0)) * 0.15);
+    return vec4(toSRGB(max(col, vec3(0.0))), 1.0);
+  }
+}%
